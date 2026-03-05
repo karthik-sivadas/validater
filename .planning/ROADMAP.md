@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 3: Browser Execution Engine** - Playwright execution, screenshots, multi-viewport, browser pool
 - [ ] **Phase 4: Workflow Orchestration** - Wire AI + browser into end-to-end Temporal workflows
 - [ ] **Phase 5: Frontend -- Dashboard and Results** - TanStack Start app, test creation, results viewer, test history
-- [ ] **Phase 6: Live Streaming and Real-Time Updates** - CDP screencast, Redis pub/sub, WebSocket live viewer
+- [ ] **Phase 6: Live Streaming and Real-Time Updates** - CDP screencast, Redis pub/sub, Hono WebSocket sidecar, live viewer
 - [ ] **Phase 7: Video and Reporting** - Debug recording, polished video export, PDF/HTML reports
 - [ ] **Phase 8: CI/CD and API Layer** - Public REST API, GitHub Actions integration, webhooks
 - [ ] **Phase 9: Test Suite Generation and Accessibility** - Full suite from feature descriptions, axe-core integration
@@ -83,7 +83,7 @@ Plans:
 **Depends on**: Phase 2, Phase 3
 **Requirements**: INFR-01, INFR-02, INFR-03
 **Success Criteria** (what must be TRUE):
-  1. A single API call triggers the full pipeline: NL input goes to AI generation, then to browser execution, then results are persisted
+  1. A single server function call triggers the full pipeline: NL input goes to AI generation, then to browser execution, then results are persisted
   2. Multi-viewport test runs fan out to parallel child workflows and aggregate results
   3. Workflow status is queryable in real-time (pending, generating, executing, complete)
   4. Failed activities retry automatically according to policy without losing progress
@@ -106,7 +106,7 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 05-01: TanStack Start app scaffolding (routing, auth integration, layout)
+- [ ] 05-01: TanStack Start app scaffolding (routing, auth integration, server function wiring, layout)
 - [ ] 05-02: Test creation flow (URL + description form, submission, progress indicator)
 - [ ] 05-03: Results viewer (step-by-step replay, screenshots, multi-viewport comparison)
 - [ ] 05-04: Test history and inline reporting (list view, filtering, pass/fail summary)
@@ -123,7 +123,7 @@ Plans:
 
 Plans:
 - [ ] 06-01: CDP screencast integration in browser workers + Redis pub/sub
-- [ ] 06-02: WebSocket gateway in API server + live viewer component in frontend
+- [ ] 06-02: Hono WebSocket sidecar + live viewer component in frontend
 
 ### Phase 7: Video and Reporting
 **Goal**: Users can get debug video recordings of test runs and export polished videos and reports for sharing
@@ -145,7 +145,7 @@ Plans:
 **Depends on**: Phase 4
 **Requirements**: PLAT-04, PLAT-05
 **Success Criteria** (what must be TRUE):
-  1. User can trigger a test run via REST API call with URL, description, and viewports
+  1. User can trigger a test run via public REST API (TanStack Start server routes or Hono) with URL, description, and viewports
   2. API returns structured results including pass/fail, step details, and links to screenshots
   3. A GitHub Actions workflow can run Validater tests on deploy and report results back to the PR
 **Plans**: TBD

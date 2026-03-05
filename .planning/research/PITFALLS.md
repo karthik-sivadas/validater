@@ -121,16 +121,16 @@ Core AI Agent phase for basic rate limiting. Dedicated optimization phase for ca
 ### Pitfall 5: Real-Time Browser Streaming Architecture Mismatch
 
 **What goes wrong:**
-Teams build WebSocket-based live browser streaming that works in development but fails in production: connections drop during long test runs (load balancer timeouts, typically 60 seconds of idle), reconnecting clients miss intermediate state (test steps 4-7 while disconnected), and horizontal scaling breaks because WebSocket connections are stateful and pinned to specific server instances.
+Teams build WebSocket-based live browser streaming (via Hono sidecar or similar) that works in development but fails in production: connections drop during long test runs (load balancer timeouts, typically 60 seconds of idle), reconnecting clients miss intermediate state (test steps 4-7 while disconnected), and horizontal scaling breaks because WebSocket connections are stateful and pinned to specific server instances.
 
 **Why it happens:**
 WebSocket connections don't automatically reconnect. They require sticky sessions at the load balancer. State synchronization across reconnections requires explicit message buffering and replay. None of this is needed in single-server development.
 
 **How to avoid:**
-- Consider Server-Sent Events (SSE) instead of WebSockets for the primary use case (server-to-client test progress updates). SSE is simpler, auto-reconnects natively, and works through CDNs and proxies without sticky sessions. Reserve WebSockets only if bidirectional communication is truly needed.
-- If using WebSockets: implement heartbeat pings (every 30 seconds), exponential backoff reconnection, and a message buffer on the server that replays missed events on reconnect.
-- Store test execution state in the database (or Temporal query), not just in the WebSocket session. On reconnect, the client fetches current state from the database, then subscribes to live updates. This is the "state sync" pattern.
-- Use Temporal queries for current workflow state rather than building a separate real-time state system. The workflow itself is the source of truth.
+- Consider Server-Sent Events (SSE) from TanStack Start server routes instead of WebSockets for test progress updates. SSE is simpler, auto-reconnects natively, and works through CDNs and proxies without sticky sessions. Reserve Hono WebSocket sidecar only for high-frequency binary data (CDP screencast frames).
+- If using the Hono WebSocket sidecar: implement heartbeat pings (every 30 seconds), exponential backoff reconnection, and a message buffer that replays missed events on reconnect.
+- Store test execution state in the database (or Temporal query), not in the Hono sidecar's WebSocket session. On reconnect, the client fetches current state via server functions, then re-subscribes to live updates. This is the "state sync" pattern.
+- Use Temporal queries for current workflow state (via server functions) rather than building a separate real-time state system. The workflow itself is the source of truth.
 
 **Warning signs:**
 - "Connection lost" errors in browser console during test runs longer than 60 seconds
@@ -307,7 +307,7 @@ Core AI Agent phase for basic budgeting. Pricing/Billing phase for user-facing c
 | Temporal + Playwright | Running browser inside Temporal workflow function | Browser operations MUST be in activities, not workflows. Workflows must be deterministic -- browser interactions are inherently non-deterministic |
 | Temporal signals | Using signals for high-frequency progress updates (every test step) | Use Temporal queries for current state, signals for commands. High-frequency signals bloat event history |
 | Playwright + Video | Using `browser.newPage()` for each viewport instead of `browser.newContext()` | Use separate contexts per viewport. Contexts share browser process (less memory) and provide proper isolation |
-| WebSocket/SSE + Temporal | Building a separate state management system alongside Temporal | Query Temporal workflow state directly. The workflow IS your state machine. Don't duplicate it |
+| Hono Sidecar + Temporal | Building a separate state management system in the Hono sidecar alongside Temporal | Query Temporal workflow state directly via server functions. The workflow IS your state machine. Don't duplicate it in the streaming layer |
 | Playwright + Auth | Hardcoding auth flows in test execution | Use Playwright's `storageState` to save and restore authentication. Pre-authenticate once, reuse cookies across test runs |
 | Pi agent + Claude | Letting the agent retry indefinitely on API errors | Set max retries (3) with exponential backoff. After max retries, fail the activity and let Temporal's retry policy handle workflow-level retries |
 

@@ -7,9 +7,9 @@
 
 ## Executive Summary
 
-Validater is an AI-powered web testing platform where users provide a URL and a natural language description, and the system generates, executes, and records test runs across multiple viewports. The expert approach to building this combines Temporal for durable workflow orchestration, Playwright for browser automation, and Claude for AI-driven test generation -- all in a TypeScript monorepo. The architecture follows a "thin API, fat workers" pattern: the web layer handles auth and input validation, then dispatches everything to Temporal workflows that coordinate specialized workers (AI generation, browser execution, video processing). This is not a novel architecture -- Temporal + Playwright for browser automation is a documented pattern with production precedents.
+Validater is an AI-powered web testing platform where users provide a URL and a natural language description, and the system generates, executes, and records test runs across multiple viewports. The expert approach to building this combines Temporal for durable workflow orchestration, Playwright for browser automation, and Claude for AI-driven test generation -- all in a TypeScript monorepo. The architecture follows a "thin server functions, fat workers" pattern: TanStack Start server functions handle auth and input validation, then dispatch everything to Temporal workflows that coordinate specialized workers (AI generation, browser execution, video processing). A Hono sidecar handles WebSocket/SSE streaming for live browser views. This is not a novel architecture -- Temporal + Playwright for browser automation is a documented pattern with production precedents.
 
-The recommended approach is to build the foundation (monorepo, database, Temporal infrastructure) first, then develop the AI agent and browser execution engine in parallel, wire them together through Temporal workflows, and layer the frontend on top. The core product loop -- URL input to test results -- must work reliably before adding differentiating features like live streaming, video export, or autonomous test discovery. The zero-setup, URL-first entry point is the primary differentiator against competitors like Mabl, testRigor, and Functionize, all of which require project setup or integration before a user can run their first test.
+The recommended approach is to build the foundation (monorepo via `bunx --bun shadcn@latest create`, database, Temporal infrastructure) first, then develop the AI agent and browser execution engine in parallel, wire them together through Temporal workflows, and layer the frontend on top. The core product loop -- URL input to test results -- must work reliably before adding differentiating features like live streaming, video export, or autonomous test discovery. The zero-setup, URL-first entry point is the primary differentiator against competitors like Mabl, testRigor, and Functionize, all of which require project setup or integration before a user can run their first test.
 
 The key risks are: (1) AI hallucination in test generation -- the agent must be grounded in actual DOM state, not imagined page structure, or test quality will be unacceptable; (2) Temporal workflow design mistakes that are expensive to fix later, particularly event history explosion from monolithic workflows; (3) Claude API rate limits blocking concurrent users at organization-wide Tier 1 limits (50 RPM); and (4) Playwright memory leaks from unclosed browser contexts under production load. All four are addressable with upfront design discipline, but none can be safely deferred.
 
@@ -17,10 +17,10 @@ The key risks are: (1) AI hallucination in test generation -- the agent must be 
 
 ### Recommended Stack
 
-The stack is TypeScript end-to-end: TanStack Start (React meta-framework) for the web app, Temporal TypeScript SDK for workflow orchestration, Playwright for browser automation, and Pi agent + Anthropic SDK for AI. PostgreSQL with Drizzle ORM for persistence, Better Auth for authentication, S3-compatible storage for videos/screenshots, and Redis for pub/sub streaming. The monorepo uses pnpm workspaces + Turborepo with 5 packages: web, api, temporal, agent, and shared.
+The stack is TypeScript end-to-end: TanStack Start (React meta-framework) with server functions as the primary API layer, Temporal TypeScript SDK for workflow orchestration, Playwright for browser automation, and Pi agent + Anthropic SDK for AI. PostgreSQL with Drizzle ORM for persistence, Better Auth for authentication, S3-compatible storage for videos/screenshots, Redis for pub/sub streaming, and a Hono sidecar for WebSocket/SSE live streaming. Runtime is Node.js 22 (Bun as package manager only -- Bun runtime has dynamic route bugs with Nitro). The monorepo uses Bun + Turborepo with 5 packages: web (frontend + server functions + streaming sidecar), worker (Temporal workflows/activities), agent, core, and db.
 
 **Core technologies:**
-- **TanStack Start + Router + Query:** Full-stack React framework with type-safe routing and server state -- chosen over Next.js to avoid Webpack lock-in; RC is API-stable
+- **TanStack Start + Router + Query:** Full-stack React framework with type-safe routing, server functions as API layer (replacing tRPC), and server state -- chosen over Next.js to avoid Webpack lock-in; RC is API-stable
 - **Temporal (TypeScript SDK 1.15.0):** Durable workflow orchestration for test runs, retries, and multi-viewport coordination -- industry standard, mature SDK
 - **Playwright 1.58+:** Cross-browser automation with built-in video recording and viewport emulation -- the only serious choice for programmatic browser automation
 - **Pi agent + Anthropic SDK:** AI agent runtime for test generation with Claude API access -- Pi is pre-1.0 but lean and composable
@@ -57,14 +57,14 @@ The stack is TypeScript end-to-end: TanStack Start (React meta-framework) for th
 
 ### Architecture Approach
 
-The system is a 4-layer architecture: Presentation (React SPA), API (tRPC + WebSocket gateway), Orchestration (Temporal workflows), and Workers (AI, browser, video). The API layer is intentionally thin -- it validates input, checks auth, and dispatches to Temporal. All business logic lives in Temporal workflows and activities. Workers are separated by type (AI, browser, video) on distinct Temporal task queues for independent scaling. Real-time streaming uses CDP screencast frames published to Redis pub/sub, fanned out through WebSocket gateway to connected clients. State management is split: TanStack Query for frontend server state, Temporal for durable execution state, PostgreSQL for permanent records, S3 for media files.
+The system is a 4-layer architecture: Presentation (React SPA), API (TanStack Start server functions + Hono streaming sidecar), Orchestration (Temporal workflows), and Workers (AI, browser, video). The server functions layer is intentionally thin -- it validates input via Zod, checks auth via middleware, and dispatches to Temporal. All business logic lives in Temporal workflows and activities. Workers are separated by type (AI, browser, video) on distinct Temporal task queues for independent scaling. Real-time streaming uses CDP screencast frames published to Redis pub/sub, fanned out through the Hono WebSocket sidecar to connected clients. State management is split: TanStack Query for frontend server state, Temporal for durable execution state, PostgreSQL for permanent records, S3 for media files.
 
 **Major components:**
-1. **React SPA (packages/web)** -- dashboard, test creation, results viewer; talks only to API via tRPC
-2. **API Server (packages/api)** -- tRPC routes, auth middleware, WebSocket gateway; dispatches to Temporal
-3. **Temporal Workflows (packages/temporal)** -- test run orchestration, multi-viewport fan-out, video processing
-4. **AI Agent (packages/agent)** -- test step generation from URL + description; Claude API integration
-5. **Shared Types (packages/shared)** -- Zod schemas, TypeScript types, constants shared across all packages
+1. **React SPA + Server Functions (packages/web)** -- dashboard, test creation, results viewer; server functions provide typed API with auth middleware; Hono sidecar handles live streaming
+2. **Temporal Workflows + Activities (packages/worker)** -- test run orchestration, multi-viewport fan-out, video processing
+3. **AI Agent (packages/agent)** -- test step generation from URL + description; Claude API integration
+4. **Shared Types (packages/core)** -- Zod schemas, TypeScript types, constants shared across all packages
+5. **Database (packages/db)** -- Drizzle ORM schema, migrations, database client
 
 ### Critical Pitfalls
 
@@ -80,13 +80,13 @@ Based on research, suggested phase structure:
 
 ### Phase 1: Foundation and Infrastructure
 **Rationale:** Everything depends on the monorepo structure, database schema, Temporal dev environment, and shared types. The Temporal workflow hierarchy and build pipeline must be correct from the start -- retrofitting is a significant rewrite (Pitfall 8). Monorepo package boundaries directly affect Temporal's workflow sandboxing.
-**Delivers:** Working monorepo with pnpm + Turborepo, PostgreSQL schema via Drizzle, Temporal dev environment (Docker), shared types/schemas, auth scaffolding with Better Auth, S3/MinIO setup.
+**Delivers:** Working monorepo scaffolded via `bunx --bun shadcn@latest create` then converted to monorepo with Turborepo, PostgreSQL schema via Drizzle, Temporal dev environment (Docker), shared types/schemas, auth scaffolding with Better Auth, S3/MinIO setup. Node.js 22 runtime, Bun as package manager.
 **Addresses:** Platform authentication (table stakes), project structure
 **Avoids:** Temporal monorepo build complexity (Pitfall 8), event history explosion by designing workflow hierarchy upfront (Pitfall 1)
 
 ### Phase 2: AI Agent -- Test Generation
 **Rationale:** The AI agent is the core product differentiator and the highest-risk component. It must be developed and validated before the browser execution engine because the execution engine depends on well-structured test steps. This is also where the central product risk lives (hallucination, Pitfall 2).
-**Delivers:** DOM crawling and semantic extraction pipeline, Claude API integration with prompt caching and rate limiting, test step generation from URL + natural language description, step validation against live DOM, cost tracking per request.
+**Delivers:** DOM crawling and semantic extraction pipeline, Claude API integration with prompt caching and rate limiting, test step generation from URL + natural language description, step validation against live DOM, cost tracking per request. Server functions in packages/web expose the generation API.
 **Addresses:** Natural language test input, AI test path generation, self-healing/smart locators (selector strategy)
 **Avoids:** AI hallucinations (Pitfall 2), rate limit exhaustion (Pitfall 4), unbounded AI cost (Pitfall 10)
 
@@ -103,20 +103,20 @@ Based on research, suggested phase structure:
 **Avoids:** Temporal event history explosion (Pitfall 1), monolithic workflow anti-pattern
 
 ### Phase 5: Frontend -- Dashboard and Results
-**Rationale:** The frontend depends on the API existing (Phase 1) and the full test pipeline working (Phase 4). Building it after the backend is complete ensures realistic data flows and avoids throwaway UI work.
-**Delivers:** TanStack Start app with routing and auth, test creation form (URL + description input), results viewer with step-by-step screenshots, test history list with filtering, basic inline test report, multi-viewport comparison view.
+**Rationale:** The frontend depends on server functions existing (Phase 1) and the full test pipeline working (Phase 4). Building it after the backend is complete ensures realistic data flows and avoids throwaway UI work.
+**Delivers:** TanStack Start app with routing and auth, test creation form (URL + description input), results viewer with step-by-step screenshots, test history list with filtering, basic inline test report, multi-viewport comparison view. All data flows through server functions.
 **Addresses:** All presentation-layer table stakes features, non-technical stakeholder experience, basic test report
 **Avoids:** UX pitfalls (no progress indication, raw AI output display, unhelpful error messages)
 
 ### Phase 6: Live Streaming and Real-Time Updates
-**Rationale:** Live execution viewing is a high-value differentiator but architecturally complex (CDP screencast, Redis pub/sub, WebSocket gateway). It depends on browser execution (Phase 3) and frontend (Phase 5) being complete. Deferring it avoids the streaming architecture mismatch pitfall (Pitfall 5) by building on a solid foundation.
-**Delivers:** CDP screencast integration in browser workers, Redis pub/sub for frame distribution, WebSocket gateway in API server, live browser viewer in frontend with reconnection logic, SSE fallback for test progress updates.
+**Rationale:** Live execution viewing is a high-value differentiator but architecturally complex (CDP screencast, Redis pub/sub, Hono WebSocket sidecar). It depends on browser execution (Phase 3) and frontend (Phase 5) being complete. Deferring it avoids the streaming architecture mismatch pitfall (Pitfall 5) by building on a solid foundation.
+**Delivers:** CDP screencast integration in browser workers, Redis pub/sub for frame distribution, Hono WebSocket sidecar for streaming, live browser viewer in frontend with reconnection logic, SSE fallback for test progress updates.
 **Addresses:** Live test execution viewing (differentiator)
 **Avoids:** Real-time streaming architecture mismatch (Pitfall 5)
 
-### Phase 7: CI/CD Integration and API Layer
-**Rationale:** Engineering teams need automation. The API must be designed API-first from Phase 1 but the polished CI/CD integration can come after core features are stable.
-**Delivers:** Public API for test triggering and result retrieval, webhook support, GitHub Actions integration, CLI runner, API key management.
+### Phase 7: CI/CD Integration and Public API
+**Rationale:** Engineering teams need automation. Server functions handle internal app API; this phase adds a public REST API (via TanStack Start server routes or Hono) for external integrations and CI/CD pipelines.
+**Delivers:** Public REST API for test triggering and result retrieval, webhook support, GitHub Actions integration, CLI runner, API key management.
 **Addresses:** CI/CD integration (table stakes)
 
 ### Phase 8: Advanced Features
@@ -128,7 +128,7 @@ Based on research, suggested phase structure:
 
 - **Foundation first** because Temporal's monorepo build requirements and workflow hierarchy design are the most expensive mistakes to fix later. Every other phase depends on this being right.
 - **AI before browser execution** because the test step schema (output of AI, input of browser) is the critical contract. Getting AI generation quality right determines whether the product is useful at all.
-- **Backend before frontend** because building UI against unstable APIs creates throwaway work. The API stabilizes through Phases 1-4; the frontend builds against a mature API in Phase 5.
+- **Backend before frontend** because building UI against unstable server functions creates throwaway work. The server functions stabilize through Phases 1-4; the frontend builds against a mature API in Phase 5.
 - **Streaming deferred to Phase 6** because it is high-complexity, high-infrastructure-cost, and not required for the core value proposition. Users can view results after execution completes. Streaming is a demo-impressive differentiator, not a launch requirement.
 - **CI/CD deferred to Phase 7** because it requires API stability. Designing the API-first architecture in Phase 1 ensures this is possible; building the integration can wait.
 

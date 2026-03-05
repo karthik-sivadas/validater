@@ -26,11 +26,11 @@
 
 | Technology | Version | Purpose | Why Recommended |
 |------------|---------|---------|-----------------|
-| Node.js | 22 LTS | Runtime | LTS with long-term support. Required by Temporal SDK (supports 20, 22, 24). |
-| TanStack Start Server Functions | (bundled) | API layer | Type-safe RPC between client and server. No need for separate REST/GraphQL layer for the web app. |
-| Hono | 4.x | API server (if needed) | Lightweight, fast HTTP framework for any endpoints outside TanStack Start (webhooks, external API). Alternative to Express with better TypeScript support. |
+| Node.js | 22 LTS | Runtime | LTS with long-term support. Required by Temporal SDK (supports 20, 22, 24). Bun used as package manager only -- Bun runtime has dynamic route bugs with Nitro (see [Nitro #3808](https://github.com/nitrojs/nitro/issues/3808)). |
+| TanStack Start Server Functions | (bundled) | Primary API layer | Type-safe RPC between client and server via `createServerFn()`. Supports Zod input validation, composable typed middleware, automatic code splitting. Replaces the need for tRPC or a separate API server for internal app communication. |
+| Hono | 4.x | Streaming sidecar | WebSocket/SSE server for live browser streaming only. TanStack Start WebSocket support is experimental -- Hono handles the real-time feed. NOT used as the primary API layer. |
 
-**Confidence:** HIGH -- Standard Node.js backend stack.
+**Confidence:** HIGH -- Standard Node.js backend stack. TanStack Start server functions are well-documented and the TanStack team's guidance aligns with using them as the primary API pattern.
 
 ### AI & Agent Layer
 
@@ -90,7 +90,7 @@
 | Technology | Version | Purpose | Why Recommended |
 |------------|---------|---------|-----------------|
 | Turborepo | 2.8+ | Monorepo task runner | Fast incremental builds, remote caching, simple configuration. Chosen over Nx: this project will have <15 packages, and Turborepo's simplicity wins at this scale. Can add to existing monorepo in minutes. |
-| pnpm | 9.x | Package manager | Fast, disk-efficient, strict dependency resolution. Native workspace support. Standard for TypeScript monorepos. |
+| Bun | 1.x | Package manager | Fast package installation, used for `bun install`, `bunx`, and scaffolding commands. NOT used as runtime (Nitro dynamic route bugs). |
 | Vite | 6.x | Build tool / dev server | Bundled with TanStack Start. Fast HMR, ESM-native. |
 | Vitest | 2.x | Unit/integration testing | Vite-native test runner. Compatible with Jest API. Fast, supports TypeScript natively. |
 | Biome | 1.x | Linting & formatting | All-in-one linter+formatter, 10-100x faster than ESLint+Prettier. Rust-based. Actively maintained. |
@@ -116,7 +116,7 @@
 | nanoid | 5.x | ID generation | Generate short, URL-safe unique IDs for test runs, sessions. |
 | sharp | 0.33+ | Image processing | Generate thumbnails from screenshots, resize viewport captures. |
 | @tanstack/react-virtual | 3.x | List virtualization | Virtualize long test result lists for performance. |
-| socket.io or ws | latest | WebSocket | Real-time test execution updates to the UI. Consider Server-Sent Events (SSE) as simpler alternative if unidirectional. |
+| ws | latest | WebSocket | Real-time browser frame streaming via Hono sidecar. SSE from TanStack Start server routes for unidirectional test progress updates. |
 | bullmq | 5.x | Job queue (optional) | If Temporal is too heavy for simple async tasks (email sending, cleanup). Usually Temporal covers this. |
 
 ## Alternatives Considered
@@ -125,6 +125,7 @@
 |-------------|-------------|-------------------------|
 | TanStack Start | Next.js 15 | If TanStack Start RC stability becomes a blocker. Next.js has larger ecosystem but Webpack/turbopack build system and vendor lock-in. |
 | TanStack Start | Remix / React Router 7 | If you prefer Remix's loader/action patterns. Less type-safe than TanStack Router. |
+| TanStack Start Server Fns | tRPC | If you need API contract export for external consumers, batching, or WebSocket subscriptions. Redundant for single-app internal API. |
 | Drizzle ORM | Prisma 7 | If team prefers schema-first approach and Prisma Studio GUI. Prisma 7 is now pure TypeScript (no Rust engine). Heavier but more mature ecosystem. |
 | Turborepo | Nx | If project grows to 30+ packages. Nx has better dependency graph analysis and affected-command intelligence at scale. |
 | Better Auth | Clerk / Auth0 | If you want fully managed auth (hosted login pages, user management dashboard). Higher cost, less control, vendor lock-in. |
@@ -140,7 +141,8 @@
 |-------|-----|-------------|
 | Lucia Auth | Deprecated as of March 2025. Now only educational resources. | Better Auth |
 | NextAuth / Auth.js v5 | In maintenance mode. Core team joined Better Auth (Sep 2025). | Better Auth |
-| Express.js | No TypeScript-first design, callback-based middleware, no built-in validation. | Hono (if separate API needed) or TanStack Start server functions |
+| tRPC | Redundant with TanStack Start server functions for internal app communication. Same type safety, more overhead. No colocation or code splitting. | TanStack Start server functions (primary API) |
+| Express.js | No TypeScript-first design, callback-based middleware, no built-in validation. | Hono (for streaming sidecar) or TanStack Start server functions |
 | Webpack | Slow, complex configuration, legacy. TanStack Start uses Vite. | Vite (bundled with TanStack Start) |
 | Puppeteer | Google-only (Chrome/Chromium), no Firefox/WebKit, less active development than Playwright. | Playwright |
 | Cypress | Not suitable for programmatic/headless automation at scale. Designed for interactive test development, not CI agent execution. | Playwright |
@@ -186,7 +188,7 @@
 ```
 validater/
   packages/
-    web/              # TanStack Start app (frontend + API)
+    web/              # TanStack Start app (frontend + server functions + Hono streaming sidecar)
     core/             # Shared types, schemas, utilities
     agent/            # AI agent logic (Pi agent, prompt definitions)
     worker/           # Temporal worker (browser automation, video)
@@ -195,49 +197,54 @@ validater/
   pnpm-workspace.yaml # pnpm workspace definition
 ```
 
+**Note:** There is no separate `api/` package. TanStack Start server functions serve as the API layer within `packages/web/`. The Hono streaming sidecar also lives in `packages/web/` as a separate entry point for WebSocket/SSE streaming.
+
 ## Installation
 
 ```bash
-# Initialize monorepo
-pnpm init
-npx turbo init
+# Initialize monorepo (Bun as package manager, Node.js 22 as runtime)
+bun init
+bunx turbo init
 
 # Core framework (in packages/web)
-pnpm add react react-dom @tanstack/react-router @tanstack/start
-pnpm add @tanstack/react-query @tanstack/react-table @tanstack/react-form
-pnpm add tailwindcss @tailwindcss/vite
-pnpm add -D typescript @types/react @types/react-dom vite
+bun add react react-dom @tanstack/react-router @tanstack/start
+bun add @tanstack/react-query @tanstack/react-table @tanstack/react-form
+bun add tailwindcss @tailwindcss/vite
+bun add -D typescript @types/react @types/react-dom vite
+
+# Hono streaming sidecar (in packages/web)
+bun add hono
 
 # UI components (in packages/web) - use shadcn CLI
-npx shadcn@latest init
-npx shadcn@latest add button card dialog table input form
+bunx --bun shadcn@latest init
+bunx --bun shadcn@latest add button card dialog table input form
 
 # Database (in packages/db)
-pnpm add drizzle-orm postgres
-pnpm add -D drizzle-kit
+bun add drizzle-orm postgres
+bun add -D drizzle-kit
 
 # Auth (in packages/web or packages/core)
-pnpm add better-auth
+bun add better-auth
 
 # AI/Agent (in packages/agent)
-pnpm add @mariozechner/pi-agent-core @mariozechner/pi-ai
-pnpm add @anthropic-ai/sdk
+bun add @mariozechner/pi-agent-core @mariozechner/pi-ai
+bun add @anthropic-ai/sdk
 
 # Workflow orchestration (in packages/worker)
-pnpm add @temporalio/client @temporalio/worker @temporalio/workflow @temporalio/activity
+bun add @temporalio/client @temporalio/worker @temporalio/workflow @temporalio/activity
 
 # Browser automation (in packages/worker)
-pnpm add playwright
+bun add playwright
 
 # Video processing (in packages/worker)
-pnpm add fluent-ffmpeg
-pnpm add -D @types/fluent-ffmpeg
+bun add fluent-ffmpeg
+bun add -D @types/fluent-ffmpeg
 
 # Utilities (in packages/core)
-pnpm add zod nanoid
+bun add zod nanoid
 
 # Dev tools (root)
-pnpm add -D turbo vitest @biomejs/biome
+bun add -D turbo vitest @biomejs/biome
 ```
 
 ## Sources
