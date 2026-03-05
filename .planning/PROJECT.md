@@ -42,7 +42,8 @@ Users can describe what to test in plain English, point at any URL, and get comp
 
 - **Agent framework:** Pi agent (github.com/badlogic/pi-mono) for AI agent orchestration, plus research into actively maintained DSPy-equivalent systems for TypeScript
 - **Workflow engine:** Temporal for durable, retryable, observable workflow orchestration covering the full test pipeline
-- **Frontend stack:** TypeScript, React, shadcn/ui, TanStack ecosystem (Router, Query, Table, Form, etc.)
+- **Frontend stack:** TypeScript, React, shadcn/ui (Lyra style, emerald theme, Remix icons, Inter font, RTL), TanStack Start template, TanStack ecosystem (Router, Query, Table, Form)
+- **Scaffolding:** `bunx --bun shadcn@latest create --rtl --preset "https://ui.shadcn.com/init?base=base&style=lyra&baseColor=gray&theme=emerald&iconLibrary=remixicon&font=inter&menuAccent=subtle&menuColor=default&radius=default&template=start&rtl=true" --template start`
 - **Browser automation:** Playwright for cross-browser test execution and video capture
 - **AI backbone:** Claude Code or equivalent agentic thinking model for test path generation
 - **User base:** Broad — QA engineers, developers, and non-technical product stakeholders
@@ -65,6 +66,8 @@ Users can describe what to test in plain English, point at any URL, and get comp
 | Pi agent for AI orchestration | User preference, active development | — Pending |
 | SaaS-first deployment | Lower initial complexity, faster to market | — Pending |
 | Responsive viewports as primary cross-platform | Achievable in v1, desktop/mobile browsers as stretch | — Pending |
+| shadcn TanStack Start template as base | Provides pre-configured React + TanStack Start + shadcn/ui setup with Lyra/emerald/RTL | — Pending |
+| Bun as package manager/runtime | Used via bunx for scaffolding; fast, modern JS runtime | — Pending |
 
 ---
 *Last updated: 2026-03-06 after initialization*

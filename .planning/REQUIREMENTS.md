@@ -1,7 +1,7 @@
 # Requirements: Validater
 
 **Defined:** 2026-03-06
-**Core Value:** Users can describe what to test in plain English, point at any URL, and get comprehensive test execution with visual proof — no test code required.
+**Core Value:** Users can describe what to test in plain English, point at any URL, and get comprehensive test execution with visual proof -- no test code required.
 
 ## v1 Requirements
 
@@ -41,7 +41,7 @@
 
 ### Infrastructure
 
-- [ ] **INFR-01**: Temporal orchestrates full pipeline (agent reasoning → test execution → video generation)
+- [ ] **INFR-01**: Temporal orchestrates full pipeline (agent reasoning -> test execution -> video generation)
 - [ ] **INFR-02**: Temporal workflow hierarchies to stay within event history limits
 - [ ] **INFR-03**: Separate Temporal task queues per worker type (AI, browser, video)
 - [ ] **INFR-04**: Claude API rate limiting with prompt caching for throughput
@@ -52,9 +52,9 @@
 
 ### Discovery & Collaboration
 
-- **DISC-01**: AI test path discovery — autonomous exploration of application to find testable paths
-- **DISC-02**: Team collaboration — shared workspaces, comments, assignments
-- **DISC-03**: Advanced analytics — failure rate trends, flakiness scoring, coverage estimation
+- **DISC-01**: AI test path discovery -- autonomous exploration of application to find testable paths
+- **DISC-02**: Team collaboration -- shared workspaces, comments, assignments
+- **DISC-03**: Advanced analytics -- failure rate trends, flakiness scoring, coverage estimation
 - **DISC-04**: CI/CD plugins beyond GitHub Actions (Jenkins, CircleCI, GitLab)
 - **DISC-05**: Visual regression testing via Percy/Applitools integration
 
@@ -75,40 +75,40 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TGEN-01 | TBD | Pending |
-| TGEN-02 | TBD | Pending |
-| TGEN-03 | TBD | Pending |
-| TGEN-04 | TBD | Pending |
-| TGEN-05 | TBD | Pending |
-| TGEN-06 | TBD | Pending |
-| TEXE-01 | TBD | Pending |
-| TEXE-02 | TBD | Pending |
-| TEXE-03 | TBD | Pending |
-| TEXE-04 | TBD | Pending |
-| TEXE-05 | TBD | Pending |
-| TEXE-06 | TBD | Pending |
-| VREP-01 | TBD | Pending |
-| VREP-02 | TBD | Pending |
-| VREP-03 | TBD | Pending |
-| VREP-04 | TBD | Pending |
-| PLAT-01 | TBD | Pending |
-| PLAT-02 | TBD | Pending |
-| PLAT-03 | TBD | Pending |
-| PLAT-04 | TBD | Pending |
-| PLAT-05 | TBD | Pending |
-| PLAT-06 | TBD | Pending |
-| INFR-01 | TBD | Pending |
-| INFR-02 | TBD | Pending |
-| INFR-03 | TBD | Pending |
-| INFR-04 | TBD | Pending |
-| INFR-05 | TBD | Pending |
-| INFR-06 | TBD | Pending |
+| TGEN-01 | Phase 2 | Pending |
+| TGEN-02 | Phase 2 | Pending |
+| TGEN-03 | Phase 2 | Pending |
+| TGEN-04 | Phase 2 | Pending |
+| TGEN-05 | Phase 2 | Pending |
+| TGEN-06 | Phase 9 | Pending |
+| TEXE-01 | Phase 3 | Pending |
+| TEXE-02 | Phase 3 | Pending |
+| TEXE-03 | Phase 3 | Pending |
+| TEXE-04 | Phase 3 | Pending |
+| TEXE-05 | Phase 6 | Pending |
+| TEXE-06 | Phase 5 | Pending |
+| VREP-01 | Phase 5 | Pending |
+| VREP-02 | Phase 7 | Pending |
+| VREP-03 | Phase 7 | Pending |
+| VREP-04 | Phase 7 | Pending |
+| PLAT-01 | Phase 1 | Pending |
+| PLAT-02 | Phase 1 | Pending |
+| PLAT-03 | Phase 5 | Pending |
+| PLAT-04 | Phase 8 | Pending |
+| PLAT-05 | Phase 8 | Pending |
+| PLAT-06 | Phase 9 | Pending |
+| INFR-01 | Phase 4 | Pending |
+| INFR-02 | Phase 4 | Pending |
+| INFR-03 | Phase 4 | Pending |
+| INFR-04 | Phase 2 | Pending |
+| INFR-05 | Phase 3 | Pending |
+| INFR-06 | Phase 10 | Pending |
 
 **Coverage:**
 - v1 requirements: 28 total
-- Mapped to phases: 0
-- Unmapped: 28 ⚠️
+- Mapped to phases: 28
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-06*
-*Last updated: 2026-03-06 after initial definition*
+*Last updated: 2026-03-06 after roadmap creation*
