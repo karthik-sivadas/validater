@@ -42,8 +42,10 @@ Users can describe what to test in plain English, point at any URL, and get comp
 
 - **Agent framework:** Pi agent (github.com/badlogic/pi-mono) for AI agent orchestration, plus research into actively maintained DSPy-equivalent systems for TypeScript
 - **Workflow engine:** Temporal for durable, retryable, observable workflow orchestration covering the full test pipeline
-- **Frontend stack:** TypeScript, React, shadcn/ui (Lyra style, emerald theme, Remix icons, Inter font, RTL), TanStack Start template, TanStack ecosystem (Router, Query, Table, Form)
+- **Frontend + API:** TypeScript, React, shadcn/ui (Lyra style, emerald theme, Remix icons, Inter font, RTL), TanStack Start (server functions as primary API layer), TanStack ecosystem (Router, Query, Table, Form)
+- **Streaming server:** Hono sidecar for WebSocket/SSE (live browser streaming) -- TanStack Start WebSocket support is experimental
 - **Scaffolding:** `bunx --bun shadcn@latest create --rtl --preset "https://ui.shadcn.com/init?base=base&style=lyra&baseColor=gray&theme=emerald&iconLibrary=remixicon&font=inter&menuAccent=subtle&menuColor=default&radius=default&template=start&rtl=true" --template start`
+- **Runtime:** Node.js 22 (Bun as package manager only -- Bun runtime has dynamic route bugs with Nitro)
 - **Browser automation:** Playwright for cross-browser test execution and video capture
 - **AI backbone:** Claude Code or equivalent agentic thinking model for test path generation
 - **User base:** Broad — QA engineers, developers, and non-technical product stakeholders
@@ -67,7 +69,10 @@ Users can describe what to test in plain English, point at any URL, and get comp
 | SaaS-first deployment | Lower initial complexity, faster to market | — Pending |
 | Responsive viewports as primary cross-platform | Achievable in v1, desktop/mobile browsers as stretch | — Pending |
 | shadcn TanStack Start template as base | Provides pre-configured React + TanStack Start + shadcn/ui setup with Lyra/emerald/RTL | — Pending |
-| Bun as package manager/runtime | Used via bunx for scaffolding; fast, modern JS runtime | — Pending |
+| Bun as package manager only | Bun runtime has dynamic route bugs with Nitro; Node.js 22 for runtime | — Pending |
+| TanStack Start server functions as API | Typed RPC, Zod validation, composable middleware -- eliminates need for tRPC | — Pending |
+| Hono sidecar for streaming | TanStack Start WebSocket is experimental; Hono handles live browser feed | — Pending |
+| No tRPC | Redundant with TanStack Start server functions; same type safety, less overhead | — Pending |
 
 ---
-*Last updated: 2026-03-06 after initialization*
+*Last updated: 2026-03-06 after API layer decision*
