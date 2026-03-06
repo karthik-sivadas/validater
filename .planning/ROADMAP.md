@@ -38,11 +38,11 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 5 plans
 
 Plans:
-- [ ] 01-01-PLAN.md -- Scaffold TanStack Start app with shadcn/ui, set up monorepo root (pnpm workspaces + Turborepo)
-- [ ] 01-02-PLAN.md -- Create internal packages (db, core, worker) with workspace wiring
-- [ ] 01-03-PLAN.md -- PostgreSQL via Podman, Drizzle ORM schema, database client
-- [ ] 01-04-PLAN.md -- Better Auth authentication (sign-up, login, session persistence, route protection)
-- [ ] 01-05-PLAN.md -- Temporal dev environment (Podman, SDK setup, workflow hierarchy spike)
+- [x] 01-01-PLAN.md -- Scaffold TanStack Start app with shadcn/ui, set up monorepo root (pnpm workspaces + Turborepo)
+- [x] 01-02-PLAN.md -- Create internal packages (db, core, worker) with workspace wiring
+- [x] 01-03-PLAN.md -- PostgreSQL via Podman, Drizzle ORM schema, database client
+- [x] 01-04-PLAN.md -- Better Auth authentication (sign-up, login, session persistence, route protection)
+- [x] 01-05-PLAN.md -- Temporal dev environment (Podman, SDK setup, workflow hierarchy spike)
 
 ### Phase 2: AI Agent -- Test Generation
 **Goal**: Users can provide a URL and natural language description, and the AI agent produces validated, executable test steps grounded in actual page structure
@@ -57,10 +57,10 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 02-01: DOM crawling and semantic extraction pipeline
-- [ ] 02-02: Claude API integration (prompt engineering, caching, rate limiting, cost tracking)
-- [ ] 02-03: Test step generation from NL + DOM (structured output, locator strategies, confidence scoring)
-- [ ] 02-04: Self-healing and step validation (selector verification against live page, retry with alternatives)
+- [ ] 02-01-PLAN.md -- Shared types, Zod schemas, and dependency installation for the AI test generation pipeline
+- [ ] 02-02-PLAN.md -- DOM crawling and semantic extraction pipeline (Playwright + Cheerio)
+- [ ] 02-03-PLAN.md -- Claude API integration (AI SDK, prompt engineering, caching, rate limiting, cost tracking)
+- [ ] 02-04-PLAN.md -- Selector validation, self-healing, generation pipeline, and Temporal activities
 
 ### Phase 3: Browser Execution Engine
 **Goal**: Generated test steps can be executed against any URL via Playwright across multiple viewports with screenshot capture and resource management
