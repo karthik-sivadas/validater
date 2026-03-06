@@ -4,6 +4,8 @@ export interface StepEvent {
   stepId: string;
   stepOrder: number;
   status: "pass" | "fail";
+  action: string;
+  description: string;
   durationMs: number;
   error?: string;
 }
