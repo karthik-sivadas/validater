@@ -18,6 +18,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 4: Workflow Orchestration** - Wire AI + browser into end-to-end Temporal workflows
 - [x] **Phase 5: Frontend -- Dashboard and Results** - TanStack Start app, test creation, results viewer, test history
 - [x] **Phase 6: Live Streaming and Real-Time Updates** - CDP screencast, Redis pub/sub, Hono WebSocket sidecar, live viewer
+- [ ] **Phase 6.1: Step Details, Screenshots, and Browser Experience** - Rich step metadata, screenshot persistence, streaming quality (INSERTED)
 - [ ] **Phase 7: Video and Reporting** - Debug recording, polished video export, PDF/HTML reports
 - [ ] **Phase 8: CI/CD and API Layer** - Public REST API, GitHub Actions integration, webhooks
 - [ ] **Phase 9: Test Suite Generation and Accessibility** - Full suite from feature descriptions, axe-core integration
@@ -126,6 +127,21 @@ Plans:
 - [x] 06-01-PLAN.md -- Infrastructure (Redis), CDP screencast, Redis publisher, Hono WebSocket sidecar, activity and workflow wiring
 - [x] 06-02-PLAN.md -- Frontend live viewer (WebSocket hook with auto-reconnect, LiveViewer component, dashboard integration)
 
+### Phase 6.1: Step Details, Screenshots, and Browser Experience (INSERTED)
+**Goal**: Users see rich step details (action type, description) in both the live viewer and results page, screenshots are persisted and visible, and browser streaming quality is improved
+**Depends on**: Phase 6
+**Success Criteria** (what must be TRUE):
+  1. Live viewer step log shows action badges (click, fill, assert...) and human-readable descriptions alongside status/timing
+  2. Results page step cards show action type, description, and clickable screenshot thumbnails
+  3. Screenshots are persisted in the database for all viewports (not just streaming-enabled viewport)
+  4. Browser streaming frames are smoother (no flicker, higher quality)
+  5. Database has `action` and `description` columns in `test_run_steps` table
+**Plans**: 2 plans
+
+Plans:
+- [ ] 06.1-01-PLAN.md -- Backend pipeline: enrich StepResult types, DB schema (columns + staging table), factory pattern for execute activity, screenshot persistence, CDP quality
+- [ ] 06.1-02-PLAN.md -- Frontend: canvas-based live viewer with action badges, results page enrichment with action/description/screenshots
+
 ### Phase 7: Video and Reporting
 **Goal**: Users can get debug video recordings of test runs and export polished videos and reports for sharing
 **Depends on**: Phase 5
@@ -188,7 +204,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 6.1 -> 7 -> 8 -> 9 -> 10
 Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phases 6, 7, 8, 9 can partially overlap (different dependency chains).
 
 | Phase | Plans Complete | Status | Completed |
@@ -199,6 +215,7 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 | 4. Workflow Orchestration | 3/3 | Complete | 2026-03-06 |
 | 5. Frontend -- Dashboard and Results | 4/4 | Complete | 2026-03-07 |
 | 6. Live Streaming and Real-Time Updates | 2/2 | Complete | 2026-03-07 |
+| 6.1. Step Details, Screenshots, and Browser Experience | 0/2 | Not started | - |
 | 7. Video and Reporting | 0/3 | Not started | - |
 | 8. CI/CD and API Layer | 0/2 | Not started | - |
 | 9. Test Suite Generation and Accessibility | 0/2 | Not started | - |
