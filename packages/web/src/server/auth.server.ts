@@ -16,7 +16,7 @@ export const ensureSession = createServerFn({ method: "GET" }).handler(
     const headers = getRequestHeaders();
     const session = await auth.api.getSession({ headers });
     if (!session) {
-      throw redirect({ to: "/login" as string });
+      throw redirect({ to: "/login" });
     }
     return session;
   }
