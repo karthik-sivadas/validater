@@ -82,7 +82,7 @@ Plans:
 ### Phase 4: Workflow Orchestration
 **Goal**: AI generation and browser execution are wired into end-to-end Temporal workflows that orchestrate the full test pipeline with multi-viewport fan-out
 **Depends on**: Phase 2, Phase 3
-**Requirements**: INFR-01, INFR-02, INFR-03
+**Requirements**: INFR-01, INFR-02 (INFR-03 deferred -- architecture supports queue separation via taskQueue param, single queue sufficient for now)
 **Success Criteria** (what must be TRUE):
   1. A single server function call triggers the full pipeline: NL input goes to AI generation, then to browser execution, then results are persisted
   2. Multi-viewport test runs fan out to parallel child workflows and aggregate results

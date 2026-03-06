@@ -43,7 +43,7 @@
 
 - [ ] **INFR-01**: Temporal orchestrates full pipeline (agent reasoning -> test execution -> video generation)
 - [ ] **INFR-02**: Temporal workflow hierarchies to stay within event history limits
-- [ ] **INFR-03**: Separate Temporal task queues per worker type (AI, browser, video)
+- [ ] **INFR-03**: Separate Temporal task queues per worker type (AI, browser, video) -- **Deferred from Phase 4. Architecture supports it (taskQueue parameter in proxyActivities), but single queue is sufficient until scaling demands separation. Will implement when worker specialization is needed.**
 - [ ] **INFR-04**: Claude API rate limiting with prompt caching for throughput
 - [ ] **INFR-05**: Browser pool with lifecycle management and memory monitoring
 - [ ] **INFR-06**: Tiered test coverage (95% business logic, 80% services, 60% UI components)
@@ -99,16 +99,17 @@
 | PLAT-06 | Phase 9 | Pending |
 | INFR-01 | Phase 4 | Pending |
 | INFR-02 | Phase 4 | Pending |
-| INFR-03 | Phase 4 | Pending |
+| INFR-03 | Deferred | Deferred -- architecture supports it; single queue until scaling demands separation |
 | INFR-04 | Phase 2 | Complete |
 | INFR-05 | Phase 3 | Complete |
 | INFR-06 | Phase 10 | Pending |
 
 **Coverage:**
 - v1 requirements: 28 total
-- Mapped to phases: 28
+- Mapped to phases: 27
+- Deferred: 1 (INFR-03)
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-06*
-*Last updated: 2026-03-06 after Phase 3 completion*
+*Last updated: 2026-03-07 -- INFR-03 deferred from Phase 4 (architecture supports it, single queue sufficient for now)*
