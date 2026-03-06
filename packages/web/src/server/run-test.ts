@@ -27,6 +27,13 @@ const RunTestInputSchema = z.object({
 export const runTest = createServerFn({ method: "POST" })
   .inputValidator(RunTestInputSchema)
   .handler(async ({ data }) => {
+    // Auth: get authenticated user session
+    const { getRequestHeaders } = await import("@tanstack/react-start/server");
+    const { auth } = await import("@/lib/auth");
+    const headers = getRequestHeaders();
+    const session = await auth.api.getSession({ headers });
+    if (!session) throw new Error("Unauthorized");
+
     // Dynamic imports to avoid bundling server-only deps in client
     const { nanoid } = await import("nanoid");
     const { createTemporalClient, testRunWorkflow } = await import(
@@ -51,7 +58,7 @@ export const runTest = createServerFn({ method: "POST" })
     // Insert initial test_run record
     await db.insert(testRuns).values({
       id: testRunId,
-      userId: "anonymous", // TODO: Wire auth context in Phase 5
+      userId: session.user.id,
       url: data.url,
       testDescription: data.testDescription,
       status: "pending",
