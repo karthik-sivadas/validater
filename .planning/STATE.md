@@ -10,28 +10,28 @@ See: .planning/PROJECT.md (updated 2026-03-06)
 ## Current Position
 
 Phase: 2 of 10 (AI Agent -- Test Generation)
-Plan: 1 of 5 in current phase
+Plan: 3 of 5 in current phase
 Status: In progress
-Last activity: 2026-03-06 -- Completed 02-01-PLAN.md (Types and Schemas)
+Last activity: 2026-03-06 -- Completed 02-03-PLAN.md (AI Client Integration)
 
-Progress: [██░░░░░░░░] 12%
+Progress: [████░░░░░░] 16%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
+- Total plans completed: 8
 - Average duration: ~5 min
-- Total execution time: ~28 min
+- Total execution time: ~37 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation | 5/5 | ~25 min | ~5 min |
-| 02-ai-agent | 1/5 | ~3 min | ~3 min |
+| 02-ai-agent | 3/5 | ~12 min | ~4 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-02 (~2 min), 01-03 (~8 min), 01-04 (~6 min), 01-05 (~4 min), 02-01 (~3 min)
+- Last 5 plans: 01-03 (~8 min), 01-04 (~6 min), 01-05 (~4 min), 02-01 (~3 min), 02-03 (~6 min)
 - Trend: Stable
 
 *Updated after each plan completion*
@@ -64,6 +64,11 @@ Recent decisions affecting current work:
 - 02-01: RawTestStep = Omit<TestStep, 'id'> -- AI generates without IDs, nanoid assigned post-generation
 - 02-01: SemanticElementSchema uses z.lazy() for recursive children
 - 02-01: TestStepSchema locators require min(2) for fallback reliability
+- 02-03: AI SDK generateObject (not generateText + Output.object) for direct Zod schema structured output
+- 02-03: System prompt ~16K chars (~4K tokens) exceeds 1024-token Anthropic cache threshold
+- 02-03: LanguageModel return type annotation on createAIClient to avoid non-portable type inference
+- 02-03: Rate limiter defaults: concurrency 5, intervalCap 40, interval 60s (conservative Tier 1)
+- 02-03: Singleton defaultApiQueue ensures all API calls share rate limits application-wide
 
 ### Pending Todos
 
@@ -78,6 +83,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06
-Stopped at: Completed 02-01-PLAN.md (Types and Schemas)
+Last session: 2026-03-06T17:29:29Z
+Stopped at: Completed 02-03-PLAN.md (AI Client Integration)
 Resume file: None
