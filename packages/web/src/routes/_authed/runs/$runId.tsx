@@ -30,6 +30,8 @@ interface TestRunStep {
   resultId: string;
   stepId: string;
   stepOrder: number;
+  action: string | null;
+  description: string | null;
   status: string;
   durationMs: number;
   errorMessage: string | null;
@@ -105,6 +107,17 @@ function passRateColor(rate: number): string {
   if (rate > 50) return "text-yellow-600 dark:text-yellow-400";
   return "text-red-600 dark:text-red-400";
 }
+
+const ACTION_COLORS: Record<string, string> = {
+  click: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
+  fill: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
+  assert: "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200",
+  navigate: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
+  select: "bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200",
+  check: "bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200",
+  hover: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200",
+  wait: "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200",
+};
 
 // ---------------------------------------------------------------------------
 // Component
@@ -294,6 +307,8 @@ interface ViewportPanelProps {
       id: string;
       stepId: string;
       stepOrder: number;
+      action: string | null;
+      description: string | null;
       status: string;
       durationMs: number;
       errorMessage: string | null;
@@ -351,6 +366,8 @@ interface StepCardProps {
     id: string;
     stepId: string;
     stepOrder: number;
+    action: string | null;
+    description: string | null;
     status: string;
     durationMs: number;
     errorMessage: string | null;
@@ -369,6 +386,13 @@ function StepCard({ step, onScreenshotClick }: StepCardProps) {
       {/* Step header */}
       <div className="flex items-center gap-3">
         <span className="text-sm font-medium">Step {step.stepOrder}</span>
+        {step.action && (
+          <span
+            className={`inline-flex items-center rounded-md px-1.5 py-0.5 text-xs font-medium ${ACTION_COLORS[step.action] ?? "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200"}`}
+          >
+            {step.action}
+          </span>
+        )}
         <Badge variant={isPassed ? "default" : "destructive"}>
           {step.status}
         </Badge>
@@ -377,7 +401,7 @@ function StepCard({ step, onScreenshotClick }: StepCardProps) {
         </span>
       </div>
 
-      <p className="text-xs text-muted-foreground">{step.stepId}</p>
+      <p className="text-xs text-muted-foreground">{step.description ?? step.stepId}</p>
 
       {/* Error details */}
       {!isPassed && step.errorMessage && (
@@ -412,7 +436,7 @@ function StepCard({ step, onScreenshotClick }: StepCardProps) {
           <img
             src={`data:image/png;base64,${step.screenshotBase64}`}
             alt={`Step ${step.stepOrder} screenshot`}
-            className="w-full max-w-2xl rounded-md border border-border"
+            className="w-full max-w-md max-h-48 rounded-md border border-border object-cover"
             loading="lazy"
           />
         </button>
