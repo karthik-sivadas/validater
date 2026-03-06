@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-03-06)
 
 **Core value:** Users can describe what to test in plain English, point at any URL, and get comprehensive test execution with visual proof -- no test code required.
-**Current focus:** Phase 7 - Video and Reporting
+**Current focus:** Phase 6.1 - Step Details, Screenshots, and Browser Experience
 
 ## Current Position
 
-Phase: 7 of 10 (Video and Reporting)
-Plan: 0 of 3 in current phase
-Status: Not started
-Last activity: 2026-03-07 -- Completed Phase 6
+Phase: 6.1 of 10 (Step Details, Screenshots, and Browser Experience)
+Plan: 1 of 2 in current phase
+Status: In progress
+Last activity: 2026-03-07 -- Completed 06.1-01-PLAN.md
 
-Progress: [███████░░░] 68%
+Progress: [█████████░] 96% (22/23 planned)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 21
-- Average duration: ~4.8 min
-- Total execution time: ~100 min
+- Total plans completed: 22
+- Average duration: ~4.9 min
+- Total execution time: ~108 min
 
 **By Phase:**
 
@@ -33,10 +33,11 @@ Progress: [███████░░░] 68%
 | 04-workflow-orchestration | 3/3 | ~11 min | ~3.7 min |
 | 05-frontend-dashboard | 4/4 | ~31 min | ~7.8 min |
 | 06-live-streaming | 2/2 | ~9 min | ~4.5 min |
+| 06.1-step-details | 1/2 | ~8 min | ~8 min |
 
 **Recent Trend:**
-- Last 5 plans: 05-04 (~11 min), 05-03 (~13 min), 06-01 (~6 min), 06-02 (~3 min)
-- Trend: 06-02 fast -- two frontend tasks, no deviations, clean execution
+- Last 5 plans: 05-03 (~13 min), 06-01 (~6 min), 06-02 (~3 min), 06.1-01 (~8 min)
+- Trend: 06.1-01 slightly longer -- schema changes + factory refactoring + 2 deviation fixes
 
 *Updated after each plan completion*
 
@@ -124,10 +125,18 @@ Recent decisions affecting current work:
 - 06-02: Client-side StepEvent/StreamMessage type duplicates (not imported from worker) to avoid cross-package client/server dependency
 - 06-02: endedRef (useRef) alongside ended state for reliable stream-end check in WebSocket onclose callback
 - 06-02: Configurable WS URL via VITE_WS_URL env var with ws://localhost:3001 default
+- 06.1-01: Staging table pattern (stepScreenshots) bypasses Temporal 2MB payload limit for screenshot persistence
+- 06.1-01: Factory DI pattern extended to executeStepsActivity (createExecuteActivities) -- same as persist-results
+- 06.1-01: onConflictDoNothing for staging table upserts (simpler than onConflictDoUpdate, equivalent for retries)
+- 06.1-01: screenshotBase64 set to empty string (not stripped) in lightResults to maintain StepResult type compatibility
 
 ### Pending Todos
 
 None yet.
+
+### Roadmap Evolution
+
+- Phase 6.1 inserted after Phase 6: Step Details, Screenshots, and Browser Experience (URGENT)
 
 ### Blockers/Concerns
 
@@ -139,5 +148,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-07
-Stopped at: Completed 06-02-PLAN.md (Phase 6 complete)
+Stopped at: Completed 06.1-01-PLAN.md
 Resume file: None
