@@ -64,6 +64,10 @@ Recent decisions affecting current work:
 - 02-01: RawTestStep = Omit<TestStep, 'id'> -- AI generates without IDs, nanoid assigned post-generation
 - 02-01: SemanticElementSchema uses z.lazy() for recursive children
 - 02-01: TestStepSchema locators require min(2) for fallback reliability
+- 02-02: crawlPage accepts Playwright Page (not Browser) -- caller manages browser lifecycle
+- 02-02: Progressive token budget enforcement: prune, truncate, strip (3-stage reduction)
+- 02-02: XPath/CSS selector priority: id > data-testid > name > text content
+- 02-02: isUtilityClass filters Tailwind-like classes from simplified DOM output
 - 02-03: AI SDK generateObject (not generateText + Output.object) for direct Zod schema structured output
 - 02-03: System prompt ~16K chars (~4K tokens) exceeds 1024-token Anthropic cache threshold
 - 02-03: LanguageModel return type annotation on createAIClient to avoid non-portable type inference
