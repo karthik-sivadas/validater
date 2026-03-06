@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-03-06)
 ## Current Position
 
 Phase: 3 of 10 (Browser Execution Engine)
-Plan: 1 of 3 in current phase
-Status: In progress
-Last activity: 2026-03-06 -- Completed 03-01-PLAN.md
+Plan: 2 of 2 in current phase
+Status: Phase complete
+Last activity: 2026-03-06 -- Completed 03-02-PLAN.md
 
-Progress: [██▒░░░░░░░] 22%
+Progress: [████░░░░░░] 39%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 11
+- Total plans completed: 12
 - Average duration: ~4 min
-- Total execution time: ~47 min
+- Total execution time: ~49 min
 
 **By Phase:**
 
@@ -29,10 +29,10 @@ Progress: [██▒░░░░░░░] 22%
 |-------|-------|-------|----------|
 | 01-foundation | 5/5 | ~25 min | ~5 min |
 | 02-ai-agent | 5/5 | ~19 min | ~3.8 min |
-| 03-browser-execution-engine | 1/3 | ~3 min | ~3 min |
+| 03-browser-execution-engine | 2/2 | ~5 min | ~2.5 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-01 (~3 min), 02-03 (~6 min), 02-04 (~2 min), 02-05 (~5 min), 03-01 (~3 min)
+- Last 5 plans: 02-03 (~6 min), 02-04 (~2 min), 02-05 (~5 min), 03-01 (~3 min), 03-02 (~2 min)
 - Trend: Stable/Improving
 
 *Updated after each plan completion*
@@ -86,6 +86,10 @@ Recent decisions affecting current work:
 - 03-01: Extracted mapLocatorToPlaywright to shared mapper.ts for reuse by validator and step-runner
 - 03-01: executeSteps continues past failures so users see cascade vs independent failures
 - 03-01: Screenshot capture wraps in try/catch with empty string fallback for page crash resilience
+- 03-02: generic-pool with testOnBorrow validates browser health on every acquire (connected, lifetime, pages, memory)
+- 03-02: Sequential viewport execution in multi-viewport activity -- pool has limited browsers, parallel would exhaust pool
+- 03-02: BrowserContext per viewport (not page resize) for full isolation including cookies, storage, device emulation
+- 03-02: Memory monitor uses process.memoryUsage() -- no external dependencies for health checks
 
 ### Pending Todos
 
@@ -99,5 +103,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-06
-Stopped at: Completed 03-01-PLAN.md (step execution engine)
+Stopped at: Completed 03-02-PLAN.md (browser pool and Temporal activities)
 Resume file: None
