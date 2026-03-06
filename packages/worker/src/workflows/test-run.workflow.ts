@@ -10,6 +10,8 @@ import type * as valActs from '../activities/validate-steps.activity.js';
 import type { PersistActivities } from '../activities/persist-results.activity.js';
 import type { TestStep, ViewportConfig } from '@validater/core';
 import { viewportExecutionWorkflow } from './viewport-execution.workflow.js';
+// Re-export so Temporal registers the child workflow in the bundle
+export { viewportExecutionWorkflow };
 
 // ---------------------------------------------------------------------------
 // Status query (queryable at any point during workflow execution)

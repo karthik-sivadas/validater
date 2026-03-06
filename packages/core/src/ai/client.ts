@@ -1,5 +1,6 @@
 import { generateObject, type LanguageModel } from 'ai';
 import { createAnthropic } from '@ai-sdk/anthropic';
+import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { TestGenerationSchema } from '../schemas/test-step.js';
 import type { RawTestStep } from '../types/test-step.js';
 import type { TokenUsage } from '../types/generation.js';
@@ -7,12 +8,23 @@ import { SYSTEM_PROMPT } from './prompts/system.js';
 import { buildUserPrompt } from './prompts/templates.js';
 
 /**
- * Create an Anthropic AI client with the specified model.
+ * Create an AI client using either OpenRouter or Anthropic provider.
  *
- * The ANTHROPIC_API_KEY is read from the environment automatically
- * by the @ai-sdk/anthropic provider. Never hardcode API keys.
+ * Provider selection:
+ * - If OPENROUTER_API_KEY is set → uses OpenRouter (supports any model)
+ * - Otherwise falls back to Anthropic (requires ANTHROPIC_API_KEY)
+ *
+ * Model selection: AI_MODEL env var or defaults per provider.
  */
 export function createAIClient(options?: { model?: string }): LanguageModel {
+  if (process.env.OPENROUTER_API_KEY) {
+    const openrouter = createOpenRouter({
+      apiKey: process.env.OPENROUTER_API_KEY,
+    });
+    const modelName = options?.model ?? process.env.AI_MODEL ?? 'moonshotai/kimi-k2.5';
+    return openrouter.chat(modelName, { structuredOutputs: false });
+  }
+
   const anthropic = createAnthropic();
   const modelName = options?.model ?? process.env.AI_MODEL ?? 'claude-sonnet-4-5';
   return anthropic(modelName);
@@ -47,6 +59,8 @@ export async function generateTestSteps(params: {
     params.testDescription,
   );
 
+  const isAnthropic = !process.env.OPENROUTER_API_KEY;
+
   const result = await generateObject({
     model,
     schema: TestGenerationSchema,
@@ -57,11 +71,15 @@ export async function generateTestSteps(params: {
         content: userMessage,
       },
     ],
-    providerOptions: {
-      anthropic: {
-        cacheControl: { type: 'ephemeral' },
-      },
-    },
+    ...(isAnthropic
+      ? {
+          providerOptions: {
+            anthropic: {
+              cacheControl: { type: 'ephemeral' },
+            },
+          },
+        }
+      : {}),
   });
 
   const usage: TokenUsage = {

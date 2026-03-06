@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.58",
+    "@openrouter/ai-sdk-provider": "^2.2.3",
     "ai": "^6.0.116",
     "cheerio": "^1.2.0",
     "nanoid": "^5.1.6",
