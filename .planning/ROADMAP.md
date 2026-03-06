@@ -35,7 +35,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Temporal dev server is running and can execute a hello-world workflow with parent-child hierarchy
   4. All monorepo packages build and type-check with a single command
   5. Database migrations run cleanly with Drizzle and schema is queryable
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
 - [ ] 01-01: Repo scaffolding via `bunx --bun shadcn@latest create --rtl --preset "https://ui.shadcn.com/init?base=base&style=lyra&baseColor=gray&theme=emerald&iconLibrary=remixicon&font=inter&menuAccent=subtle&menuColor=default&radius=default&template=start&rtl=true" --template start` then convert to monorepo with pnpm workspaces + Turborepo
@@ -53,7 +53,7 @@ Plans:
   3. Each test step includes multiple locator strategies with confidence scores
   4. When a primary locator fails, the system automatically retries with alternative locators
   5. Claude API calls use prompt caching and respect rate limits without errors under concurrent load
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
 - [ ] 02-01: DOM crawling and semantic extraction pipeline
@@ -71,7 +71,7 @@ Plans:
   3. Failed steps include clear error details (what was expected vs. what happened)
   4. The same test runs across desktop, tablet, and mobile viewport presets producing separate results
   5. Browser contexts are properly pooled with lifecycle management and no memory leaks over sustained use
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
 - [ ] 03-01: Playwright execution activity (step runner, screenshot capture, error reporting)
@@ -87,7 +87,7 @@ Plans:
   2. Multi-viewport test runs fan out to parallel child workflows and aggregate results
   3. Workflow status is queryable in real-time (pending, generating, executing, complete)
   4. Failed activities retry automatically according to policy without losing progress
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
 - [ ] 04-01: End-to-end test run workflow (parent workflow, activity wiring, result persistence)
@@ -103,7 +103,7 @@ Plans:
   2. User can view step-by-step replay with screenshots and action log after a test completes
   3. User can see an inline test report with pass/fail summary and step details across viewports
   4. User can browse past test runs with filtering and click into any run for detail view
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
 - [ ] 05-01: TanStack Start app scaffolding (routing, auth integration, server function wiring, layout)
@@ -119,7 +119,7 @@ Plans:
   1. User sees a live browser feed during test execution showing what the browser is doing
   2. Step log updates in real-time alongside the browser feed as each step executes
   3. Stream reconnects automatically if connection drops without losing context
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
 - [ ] 06-01: CDP screencast integration in browser workers + Redis pub/sub
@@ -133,7 +133,7 @@ Plans:
   1. Every test run produces a debug video recording viewable in the results page
   2. User can export a polished video with step annotations and trimmed dead time at a selected resolution
   3. User can export test report as PDF or HTML for sharing with stakeholders
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
 - [ ] 07-01: Debug video recording (Playwright built-in recording, storage, playback in UI)
@@ -148,7 +148,7 @@ Plans:
   1. User can trigger a test run via public REST API (TanStack Start server routes or Hono) with URL, description, and viewports
   2. API returns structured results including pass/fail, step details, and links to screenshots
   3. A GitHub Actions workflow can run Validater tests on deploy and report results back to the PR
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
 - [ ] 08-01: Public REST API (endpoints, API key management, rate limiting)
@@ -162,7 +162,7 @@ Plans:
   1. User can describe a feature and receive a full test suite covering happy path, edge cases, and error states
   2. User can review, select, and run individual tests from the generated suite
   3. Every test run includes accessibility insights with issues categorized by severity
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
 - [ ] 09-01: Test suite generation (feature description to multiple test cases, suite management UI)
@@ -177,7 +177,7 @@ Plans:
   2. Service layer has 80%+ test coverage
   3. UI components have 60%+ test coverage
   4. Integration tests cover the full pipeline from API call to result persistence
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
 - [ ] 10-01: Test infrastructure and coverage tooling (Vitest config, coverage reporters, CI gates)
