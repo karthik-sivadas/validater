@@ -133,7 +133,7 @@ function escapeCssAttrValue(value: string): string {
  * Prefers text content or name/id attributes for readability.
  */
 function generateXPath(
-  $: CheerioAPI,
+  _$: CheerioAPI,
   el: ReturnType<CheerioAPI>,
 ): string {
   const tag = el.prop('tagName')?.toLowerCase() ?? '*';
