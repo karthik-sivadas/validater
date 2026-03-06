@@ -158,6 +158,8 @@ export async function executeStep(
   return {
     stepId: step.id,
     stepOrder: step.order,
+    action: step.action,
+    description: step.description,
     status,
     error,
     screenshotBase64,

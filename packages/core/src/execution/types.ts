@@ -7,6 +7,8 @@ export interface StepError {
 export interface StepResult {
   stepId: string;
   stepOrder: number;
+  action: string;
+  description: string;
   status: 'pass' | 'fail';
   error?: StepError;
   screenshotBase64: string; // PNG screenshot as base64 (always captured)

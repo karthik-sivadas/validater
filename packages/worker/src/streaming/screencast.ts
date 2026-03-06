@@ -32,10 +32,10 @@ export async function startScreencast(
 
   await cdp.send('Page.startScreencast', {
     format: 'jpeg',
-    quality: 60,
+    quality: 80,
     maxWidth: 1280,
     maxHeight: 720,
-    everyNthFrame: 2,
+    everyNthFrame: 1,
   });
 
   return async () => {

@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, integer, jsonb, pgEnum } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, integer, jsonb, pgEnum, uniqueIndex } from "drizzle-orm/pg-core";
 import { users } from "./users.js";
 
 export const testRunStatusEnum = pgEnum("test_run_status", [
@@ -47,6 +47,8 @@ export const testRunSteps = pgTable("test_run_steps", {
     .references(() => testRunResults.id, { onDelete: "cascade" }),
   stepId: text("step_id").notNull(),
   stepOrder: integer("step_order").notNull(),
+  action: text("action"),
+  description: text("description"),
   status: text("status").notNull(),
   errorMessage: text("error_message"),
   errorExpected: text("error_expected"),
@@ -54,3 +56,17 @@ export const testRunSteps = pgTable("test_run_steps", {
   screenshotBase64: text("screenshot_base64"),
   durationMs: integer("duration_ms").notNull(),
 });
+
+export const stepScreenshots = pgTable("step_screenshots", {
+  id: text("id").primaryKey(),
+  testRunId: text("test_run_id").notNull(),
+  viewport: text("viewport").notNull(),
+  stepOrder: integer("step_order").notNull(),
+  screenshotBase64: text("screenshot_base64").notNull(),
+}, (table) => [
+  uniqueIndex("step_screenshots_run_viewport_step_idx").on(
+    table.testRunId,
+    table.viewport,
+    table.stepOrder,
+  ),
+]);
