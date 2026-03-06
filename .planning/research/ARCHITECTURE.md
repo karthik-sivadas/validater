@@ -61,7 +61,7 @@
 | TanStack Start Server Functions | Type-safe API for all CRUD + query operations | `createServerFn()` with Zod validation and auth middleware |
 | Hono Streaming Sidecar | WebSocket/SSE for live browser frame streaming | Hono server running alongside TanStack Start, subscribes to Redis pub/sub |
 | Auth Middleware | Session management, route protection | Better Auth + TanStack Start middleware chain |
-| Temporal Server | Workflow state, task queues, retry coordination | Self-hosted Temporal (Docker) or Temporal Cloud |
+| Temporal Server | Workflow state, task queues, retry coordination | Self-hosted Temporal (Podman) or Temporal Cloud |
 | Test Run Workflow | Orchestrates single test: generate -> execute -> record | Temporal workflow (deterministic orchestration) |
 | Test Suite Workflow | Fan-out across viewports/browsers, fan-in results | Temporal child workflows for parallelism |
 | AI Agent Worker | Generates test steps from URL + description | Pi agent + Claude API, Temporal activity |
@@ -131,7 +131,7 @@ validater/
 │       │   └── client.ts       # Database client singleton
 │       └── package.json
 │
-├── docker/                     # Docker configs
+├── docker/                     # Container configs (Podman-compatible)
 │   ├── temporal/               # Temporal server + dependencies
 │   ├── playwright/             # Browser worker with Playwright
 │   └── docker-compose.yml
@@ -164,7 +164,7 @@ validater/
 - (+) Resumable: if a worker crashes mid-test, another picks up
 - (-) Adds infrastructure complexity (Temporal server, task queues)
 - (-) Workflow code must be deterministic (no I/O, no randomness)
-- (-) Local dev requires running Temporal (Docker)
+- (-) Local dev requires running Temporal (Podman)
 
 **Example:**
 ```typescript
@@ -419,7 +419,7 @@ File State (S3/MinIO):
 
 | Scale | Architecture Adjustments |
 |-------|--------------------------|
-| 0-100 users | Single TanStack Start instance, 1-2 browser workers, single Temporal server (Docker), Postgres + MinIO local. Good enough for launch. |
+| 0-100 users | Single TanStack Start instance, 1-2 browser workers, single Temporal server (Podman), Postgres + MinIO local. Good enough for launch. |
 | 100-1K users | Add Redis for pub/sub + caching. Scale browser workers to 3-5. Move to managed Postgres (e.g., Neon, Supabase). S3 for storage. |
 | 1K-10K users | Multiple TanStack Start instances behind load balancer. Browser worker pool (10+). Temporal Cloud instead of self-hosted. Dedicated video processing workers. CDN for video delivery. |
 | 10K+ users | Queue-based job admission to prevent overload. Worker autoscaling. Regional browser worker pools for latency. Rate limiting per user tier. Consider browser-as-a-service (Browserless, Browserbase) instead of self-managed Playwright. |
@@ -469,7 +469,7 @@ File State (S3/MinIO):
 | Service | Integration Pattern | Notes |
 |---------|---------------------|-------|
 | Claude API | HTTP via Anthropic SDK, called from AI agent activity | Rate limit: pool requests, implement backoff. Cost: track token usage per user. |
-| Temporal Cloud (production) | gRPC, managed by Temporal SDK | Self-hosted Docker for dev, Temporal Cloud for production SaaS. |
+| Temporal Cloud (production) | gRPC, managed by Temporal SDK | Self-hosted Podman for dev, Temporal Cloud for production SaaS. |
 | S3/MinIO | AWS SDK v3, presigned URLs for frontend access | MinIO for local dev (S3-compatible). Lifecycle policies for retention. |
 | Email (notifications) | SMTP or service like Resend, called from notification activity | Optional: notify on test completion, failures. |
 

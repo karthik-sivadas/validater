@@ -80,7 +80,7 @@ Based on research, suggested phase structure:
 
 ### Phase 1: Foundation and Infrastructure
 **Rationale:** Everything depends on the monorepo structure, database schema, Temporal dev environment, and shared types. The Temporal workflow hierarchy and build pipeline must be correct from the start -- retrofitting is a significant rewrite (Pitfall 8). Monorepo package boundaries directly affect Temporal's workflow sandboxing.
-**Delivers:** Working monorepo scaffolded via `bunx --bun shadcn@latest create` then converted to monorepo with Turborepo, PostgreSQL schema via Drizzle, Temporal dev environment (Docker), shared types/schemas, auth scaffolding with Better Auth, S3/MinIO setup. Node.js 22 runtime, Bun as package manager.
+**Delivers:** Working monorepo scaffolded via `bunx --bun shadcn@latest create` then converted to monorepo with Turborepo, PostgreSQL schema via Drizzle, Temporal dev environment (Podman), shared types/schemas, auth scaffolding with Better Auth, S3/MinIO setup. Node.js 22 runtime, Bun as package manager.
 **Addresses:** Platform authentication (table stakes), project structure
 **Avoids:** Temporal monorepo build complexity (Pitfall 8), event history explosion by designing workflow hierarchy upfront (Pitfall 1)
 
@@ -140,7 +140,7 @@ Phases likely needing deeper research during planning:
 - **Phase 6 (Live Streaming):** CDP screencast + Redis pub/sub + WebSocket architecture has few production references. The Vercel agent-browser project is the closest precedent. Needs prototyping.
 
 Phases with standard patterns (skip research-phase):
-- **Phase 1 (Foundation):** Monorepo setup, Drizzle ORM, Better Auth, Docker -- all well-documented with established patterns.
+- **Phase 1 (Foundation):** Monorepo setup, Drizzle ORM, Better Auth, Podman -- all well-documented with established patterns.
 - **Phase 3 (Browser Execution):** Playwright automation is extensively documented. Video recording API is stable. Browser pool patterns are well-known.
 - **Phase 5 (Frontend):** TanStack ecosystem is well-documented. shadcn/ui has comprehensive component library. Standard React SPA patterns.
 - **Phase 7 (CI/CD):** API design, GitHub Actions, webhooks -- all standard patterns.
@@ -162,7 +162,7 @@ Phases with standard patterns (skip research-phase):
 - **Pi agent stability:** Pre-1.0 with rapid iteration. Need to evaluate whether Vercel AI SDK (more established, has Temporal integration) is a safer choice despite being less opinionated about agent patterns.
 - **TanStack Start RC stability:** API is frozen but 1.0 has not shipped. Fallback plan exists (Vite + TanStack Router SPA + Hono API), but migration cost is non-trivial. Monitor closely during Phase 1.
 - **Cost modeling:** No concrete data on per-test-generation cost with Claude. Need to build a cost model during Phase 2 spike work: how many API calls, how many tokens, what cache hit rate is achievable.
-- **Temporal Cloud vs self-hosted:** Cost/ops tradeoff not resolved. Self-hosted Docker for development is clear; production decision can be deferred to Phase 4 but should be spiked.
+- **Temporal Cloud vs self-hosted:** Cost/ops tradeoff not resolved. Self-hosted Podman for development is clear; production decision can be deferred to Phase 4 but should be spiked.
 - **Live streaming at scale:** CDP screencast + Redis + WebSocket has no well-documented production deployment at scale. Phase 6 needs a prototype/spike before committing to the architecture.
 
 ## Sources

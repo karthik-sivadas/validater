@@ -2,16 +2,16 @@
 phase: 01-foundation-and-infrastructure
 plan: 05
 subsystem: infra
-tags: [temporal, workflow, docker, parent-child, orchestration]
+tags: [temporal, workflow, podman, parent-child, orchestration]
 
 # Dependency graph
 requires:
   - phase: 01-02
     provides: "TypeScript project structure with NodeNext modules for worker package"
   - phase: 01-03
-    provides: "Docker Compose with Temporal server, Temporal UI, and PostgreSQL services"
+    provides: "Podman Compose with Temporal server, Temporal UI, and PostgreSQL services"
 provides:
-  - "Running Temporal dev environment (server + UI via Docker)"
+  - "Running Temporal dev environment (server + UI via Podman)"
   - "Temporal client connection helper"
   - "Hello-world parent-child workflow hierarchy demonstration"
   - "Worker entry point with activity registration and workflow bundling"
@@ -49,7 +49,7 @@ completed: 2026-03-06
 
 # Phase 1 Plan 5: Temporal Dev Environment and Hello-World Workflow Summary
 
-**Temporal dev environment running via Docker with verified parent-child workflow hierarchy using executeChild and proxyActivities patterns**
+**Temporal dev environment running via Podman with verified parent-child workflow hierarchy using executeChild and proxyActivities patterns**
 
 ## Performance
 
@@ -61,7 +61,7 @@ completed: 2026-03-06
 
 ## Accomplishments
 
-- Temporal server running on localhost:7233 with UI on localhost:8080 via Docker Compose
+- Temporal server running on localhost:7233 with UI on localhost:8080 via Podman Compose
 - Parent-child workflow hierarchy verified end-to-end: parent spawns 3 child workflows, each calling greet activity, results aggregated as ["Hello, Alice!", "Hello, Bob!", "Hello, Charlie!"]
 - Worker entry point with Temporal SDK bundling (webpack) of workflow code, activity registration, and ESM-compatible workflowsPath resolution
 - Temporal client connection helper with configurable address via TEMPORAL_ADDRESS env var
@@ -112,7 +112,7 @@ None -- Temporal auto-setup image initialized correctly, worker started on first
 
 ## User Setup Required
 
-None - Docker services auto-start with `docker compose -f docker/docker-compose.yml up -d`.
+None - Podman services auto-start with `podman compose -f docker/docker-compose.yml up -d`.
 
 ## Next Phase Readiness
 

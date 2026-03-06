@@ -101,8 +101,8 @@
 
 | Technology | Version | Purpose | Why Recommended |
 |------------|---------|---------|-----------------|
-| Docker | latest | Containerization | Package Temporal workers, Playwright browsers, and the web app. Required for Temporal development environment. |
-| Temporal Server (self-hosted or Cloud) | latest | Workflow engine | Self-hosted via Docker for development; Temporal Cloud for production. Cloud removes operational burden of running the Temporal cluster. |
+| Podman | 5.3+ | Containerization | Package Temporal workers, Playwright browsers, and the web app. Required for Temporal development environment. |
+| Temporal Server (self-hosted or Cloud) | latest | Workflow engine | Self-hosted via Podman for development; Temporal Cloud for production. Cloud removes operational burden of running the Temporal cluster. |
 | S3-compatible storage | -- | Video/artifact storage | Store test recording videos and screenshots. Use MinIO locally, AWS S3 or Cloudflare R2 in production. |
 
 **Confidence:** MEDIUM -- Infrastructure choices depend on deployment target (cloud provider, budget). S3-compatible storage is a safe bet. Temporal Cloud vs self-hosted is a cost/ops tradeoff to decide later.

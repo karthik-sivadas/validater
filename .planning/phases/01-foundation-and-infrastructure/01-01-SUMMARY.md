@@ -14,7 +14,7 @@ provides:
   - "Root tsconfig with project references"
   - "Stub packages/core and packages/db for workspace resolution"
 affects:
-  - 01-02 (Docker + database setup builds on this workspace)
+  - 01-02 (Podman + database setup builds on this workspace)
   - 01-03 (Auth builds on packages/web and packages/db)
   - 01-04 (API layer builds on packages/web)
   - 01-05 (CI/CD uses turbo pipeline)
