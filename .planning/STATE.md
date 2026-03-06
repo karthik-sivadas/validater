@@ -5,33 +5,33 @@
 See: .planning/PROJECT.md (updated 2026-03-06)
 
 **Core value:** Users can describe what to test in plain English, point at any URL, and get comprehensive test execution with visual proof -- no test code required.
-**Current focus:** Phase 2 - AI Agent -- Test Generation
+**Current focus:** Phase 2 - AI Agent -- Test Generation (COMPLETE)
 
 ## Current Position
 
 Phase: 2 of 10 (AI Agent -- Test Generation)
-Plan: 4 of 5 in current phase
-Status: In progress
-Last activity: 2026-03-06 -- Completed 02-04-PLAN.md (Selector Validation and Self-Healing)
+Plan: 5 of 5 in current phase
+Status: Phase complete
+Last activity: 2026-03-06 -- Completed 02-05-PLAN.md (Generation Pipeline Integration)
 
-Progress: [█████░░░░░] 18%
+Progress: [██████░░░░] 20%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 9
+- Total plans completed: 10
 - Average duration: ~4 min
-- Total execution time: ~39 min
+- Total execution time: ~44 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation | 5/5 | ~25 min | ~5 min |
-| 02-ai-agent | 4/5 | ~14 min | ~3.5 min |
+| 02-ai-agent | 5/5 | ~19 min | ~3.8 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-04 (~6 min), 01-05 (~4 min), 02-01 (~3 min), 02-03 (~6 min), 02-04 (~2 min)
+- Last 5 plans: 01-05 (~4 min), 02-01 (~3 min), 02-03 (~6 min), 02-04 (~2 min), 02-05 (~5 min)
 - Trend: Stable/Improving
 
 *Updated after each plan completion*
@@ -77,6 +77,11 @@ Recent decisions affecting current work:
 - 02-04: healLocator cheapest-first: working alternatives (free) > AI-generated locators (expensive)
 - 02-04: healStepLocators returns new array (no mutation) -- downstream decides what to do with unhealed steps
 - 02-04: Role locator parsing supports "roleName" and "roleName: accessible name" formats
+- 02-05: Pipeline accepts Page via dependency injection -- caller manages browser lifecycle
+- 02-05: Added html field to SimplifiedDom type for pipeline data flow
+- 02-05: TanStack Start v1.166.2 uses inputValidator (not validator) on ServerFnBuilder
+- 02-05: Server function uses dynamic imports for playwright and @validater/core to avoid client bundling
+- 02-05: Playwright added as runtime dependency in @validater/web for server function
 
 ### Pending Todos
 
@@ -84,13 +89,11 @@ None yet.
 
 ### Blockers/Concerns
 
-- Phase 2: Pi agent is pre-1.0 -- evaluate Vercel AI SDK as alternative during planning
-- Phase 2: DSPy.ts maturity uncertain -- build lightweight prompt abstraction instead
 - Phase 6: CDP screencast + Redis + WebSocket has few production references -- needs prototyping spike
 - 01-03: New schema files must be manually added to drizzle.config.ts schema array (documented)
 
 ## Session Continuity
 
-Last session: 2026-03-06T17:35:02Z
-Stopped at: Completed 02-04-PLAN.md (Selector Validation and Self-Healing)
+Last session: 2026-03-06T17:42:45Z
+Stopped at: Completed 02-05-PLAN.md (Generation Pipeline Integration) -- Phase 2 complete
 Resume file: None
