@@ -26,4 +26,5 @@ export interface ExecutionConfig {
   stepTimeoutMs?: number; // default 10_000
   navigationTimeoutMs?: number; // default 30_000
   screenshotFullPage?: boolean; // default false
+  onStepComplete?: (result: StepResult) => void | Promise<void>;
 }

@@ -1,14 +1,16 @@
 import { useEffect, useRef } from "react";
-import { useLiveStream, type StepEvent } from "@/hooks/use-live-stream";
+import type { StepEvent } from "@/hooks/use-live-stream";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface LiveViewerProps {
-  testRunId: string;
+  frame: string | null;
+  steps: StepEvent[];
+  connected: boolean;
+  ended: boolean;
 }
 
-export function LiveViewer({ testRunId }: LiveViewerProps) {
-  const { frame, steps, connected, ended } = useLiveStream(testRunId);
+export function LiveViewer({ frame, steps, connected, ended }: LiveViewerProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom when new steps arrive

@@ -32,6 +32,15 @@ export async function executeSteps(
   for (const step of steps) {
     const result = await executeStep(page, step, mergedConfig);
     results.push(result);
+
+    // Notify caller of step completion (for real-time streaming)
+    if (mergedConfig.onStepComplete) {
+      try {
+        await mergedConfig.onStepComplete(result);
+      } catch {
+        // Callback failure must not break execution
+      }
+    }
     // IMPORTANT: Continue executing ALL remaining steps even after failure.
     // Users need to see which steps are independently valid vs cascade failures.
   }

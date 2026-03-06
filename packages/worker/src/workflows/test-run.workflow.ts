@@ -75,7 +75,7 @@ const { crawlDom } = proxyActivities<typeof crawlActs>({
 });
 
 const { generateSteps } = proxyActivities<typeof genActs>({
-  startToCloseTimeout: '2 minutes',
+  startToCloseTimeout: '5 minutes',
   retry: {
     initialInterval: '5s',
     backoffCoefficient: 2,

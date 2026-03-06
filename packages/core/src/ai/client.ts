@@ -22,7 +22,7 @@ export function createAIClient(options?: { model?: string }): LanguageModel {
       apiKey: process.env.OPENROUTER_API_KEY,
     });
     const modelName = options?.model ?? process.env.AI_MODEL ?? 'moonshotai/kimi-k2.5';
-    return openrouter.chat(modelName, { structuredOutputs: false });
+    return openrouter.chat(modelName, { structuredOutputs: false } as Record<string, unknown>);
   }
 
   const anthropic = createAnthropic();

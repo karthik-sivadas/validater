@@ -65,24 +65,21 @@ export async function executeStepsActivity(params: ExecuteStepsParams): Promise<
         }
       }
 
-      const stepResults = await executeSteps(page, params.steps, params.config);
-
-      // Publish step events to Redis after execution (best-effort)
-      if (params.streamingConfig?.enabled) {
-        try {
-          for (const result of stepResults) {
-            await publishStepEvent(params.streamingConfig.testRunId, {
-              stepId: result.stepId,
-              stepOrder: result.stepOrder,
-              status: result.status,
-              durationMs: result.durationMs,
-              error: result.error?.message,
-            });
-          }
-        } catch {
-          // Step event publishing failed -- non-critical
-        }
-      }
+      const stepResults = await executeSteps(page, params.steps, {
+        ...params.config,
+        // Publish step events in real-time as each step completes (best-effort)
+        onStepComplete: params.streamingConfig?.enabled
+          ? async (result) => {
+              publishStepEvent(params.streamingConfig!.testRunId, {
+                stepId: result.stepId,
+                stepOrder: result.stepOrder,
+                status: result.status,
+                durationMs: result.durationMs,
+                error: result.error?.message,
+              }).catch(() => {});
+            }
+          : undefined,
+      });
 
       // Stop screencast (best-effort)
       if (stopScreencast) {

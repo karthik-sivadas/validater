@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { runTest } from "@/server/run-test";
 import { useTestRunPolling } from "@/hooks/use-test-run-polling";
+import { useLiveStream } from "@/hooks/use-live-stream";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -52,6 +53,11 @@ function DashboardPage() {
   const [error, setError] = useState<string | null>(null);
 
   const { status, isPolling } = useTestRunPolling(testRunId);
+
+  // Connect WebSocket early (as soon as testRunId exists) so the stream
+  // is ready before execution starts. This prevents the race condition
+  // where execution finishes before the WS handshake completes.
+  const liveStream = useLiveStream(testRunId);
 
   async function handleSubmit() {
     setIsSubmitting(true);
@@ -116,7 +122,12 @@ function DashboardPage() {
 
             {/* Live viewer during execution */}
             {status?.phase === 'executing' && testRunId && (
-              <LiveViewer testRunId={testRunId} />
+              <LiveViewer
+                frame={liveStream.frame}
+                steps={liveStream.steps}
+                connected={liveStream.connected}
+                ended={liveStream.ended}
+              />
             )}
 
             {/* Viewport progress */}

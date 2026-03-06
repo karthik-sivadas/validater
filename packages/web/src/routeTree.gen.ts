@@ -15,9 +15,9 @@ import { Route as AuthedRouteImport } from './routes/_authed'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthedRunsRouteImport } from './routes/_authed/runs'
 import { Route as AuthedDashboardRouteImport } from './routes/_authed/dashboard'
-import { Route as AuthedRunsRunIdRouteImport } from './routes/_authed/runs/$runId'
 import { Route as AuthedRunsIndexRouteImport } from './routes/_authed/runs/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as AuthedRunsRunIdRouteImport } from './routes/_authed/runs/$runId'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -48,11 +48,6 @@ const AuthedDashboardRoute = AuthedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthedRoute,
 } as any)
-const AuthedRunsRunIdRoute = AuthedRunsRunIdRouteImport.update({
-  id: '/$runId',
-  path: '/$runId',
-  getParentRoute: () => AuthedRunsRoute,
-} as any)
 const AuthedRunsIndexRoute = AuthedRunsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -62,6 +57,11 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthedRunsRunIdRoute = AuthedRunsRunIdRouteImport.update({
+  id: '/$runId',
+  path: '/$runId',
+  getParentRoute: () => AuthedRunsRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -180,13 +180,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedDashboardRouteImport
       parentRoute: typeof AuthedRoute
     }
-    '/_authed/runs/$runId': {
-      id: '/_authed/runs/$runId'
-      path: '/$runId'
-      fullPath: '/runs/$runId'
-      preLoaderRoute: typeof AuthedRunsRunIdRouteImport
-      parentRoute: typeof AuthedRunsRoute
-    }
     '/_authed/runs/': {
       id: '/_authed/runs/'
       path: '/'
@@ -200,6 +193,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/auth/$'
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authed/runs/$runId': {
+      id: '/_authed/runs/$runId'
+      path: '/$runId'
+      fullPath: '/runs/$runId'
+      preLoaderRoute: typeof AuthedRunsRunIdRouteImport
+      parentRoute: typeof AuthedRunsRoute
     }
   }
 }
@@ -241,3 +241,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
