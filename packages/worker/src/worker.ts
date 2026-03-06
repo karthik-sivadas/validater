@@ -9,7 +9,7 @@ import { shutdownRedis } from "./streaming/redis-publisher.js";
 import * as crawlActivities from "./activities/crawl-dom.activity.js";
 import * as generateActivities from "./activities/generate-steps.activity.js";
 import * as validateActivities from "./activities/validate-steps.activity.js";
-import * as executeActivities from "./activities/execute-steps.activity.js";
+import { createExecuteActivities } from "./activities/execute-steps.activity.js";
 import { createPersistActivities } from "./activities/persist-results.activity.js";
 
 const require = createRequire(import.meta.url);
@@ -19,6 +19,7 @@ async function run() {
   startWsSidecar();
 
   const persistActivities = createPersistActivities(db);
+  const executeActivities = createExecuteActivities(db);
 
   const worker = await Worker.create({
     workflowsPath: require.resolve("./workflows/test-run.workflow"),

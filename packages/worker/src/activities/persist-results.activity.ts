@@ -1,8 +1,8 @@
 import type { Database } from '@validater/db';
-import { testRuns, testRunResults, testRunSteps } from '@validater/db';
+import { testRuns, testRunResults, testRunSteps, stepScreenshots } from '@validater/db';
 import type { ExecutionResult } from '@validater/core';
 import { nanoid } from 'nanoid';
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 
 export interface PersistResultsParams {
   testRunId: string;
@@ -32,20 +32,40 @@ export function createPersistActivities(db: Database) {
       });
 
       for (const stepResult of result.stepResults) {
+        // Read screenshot from staging table (side-channel from execute activity)
+        const cached = await db
+          .select()
+          .from(stepScreenshots)
+          .where(
+            and(
+              eq(stepScreenshots.testRunId, params.testRunId),
+              eq(stepScreenshots.viewport, result.viewport),
+              eq(stepScreenshots.stepOrder, stepResult.stepOrder),
+            ),
+          )
+          .limit(1);
+
         await db.insert(testRunSteps).values({
           id: nanoid(),
           resultId,
           stepId: stepResult.stepId,
           stepOrder: stepResult.stepOrder,
+          action: stepResult.action,
+          description: stepResult.description,
           status: stepResult.status,
           errorMessage: stepResult.error?.message,
           errorExpected: stepResult.error?.expected,
           errorActual: stepResult.error?.actual,
-          screenshotBase64: stepResult.screenshotBase64,
+          screenshotBase64: cached[0]?.screenshotBase64 ?? stepResult.screenshotBase64 ?? null,
           durationMs: stepResult.durationMs,
         });
       }
     }
+
+    // Clean up staging table after all results persisted
+    await db
+      .delete(stepScreenshots)
+      .where(eq(stepScreenshots.testRunId, params.testRunId));
 
     // Mark test run as complete after all results persisted
     await db

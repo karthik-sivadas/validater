@@ -1,6 +1,6 @@
 import type { TestStep, ExecutionConfig, ExecutionResult, ViewportConfig } from '@validater/core';
 import { VIEWPORT_PRESETS, DEFAULT_VIEWPORTS } from '@validater/core';
-import { executeStepsActivity } from './execute-steps.activity.js';
+import type { ExecuteActivities } from './execute-steps.activity.js';
 
 export interface ExecuteViewportsParams {
   url: string;
@@ -11,41 +11,41 @@ export interface ExecuteViewportsParams {
 }
 
 /**
- * Temporal activity: execute test steps across multiple viewports.
+ * DEPRECATED: Superseded by child workflows (viewport-execution.workflow.ts).
  *
- * Resolves viewport names to ViewportConfig objects using VIEWPORT_PRESETS,
- * then runs executeStepsActivity sequentially for each viewport. Sequential
- * execution is intentional -- the browser pool has limited capacity and
- * sequential is safer for memory.
+ * Factory function for multi-viewport execution activity.
+ * Uses dependency injection to receive the executeStepsActivity from the factory.
  *
- * Unknown viewport names are skipped with a console.warn.
- *
- * @returns Array of ExecutionResult, one per successfully resolved viewport
+ * @deprecated Use viewportExecutionWorkflow child workflow pattern instead.
  */
-export async function executeViewportsActivity(params: ExecuteViewportsParams): Promise<ExecutionResult[]> {
-  const viewportNames = params.viewports ?? [...DEFAULT_VIEWPORTS];
+export function createExecuteViewportsActivities(executeActivities: ExecuteActivities) {
+  async function executeViewportsActivity(params: ExecuteViewportsParams): Promise<ExecutionResult[]> {
+    const viewportNames = params.viewports ?? [...DEFAULT_VIEWPORTS];
 
-  // Resolve viewport names to configs, skipping unknown names
-  const resolvedViewports: ViewportConfig[] = [];
-  for (const name of viewportNames) {
-    const preset = VIEWPORT_PRESETS[name];
-    if (preset) {
-      resolvedViewports.push(preset);
-    } else {
-      console.warn(`Unknown viewport name "${name}" -- skipping. Available: ${Object.keys(VIEWPORT_PRESETS).join(', ')}`);
+    // Resolve viewport names to configs, skipping unknown names
+    const resolvedViewports: ViewportConfig[] = [];
+    for (const name of viewportNames) {
+      const preset = VIEWPORT_PRESETS[name];
+      if (preset) {
+        resolvedViewports.push(preset);
+      } else {
+        console.warn(`Unknown viewport name "${name}" -- skipping. Available: ${Object.keys(VIEWPORT_PRESETS).join(', ')}`);
+      }
     }
+
+    const results: ExecutionResult[] = [];
+    for (const viewport of resolvedViewports) {
+      const result = await executeActivities.executeStepsActivity({
+        url: params.url,
+        steps: params.steps,
+        viewport,
+        config: params.config,
+      });
+      results.push(result);
+    }
+
+    return results;
   }
 
-  const results: ExecutionResult[] = [];
-  for (const viewport of resolvedViewports) {
-    const result = await executeStepsActivity({
-      url: params.url,
-      steps: params.steps,
-      viewport,
-      config: params.config,
-    });
-    results.push(result);
-  }
-
-  return results;
+  return { executeViewportsActivity };
 }

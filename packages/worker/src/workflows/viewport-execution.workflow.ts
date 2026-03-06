@@ -1,9 +1,9 @@
 import { proxyActivities } from '@temporalio/workflow';
-import type * as activities from '../activities/execute-steps.activity.js';
+import type { ExecuteActivities } from '../activities/execute-steps.activity.js';
 import type { TestStep, ViewportConfig } from '@validater/core';
 import type { ExecutionResult } from '@validater/core';
 
-const { executeStepsActivity } = proxyActivities<typeof activities>({
+const { executeStepsActivity } = proxyActivities<ExecuteActivities>({
   startToCloseTimeout: '10 minutes',
   heartbeatTimeout: '30s',
   retry: {
