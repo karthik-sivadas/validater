@@ -206,6 +206,9 @@ importers:
       '@validater/db':
         specifier: workspace:*
         version: link:../db
+      generic-pool:
+        specifier: ^3.9.0
+        version: 3.9.0
       nanoid:
         specifier: ^5.1.6
         version: 5.1.6
@@ -213,6 +216,9 @@ importers:
         specifier: ^1.58.2
         version: 1.58.2
     devDependencies:
+      '@types/generic-pool':
+        specifier: ^3.8.3
+        version: 3.8.3
       tsx:
         specifier: ^4.19.0
         version: 4.21.0
@@ -2330,6 +2336,10 @@ packages:
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
 
+  '@types/generic-pool@3.8.3':
+    resolution: {integrity: sha512-ZGnwaX+JGSCMnjf4/CmLkTjJwE5bnT45Z3y+3HvoYymKU5vPMCEZAFtrl3sBpg+rjFpEvhSBTJX7jfJArBKjYQ==}
+    deprecated: This is a stub types definition. generic-pool provides its own type definitions, so you do not need this installed.
+
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
 
@@ -3350,6 +3360,10 @@ packages:
 
   generate-function@2.3.1:
     resolution: {integrity: sha512-eeB5GfMNeevm/GRYq20ShmsaGcmI81kIX2K9XQx5miC8KdHaC6Jm0qQ8ZNeGOi7wYB8OsdxKs+Y2oVuTFuVwKQ==}
+
+  generic-pool@3.9.0:
+    resolution: {integrity: sha512-hymDOu5B53XvN4QT9dBmZxPX4CWhBPPLguTZ9MMFeFa/Kg0xWVfylOVNlJji/E7yTZWFd/q9GO5TxDLq156D7g==}
+    engines: {node: '>= 4'}
 
   gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
@@ -7088,6 +7102,10 @@ snapshots:
 
   '@types/estree@1.0.8': {}
 
+  '@types/generic-pool@3.8.3':
+    dependencies:
+      generic-pool: 3.9.0
+
   '@types/json-schema@7.0.15': {}
 
   '@types/node@22.19.15':
@@ -8092,6 +8110,8 @@ snapshots:
   generate-function@2.3.1:
     dependencies:
       is-property: 1.0.2
+
+  generic-pool@3.9.0: {}
 
   gensync@1.0.0-beta.2: {}
 
