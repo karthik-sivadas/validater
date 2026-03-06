@@ -1,6 +1,7 @@
 import { verifyStepLocators, healStepLocators } from '@validater/core';
 import type { TestStep, ValidationResult } from '@validater/core';
 import { getDefaultPool } from '../browser/pool.js';
+import { heartbeat } from '@temporalio/activity';
 
 /**
  * Temporal activity: Validate and heal test step locators against a live page.
@@ -21,19 +22,23 @@ export async function validateSteps(params: {
 }> {
   const pool = getDefaultPool();
   const pooled = await pool.acquire();
+  heartbeat('browser acquired');
 
   try {
     const context = await pooled.browser.newContext();
+    const page = await context.newPage();
+    heartbeat('page created');
 
     try {
-      const page = await context.newPage();
-      await page.goto(params.url, { waitUntil: 'networkidle', timeout: 30_000 });
+      await page.goto(params.url, { waitUntil: 'domcontentloaded', timeout: 30_000 });
+      heartbeat('page loaded');
 
       // Validate all steps
       const validationResults: ValidationResult[] = [];
       for (const step of params.steps) {
         const result = await verifyStepLocators(page, step);
         validationResults.push(result);
+        heartbeat(`validated step ${step.id}`);
       }
 
       // Heal failed steps
@@ -45,6 +50,7 @@ export async function validateSteps(params: {
 
       return { validatedSteps: healedSteps, validationResults };
     } finally {
+      await page.close();
       await context.close();
     }
   } finally {

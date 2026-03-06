@@ -4,6 +4,7 @@ import { getDefaultPool } from '../browser/pool.js';
 import type { StreamingConfig } from '../streaming/types.js';
 import { startScreencast } from '../streaming/screencast.js';
 import { publishFrame, publishStepEvent, publishStreamEnd } from '../streaming/redis-publisher.js';
+import { heartbeat } from '@temporalio/activity';
 
 export interface ExecuteStepsParams {
   url: string;
@@ -35,6 +36,7 @@ export async function executeStepsActivity(params: ExecuteStepsParams): Promise<
   const startTime = new Date().toISOString();
   const pool = getDefaultPool();
   const pooled = await pool.acquire();
+  heartbeat('browser acquired');
 
   try {
     const context = await pooled.browser.newContext({
@@ -49,9 +51,10 @@ export async function executeStepsActivity(params: ExecuteStepsParams): Promise<
 
       // Navigate to the target URL before executing steps
       await page.goto(params.url, {
-        waitUntil: 'networkidle',
+        waitUntil: 'domcontentloaded',
         timeout: params.config?.navigationTimeoutMs ?? 30_000,
       });
+      heartbeat('page loaded');
 
       // Start screencast if streaming is enabled (best-effort)
       let stopScreencast: (() => Promise<void>) | null = null;
@@ -68,17 +71,18 @@ export async function executeStepsActivity(params: ExecuteStepsParams): Promise<
       const stepResults = await executeSteps(page, params.steps, {
         ...params.config,
         // Publish step events in real-time as each step completes (best-effort)
-        onStepComplete: params.streamingConfig?.enabled
-          ? async (result) => {
-              publishStepEvent(params.streamingConfig!.testRunId, {
-                stepId: result.stepId,
-                stepOrder: result.stepOrder,
-                status: result.status,
-                durationMs: result.durationMs,
-                error: result.error?.message,
-              }).catch(() => {});
-            }
-          : undefined,
+        onStepComplete: async (result) => {
+          heartbeat(`step ${result.stepOrder} complete`);
+          if (params.streamingConfig?.enabled) {
+            publishStepEvent(params.streamingConfig!.testRunId, {
+              stepId: result.stepId,
+              stepOrder: result.stepOrder,
+              status: result.status,
+              durationMs: result.durationMs,
+              error: result.error?.message,
+            }).catch(() => {});
+          }
+        },
       });
 
       // Stop screencast (best-effort)
@@ -99,10 +103,15 @@ export async function executeStepsActivity(params: ExecuteStepsParams): Promise<
         }
       }
 
+      // Strip screenshotBase64 from results to stay within Temporal's
+      // gRPC payload size limit (~2MB). Screenshots will be stored
+      // via a dedicated blob storage mechanism in a future phase.
+      const lightResults = stepResults.map(({ screenshotBase64, ...rest }) => rest);
+
       return {
         viewport: params.viewport.name,
         url: params.url,
-        stepResults,
+        stepResults: lightResults,
         totalDurationMs: stepResults.reduce((sum, r) => sum + r.durationMs, 0),
         startedAt: startTime,
         completedAt: new Date().toISOString(),

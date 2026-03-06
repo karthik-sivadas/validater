@@ -1,6 +1,7 @@
 import { crawlPage, simplifyDom } from '@validater/core';
 import type { CrawlOptions, SimplifiedDom, CrawlResult } from '@validater/core';
 import { getDefaultPool } from '../browser/pool.js';
+import { heartbeat } from '@temporalio/activity';
 
 /**
  * Temporal activity: Crawl a page and produce a simplified DOM representation.
@@ -23,6 +24,7 @@ export async function crawlDom(
     try {
       const page = await context.newPage();
       const crawlResult = await crawlPage(page, options);
+      heartbeat('page crawled');
       const simplified = simplifyDom(crawlResult.html, {
         maxTokenEstimate: 15000,
         includeAriaSnapshot: crawlResult.ariaSnapshot,
