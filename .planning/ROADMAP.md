@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Browser Execution Engine** - Playwright execution, screenshots, multi-viewport, browser pool
 - [x] **Phase 4: Workflow Orchestration** - Wire AI + browser into end-to-end Temporal workflows
 - [x] **Phase 5: Frontend -- Dashboard and Results** - TanStack Start app, test creation, results viewer, test history
-- [ ] **Phase 6: Live Streaming and Real-Time Updates** - CDP screencast, Redis pub/sub, Hono WebSocket sidecar, live viewer
+- [x] **Phase 6: Live Streaming and Real-Time Updates** - CDP screencast, Redis pub/sub, Hono WebSocket sidecar, live viewer
 - [ ] **Phase 7: Video and Reporting** - Debug recording, polished video export, PDF/HTML reports
 - [ ] **Phase 8: CI/CD and API Layer** - Public REST API, GitHub Actions integration, webhooks
 - [ ] **Phase 9: Test Suite Generation and Accessibility** - Full suite from feature descriptions, axe-core integration
@@ -123,8 +123,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 06-01-PLAN.md -- Infrastructure (Redis), CDP screencast, Redis publisher, Hono WebSocket sidecar, activity and workflow wiring
-- [ ] 06-02-PLAN.md -- Frontend live viewer (WebSocket hook with auto-reconnect, LiveViewer component, dashboard integration)
+- [x] 06-01-PLAN.md -- Infrastructure (Redis), CDP screencast, Redis publisher, Hono WebSocket sidecar, activity and workflow wiring
+- [x] 06-02-PLAN.md -- Frontend live viewer (WebSocket hook with auto-reconnect, LiveViewer component, dashboard integration)
 
 ### Phase 7: Video and Reporting
 **Goal**: Users can get debug video recordings of test runs and export polished videos and reports for sharing
@@ -198,7 +198,7 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 | 3. Browser Execution Engine | 2/2 | Complete | 2026-03-06 |
 | 4. Workflow Orchestration | 3/3 | Complete | 2026-03-06 |
 | 5. Frontend -- Dashboard and Results | 4/4 | Complete | 2026-03-07 |
-| 6. Live Streaming and Real-Time Updates | 0/2 | Not started | - |
+| 6. Live Streaming and Real-Time Updates | 2/2 | Complete | 2026-03-07 |
 | 7. Video and Reporting | 0/3 | Not started | - |
 | 8. CI/CD and API Layer | 0/2 | Not started | - |
 | 9. Test Suite Generation and Accessibility | 0/2 | Not started | - |
