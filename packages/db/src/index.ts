@@ -1,3 +1,3 @@
-// @validater/db - database client
-// Database client - implemented in plan 01-03
-export {};
+export { db } from "./client.js";
+export type { Database } from "./client.js";
+export * from "./schema/index.js";
