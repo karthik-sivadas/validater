@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-03-06)
 
 **Core value:** Users can describe what to test in plain English, point at any URL, and get comprehensive test execution with visual proof -- no test code required.
-**Current focus:** Phase 6 - Live Streaming and Real-Time Updates
+**Current focus:** Phase 7 - Video and Reporting
 
 ## Current Position
 
 Phase: 6 of 10 (Live Streaming and Real-Time Updates)
-Plan: 1 of 2 in current phase
-Status: In progress
-Last activity: 2026-03-07 -- Completed 06-01-PLAN.md
+Plan: 2 of 2 in current phase
+Status: Phase complete
+Last activity: 2026-03-07 -- Completed 06-02-PLAN.md
 
-Progress: [██████░░░░] 53%
+Progress: [███████░░░] 68%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 20
-- Average duration: ~4.9 min
-- Total execution time: ~97 min
+- Total plans completed: 21
+- Average duration: ~4.8 min
+- Total execution time: ~100 min
 
 **By Phase:**
 
@@ -32,11 +32,11 @@ Progress: [██████░░░░] 53%
 | 03-browser-execution-engine | 2/2 | ~5 min | ~2.5 min |
 | 04-workflow-orchestration | 3/3 | ~11 min | ~3.7 min |
 | 05-frontend-dashboard | 4/4 | ~31 min | ~7.8 min |
-| 06-live-streaming | 1/2 | ~6 min | ~6 min |
+| 06-live-streaming | 2/2 | ~9 min | ~4.5 min |
 
 **Recent Trend:**
-- Last 5 plans: 05-02 (~2 min), 05-04 (~11 min), 05-03 (~13 min), 06-01 (~6 min)
-- Trend: 06-01 straightforward -- two tasks, CDP/Redis/WS wiring with minor type fixes
+- Last 5 plans: 05-04 (~11 min), 05-03 (~13 min), 06-01 (~6 min), 06-02 (~3 min)
+- Trend: 06-02 fast -- two frontend tasks, no deviations, clean execution
 
 *Updated after each plan completion*
 
@@ -121,6 +121,9 @@ Recent decisions affecting current work:
 - 06-01: All streaming operations wrapped in try/catch -- streaming failures never break test execution
 - 06-01: Frame ack sent immediately before processing to prevent CDP backpressure stalling
 - 06-01: Step events published after executeSteps returns (core executor has no callback hooks)
+- 06-02: Client-side StepEvent/StreamMessage type duplicates (not imported from worker) to avoid cross-package client/server dependency
+- 06-02: endedRef (useRef) alongside ended state for reliable stream-end check in WebSocket onclose callback
+- 06-02: Configurable WS URL via VITE_WS_URL env var with ws://localhost:3001 default
 
 ### Pending Todos
 
@@ -136,5 +139,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-07
-Stopped at: Completed 06-01-PLAN.md
+Stopped at: Completed 06-02-PLAN.md (Phase 6 complete)
 Resume file: None
