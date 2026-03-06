@@ -15,8 +15,9 @@ import { Route as AuthedRouteImport } from './routes/_authed'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthedRunsRouteImport } from './routes/_authed/runs'
 import { Route as AuthedDashboardRouteImport } from './routes/_authed/dashboard'
+import { Route as AuthedRunsRunIdRouteImport } from './routes/_authed/runs/$runId'
+import { Route as AuthedRunsIndexRouteImport } from './routes/_authed/runs/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
-import { Route as AuthedRunsRunIdRouteImport } from './routes/_authed/runs.$runId'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -47,15 +48,20 @@ const AuthedDashboardRoute = AuthedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthedRoute,
 } as any)
-const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
-  id: '/api/auth/$',
-  path: '/api/auth/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthedRunsRunIdRoute = AuthedRunsRunIdRouteImport.update({
   id: '/$runId',
   path: '/$runId',
   getParentRoute: () => AuthedRunsRoute,
+} as any)
+const AuthedRunsIndexRoute = AuthedRunsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthedRunsRoute,
+} as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -66,15 +72,16 @@ export interface FileRoutesByFullPath {
   '/runs': typeof AuthedRunsRouteWithChildren
   '/runs/$runId': typeof AuthedRunsRunIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/runs/': typeof AuthedRunsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthedDashboardRoute
-  '/runs': typeof AuthedRunsRouteWithChildren
   '/runs/$runId': typeof AuthedRunsRunIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/runs': typeof AuthedRunsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -86,6 +93,7 @@ export interface FileRoutesById {
   '/_authed/runs': typeof AuthedRunsRouteWithChildren
   '/_authed/runs/$runId': typeof AuthedRunsRunIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/_authed/runs/': typeof AuthedRunsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -97,15 +105,16 @@ export interface FileRouteTypes {
     | '/runs'
     | '/runs/$runId'
     | '/api/auth/$'
+    | '/runs/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/signup'
     | '/dashboard'
-    | '/runs'
     | '/runs/$runId'
     | '/api/auth/$'
+    | '/runs'
   id:
     | '__root__'
     | '/'
@@ -116,6 +125,7 @@ export interface FileRouteTypes {
     | '/_authed/runs'
     | '/_authed/runs/$runId'
     | '/api/auth/$'
+    | '/_authed/runs/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -170,13 +180,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedDashboardRouteImport
       parentRoute: typeof AuthedRoute
     }
-    '/api/auth/$': {
-      id: '/api/auth/$'
-      path: '/api/auth/$'
-      fullPath: '/api/auth/$'
-      preLoaderRoute: typeof ApiAuthSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_authed/runs/$runId': {
       id: '/_authed/runs/$runId'
       path: '/$runId'
@@ -184,15 +187,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedRunsRunIdRouteImport
       parentRoute: typeof AuthedRunsRoute
     }
+    '/_authed/runs/': {
+      id: '/_authed/runs/'
+      path: '/'
+      fullPath: '/runs/'
+      preLoaderRoute: typeof AuthedRunsIndexRouteImport
+      parentRoute: typeof AuthedRunsRoute
+    }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 interface AuthedRunsRouteChildren {
   AuthedRunsRunIdRoute: typeof AuthedRunsRunIdRoute
+  AuthedRunsIndexRoute: typeof AuthedRunsIndexRoute
 }
 
 const AuthedRunsRouteChildren: AuthedRunsRouteChildren = {
   AuthedRunsRunIdRoute: AuthedRunsRunIdRoute,
+  AuthedRunsIndexRoute: AuthedRunsIndexRoute,
 }
 
 const AuthedRunsRouteWithChildren = AuthedRunsRoute._addFileChildren(

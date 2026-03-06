@@ -1,16 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authed/runs")({
-  component: RunsPage,
+  component: RunsLayout,
 });
 
-function RunsPage() {
-  return (
-    <div>
-      <h1 className="text-2xl font-bold tracking-tight">Test Run History</h1>
-      <p className="mt-2 text-muted-foreground">
-        History page coming soon.
-      </p>
-    </div>
-  );
+function RunsLayout() {
+  return <Outlet />;
 }
