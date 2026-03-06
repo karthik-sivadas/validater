@@ -1,6 +1,9 @@
 {
   "references": [
-    { "path": "packages/web" }
+    { "path": "packages/core" },
+    { "path": "packages/db" },
+    { "path": "packages/web" },
+    { "path": "packages/worker" }
   ],
   "files": []
 }

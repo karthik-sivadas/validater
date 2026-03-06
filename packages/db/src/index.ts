@@ -1,3 +1,3 @@
-// @validater/db - database client and schema
-// Populated in Plan 01-02
+// @validater/db - database client
+// Database client - implemented in plan 01-03
 export {};
