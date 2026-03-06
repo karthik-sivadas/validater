@@ -5,3 +5,4 @@ export * from "./dom/index.js";
 export * from "./ai/index.js";
 export * from "./locators/index.js";
 export * from "./generation/index.js";
+export * from "./execution/index.js";
