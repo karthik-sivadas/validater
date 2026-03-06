@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-03-06)
 ## Current Position
 
 Phase: 5 of 10 (Frontend -- Dashboard and Results)
-Plan: 1 of 4 in current phase
+Plan: 2 of 4 in current phase
 Status: In progress
-Last activity: 2026-03-06 -- Completed 05-01-PLAN.md
+Last activity: 2026-03-06 -- Completed 05-02-PLAN.md
 
-Progress: [████▓░░░░░] 43%
+Progress: [█████▓░░░░] 46%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 16
-- Average duration: ~4.1 min
-- Total execution time: ~65 min
+- Total plans completed: 17
+- Average duration: ~3.9 min
+- Total execution time: ~67 min
 
 **By Phase:**
 
@@ -31,11 +31,11 @@ Progress: [████▓░░░░░] 43%
 | 02-ai-agent | 5/5 | ~19 min | ~3.8 min |
 | 03-browser-execution-engine | 2/2 | ~5 min | ~2.5 min |
 | 04-workflow-orchestration | 3/3 | ~11 min | ~3.7 min |
-| 05-frontend-dashboard | 1/4 | ~5 min | ~5 min |
+| 05-frontend-dashboard | 2/4 | ~7 min | ~3.5 min |
 
 **Recent Trend:**
-- Last 5 plans: 04-01 (~6 min), 04-02 (~2 min), 04-03 (~3 min), 05-01 (~5 min)
-- Trend: Stable, Phase 5 start consistent with Phase 1 complexity
+- Last 5 plans: 04-02 (~2 min), 04-03 (~3 min), 05-01 (~5 min), 05-02 (~2 min)
+- Trend: Fast execution, simple UI plans completing quickly
 
 *Updated after each plan completion*
 
@@ -106,6 +106,8 @@ Recent decisions affecting current work:
 - 05-01: Cast jsonb viewports to string[] in server function returns -- dynamic import creates incompatible Promise types with unknown vs {}
 - 05-01: Auth ownership check in getTestRunDetail returns null (not 403) to avoid leaking run existence
 - 05-01: Added stub /runs route for TanStack Router strict Link type-checking
+- 05-02: Phase-to-progress mapping with interpolation during executing phase based on viewport completion ratio
+- 05-02: Stub /runs/$runId route for type-safe navigate() -- will be expanded in plan 05-03/05-04
 
 ### Pending Todos
 
@@ -121,5 +123,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-06
-Stopped at: Completed 05-01-PLAN.md
+Stopped at: Completed 05-02-PLAN.md
 Resume file: None
