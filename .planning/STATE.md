@@ -10,28 +10,28 @@ See: .planning/PROJECT.md (updated 2026-03-06)
 ## Current Position
 
 Phase: 1 of 10 (Foundation and Infrastructure)
-Plan: 3 of 5 in current phase
-Status: In progress
-Last activity: 2026-03-06 -- Completed 01-03-PLAN.md
+Plan: 5 of 5 in current phase
+Status: In progress (01-04 pending)
+Last activity: 2026-03-06 -- Completed 01-05-PLAN.md
 
-Progress: [███░░░░░░░] 30% (3/5 phase plans, only phase 1 planned so far)
+Progress: [████████░░] 80% (4/5 phase plans, only phase 1 planned so far)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
+- Total plans completed: 4
 - Average duration: ~5 min
-- Total execution time: ~15 min
+- Total execution time: ~19 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-foundation | 3/5 | ~15 min | ~5 min |
+| 01-foundation | 4/5 | ~19 min | ~5 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (~5 min), 01-02 (~2 min), 01-03 (~8 min)
-- Trend: Stable (01-03 slower due to Docker image pulls and debugging drizzle-kit CJS/ESM issues)
+- Last 5 plans: 01-01 (~5 min), 01-02 (~2 min), 01-03 (~8 min), 01-05 (~4 min)
+- Trend: Stable (01-05 included Docker image pulls for Temporal but still fast)
 
 *Updated after each plan completion*
 
@@ -52,6 +52,9 @@ Recent decisions affecting current work:
 - 01-03: Explicit schema file paths in drizzle.config.ts (drizzle-kit CJS loader incompatible with NodeNext .js barrel re-exports)
 - 01-03: DOTENV_CONFIG_PATH env var in db scripts to resolve root .env from packages/db
 - 01-03: Installed docker-compose via Homebrew for Colima Docker runtime
+- 01-05: Used createRequire(import.meta.url) for workflowsPath in ESM context
+- 01-05: Type-only imports for activities in workflow files (Temporal sandbox restriction)
+- 01-05: Parent-child workflow pattern with executeChild + Promise.all for aggregation
 
 ### Pending Todos
 
@@ -66,6 +69,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T10:42:33Z
-Stopped at: Completed 01-03-PLAN.md (database and Docker setup)
+Last session: 2026-03-06T10:48:50Z
+Stopped at: Completed 01-05-PLAN.md (Temporal dev environment and hello-world workflow)
 Resume file: None
