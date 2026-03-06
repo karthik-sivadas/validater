@@ -35,13 +35,14 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Temporal dev server is running and can execute a hello-world workflow with parent-child hierarchy
   4. All monorepo packages build and type-check with a single command
   5. Database migrations run cleanly with Drizzle and schema is queryable
-**Plans**: 4 plans
+**Plans**: 5 plans
 
 Plans:
-- [ ] 01-01: Repo scaffolding via `bunx --bun shadcn@latest create --rtl --preset "https://ui.shadcn.com/init?base=base&style=lyra&baseColor=gray&theme=emerald&iconLibrary=remixicon&font=inter&menuAccent=subtle&menuColor=default&radius=default&template=start&rtl=true" --template start` then convert to monorepo with pnpm workspaces + Turborepo
-- [ ] 01-02: Database and shared types (PostgreSQL, Drizzle ORM, Zod schemas)
-- [ ] 01-03: Authentication (Better Auth, sign-up/login, session persistence)
-- [ ] 01-04: Temporal dev environment (Docker, SDK setup, workflow hierarchy spike, task queues)
+- [ ] 01-01-PLAN.md -- Scaffold TanStack Start app with shadcn/ui, set up monorepo root (pnpm workspaces + Turborepo)
+- [ ] 01-02-PLAN.md -- Create internal packages (db, core, worker) with workspace wiring
+- [ ] 01-03-PLAN.md -- PostgreSQL via Docker, Drizzle ORM schema, database client
+- [ ] 01-04-PLAN.md -- Better Auth authentication (sign-up, login, session persistence, route protection)
+- [ ] 01-05-PLAN.md -- Temporal dev environment (Docker, SDK setup, workflow hierarchy spike)
 
 ### Phase 2: AI Agent -- Test Generation
 **Goal**: Users can provide a URL and natural language description, and the AI agent produces validated, executable test steps grounded in actual page structure
@@ -192,7 +193,7 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation and Infrastructure | 0/4 | Not started | - |
+| 1. Foundation and Infrastructure | 0/5 | Not started | - |
 | 2. AI Agent -- Test Generation | 0/4 | Not started | - |
 | 3. Browser Execution Engine | 0/3 | Not started | - |
 | 4. Workflow Orchestration | 0/3 | Not started | - |
