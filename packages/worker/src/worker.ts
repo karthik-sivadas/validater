@@ -2,6 +2,8 @@ import { createRequire } from "node:module";
 import { Worker } from "@temporalio/worker";
 import { db } from "@validater/db";
 import { shutdownPool } from "./browser/pool.js";
+import { startWsSidecar } from "./streaming/ws-sidecar.js";
+import { shutdownRedis } from "./streaming/redis-publisher.js";
 
 // Runtime activity imports (NOT workflow sandbox -- these run in Node.js)
 import * as crawlActivities from "./activities/crawl-dom.activity.js";
@@ -13,6 +15,9 @@ import { createPersistActivities } from "./activities/persist-results.activity.j
 const require = createRequire(import.meta.url);
 
 async function run() {
+  // Start WebSocket sidecar for live streaming
+  startWsSidecar();
+
   const persistActivities = createPersistActivities(db);
 
   const worker = await Worker.create({
@@ -29,10 +34,11 @@ async function run() {
 
   console.log("Worker started on task queue: test-pipeline");
 
-  // Graceful shutdown: drain browser pool on SIGINT/SIGTERM
+  // Graceful shutdown: drain browser pool and Redis on SIGINT/SIGTERM
   const shutdown = async () => {
     console.log("Shutting down worker...");
     await shutdownPool();
+    await shutdownRedis();
     process.exit(0);
   };
   process.on("SIGINT", shutdown);

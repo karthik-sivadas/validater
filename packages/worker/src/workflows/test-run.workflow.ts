@@ -158,12 +158,22 @@ export async function testRunWorkflow(params: TestRunParams): Promise<TestRunRes
     });
 
     // Stage 4: Fan out to child workflows per viewport
+    // Enable streaming only for the first viewport to avoid multiple
+    // simultaneous streams overwhelming the client.
     status = { ...status, phase: 'executing' };
     await updateTestRunStatus({ testRunId: params.testRunId, status: 'executing' });
     const viewportResults = await Promise.all(
-      params.viewports.map((viewport) =>
+      params.viewports.map((viewport, index) =>
         executeChild(viewportExecutionWorkflow, {
-          args: [{ url: params.url, steps: validatedSteps, viewport }],
+          args: [{
+            url: params.url,
+            steps: validatedSteps,
+            viewport,
+            streamingConfig: {
+              testRunId: params.testRunId,
+              enabled: index === 0,
+            },
+          }],
           workflowId: `${params.testRunId}-viewport-${viewport.name}`,
         }),
       ),

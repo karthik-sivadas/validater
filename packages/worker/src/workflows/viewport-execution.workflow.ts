@@ -18,6 +18,7 @@ export interface ViewportExecutionParams {
   url: string;
   steps: TestStep[];
   viewport: ViewportConfig;
+  streamingConfig?: { testRunId: string; enabled: boolean };
 }
 
 /**
@@ -34,5 +35,6 @@ export async function viewportExecutionWorkflow(
     url: params.url,
     steps: params.steps,
     viewport: params.viewport,
+    streamingConfig: params.streamingConfig,
   });
 }
