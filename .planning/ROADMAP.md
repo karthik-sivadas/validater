@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation and Infrastructure** - Monorepo, database, Temporal dev environment, auth, shared types
 - [x] **Phase 2: AI Agent -- Test Generation** - DOM grounding, Claude integration, NL-to-test-steps with smart locators
-- [ ] **Phase 3: Browser Execution Engine** - Playwright execution, screenshots, multi-viewport, browser pool
+- [x] **Phase 3: Browser Execution Engine** - Playwright execution, screenshots, multi-viewport, browser pool
 - [ ] **Phase 4: Workflow Orchestration** - Wire AI + browser into end-to-end Temporal workflows
 - [ ] **Phase 5: Frontend -- Dashboard and Results** - TanStack Start app, test creation, results viewer, test history
 - [ ] **Phase 6: Live Streaming and Real-Time Updates** - CDP screencast, Redis pub/sub, Hono WebSocket sidecar, live viewer
@@ -76,8 +76,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 03-01-PLAN.md -- Core execution engine (types, locator mapper extraction, viewport presets, assertions, step runner, step executor)
-- [ ] 03-02-PLAN.md -- Browser pool with generic-pool, memory monitor, Temporal activities (single + multi-viewport)
+- [x] 03-01-PLAN.md -- Core execution engine (types, locator mapper extraction, viewport presets, assertions, step runner, step executor)
+- [x] 03-02-PLAN.md -- Browser pool with generic-pool, memory monitor, Temporal activities (single + multi-viewport)
 
 ### Phase 4: Workflow Orchestration
 **Goal**: AI generation and browser execution are wired into end-to-end Temporal workflows that orchestrate the full test pipeline with multi-viewport fan-out
@@ -195,7 +195,7 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 |-------|----------------|--------|-----------|
 | 1. Foundation and Infrastructure | 5/5 | Complete | 2026-03-06 |
 | 2. AI Agent -- Test Generation | 5/5 | Complete | 2026-03-06 |
-| 3. Browser Execution Engine | 0/2 | Not started | - |
+| 3. Browser Execution Engine | 2/2 | Complete | 2026-03-06 |
 | 4. Workflow Orchestration | 0/3 | Not started | - |
 | 5. Frontend -- Dashboard and Results | 0/4 | Not started | - |
 | 6. Live Streaming and Real-Time Updates | 0/2 | Not started | - |
