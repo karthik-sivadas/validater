@@ -73,12 +73,11 @@ Plans:
   3. Failed steps include clear error details (what was expected vs. what happened)
   4. The same test runs across desktop, tablet, and mobile viewport presets producing separate results
   5. Browser contexts are properly pooled with lifecycle management and no memory leaks over sustained use
-**Plans**: 4 plans
+**Plans**: 2 plans
 
 Plans:
-- [ ] 03-01: Playwright execution activity (step runner, screenshot capture, error reporting)
-- [ ] 03-02: Multi-viewport execution (3+ presets, viewport-specific results)
-- [ ] 03-03: Browser pool with lifecycle management (memory monitoring, max lifetime, cleanup)
+- [ ] 03-01-PLAN.md -- Core execution engine (types, locator mapper extraction, viewport presets, assertions, step runner, step executor)
+- [ ] 03-02-PLAN.md -- Browser pool with generic-pool, memory monitor, Temporal activities (single + multi-viewport)
 
 ### Phase 4: Workflow Orchestration
 **Goal**: AI generation and browser execution are wired into end-to-end Temporal workflows that orchestrate the full test pipeline with multi-viewport fan-out
@@ -196,7 +195,7 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 |-------|----------------|--------|-----------|
 | 1. Foundation and Infrastructure | 5/5 | Complete | 2026-03-06 |
 | 2. AI Agent -- Test Generation | 5/5 | Complete | 2026-03-06 |
-| 3. Browser Execution Engine | 0/3 | Not started | - |
+| 3. Browser Execution Engine | 0/2 | Not started | - |
 | 4. Workflow Orchestration | 0/3 | Not started | - |
 | 5. Frontend -- Dashboard and Results | 0/4 | Not started | - |
 | 6. Live Streaming and Real-Time Updates | 0/2 | Not started | - |
