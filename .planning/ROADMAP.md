@@ -54,13 +54,14 @@ Plans:
   3. Each test step includes multiple locator strategies with confidence scores
   4. When a primary locator fails, the system automatically retries with alternative locators
   5. Claude API calls use prompt caching and respect rate limits without errors under concurrent load
-**Plans**: 4 plans
+**Plans**: 5 plans
 
 Plans:
 - [ ] 02-01-PLAN.md -- Shared types, Zod schemas, and dependency installation for the AI test generation pipeline
 - [ ] 02-02-PLAN.md -- DOM crawling and semantic extraction pipeline (Playwright + Cheerio)
 - [ ] 02-03-PLAN.md -- Claude API integration (AI SDK, prompt engineering, caching, rate limiting, cost tracking)
-- [ ] 02-04-PLAN.md -- Selector validation, self-healing, generation pipeline, and Temporal activities
+- [ ] 02-04-PLAN.md -- Selector validation and self-healing locator system
+- [ ] 02-05-PLAN.md -- Generation pipeline orchestrator, Temporal activities, and user-facing server function
 
 ### Phase 3: Browser Execution Engine
 **Goal**: Generated test steps can be executed against any URL via Playwright across multiple viewports with screenshot capture and resource management
@@ -194,7 +195,7 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation and Infrastructure | 5/5 | Complete | 2026-03-06 |
-| 2. AI Agent -- Test Generation | 0/4 | Not started | - |
+| 2. AI Agent -- Test Generation | 0/5 | Not started | - |
 | 3. Browser Execution Engine | 0/3 | Not started | - |
 | 4. Workflow Orchestration | 0/3 | Not started | - |
 | 5. Frontend -- Dashboard and Results | 0/4 | Not started | - |
