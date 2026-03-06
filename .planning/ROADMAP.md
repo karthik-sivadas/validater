@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: AI Agent -- Test Generation** - DOM grounding, Claude integration, NL-to-test-steps with smart locators
 - [x] **Phase 3: Browser Execution Engine** - Playwright execution, screenshots, multi-viewport, browser pool
 - [x] **Phase 4: Workflow Orchestration** - Wire AI + browser into end-to-end Temporal workflows
-- [ ] **Phase 5: Frontend -- Dashboard and Results** - TanStack Start app, test creation, results viewer, test history
+- [x] **Phase 5: Frontend -- Dashboard and Results** - TanStack Start app, test creation, results viewer, test history
 - [ ] **Phase 6: Live Streaming and Real-Time Updates** - CDP screencast, Redis pub/sub, Hono WebSocket sidecar, live viewer
 - [ ] **Phase 7: Video and Reporting** - Debug recording, polished video export, PDF/HTML reports
 - [ ] **Phase 8: CI/CD and API Layer** - Public REST API, GitHub Actions integration, webhooks
@@ -107,10 +107,10 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 05-01-PLAN.md -- Dependencies, shadcn components, dashboard layout, server functions, auth wiring
-- [ ] 05-02-PLAN.md -- Test creation form with progress polling and status display
-- [ ] 05-03-PLAN.md -- Results viewer with step replay, screenshots, viewport tabs, inline report
-- [ ] 05-04-PLAN.md -- Test history list with URL-driven filtering, pagination, and navigation
+- [x] 05-01-PLAN.md -- Dependencies, shadcn components, dashboard layout, server functions, auth wiring
+- [x] 05-02-PLAN.md -- Test creation form with progress polling and status display
+- [x] 05-03-PLAN.md -- Results viewer with step replay, screenshots, viewport tabs, inline report
+- [x] 05-04-PLAN.md -- Test history list with URL-driven filtering, pagination, and navigation
 
 ### Phase 6: Live Streaming and Real-Time Updates
 **Goal**: Users can watch test execution in real-time with a live browser view and synchronized step log
@@ -197,7 +197,7 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 | 2. AI Agent -- Test Generation | 5/5 | Complete | 2026-03-06 |
 | 3. Browser Execution Engine | 2/2 | Complete | 2026-03-06 |
 | 4. Workflow Orchestration | 3/3 | Complete | 2026-03-06 |
-| 5. Frontend -- Dashboard and Results | 0/4 | Not started | - |
+| 5. Frontend -- Dashboard and Results | 4/4 | Complete | 2026-03-07 |
 | 6. Live Streaming and Real-Time Updates | 0/2 | Not started | - |
 | 7. Video and Reporting | 0/3 | Not started | - |
 | 8. CI/CD and API Layer | 0/2 | Not started | - |

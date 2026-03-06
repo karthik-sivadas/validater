@@ -86,14 +86,14 @@
 | TEXE-03 | Phase 3 | Complete |
 | TEXE-04 | Phase 3 | Complete |
 | TEXE-05 | Phase 6 | Pending |
-| TEXE-06 | Phase 5 | Pending |
-| VREP-01 | Phase 5 | Pending |
+| TEXE-06 | Phase 5 | Complete |
+| VREP-01 | Phase 5 | Complete |
 | VREP-02 | Phase 7 | Pending |
 | VREP-03 | Phase 7 | Pending |
 | VREP-04 | Phase 7 | Pending |
 | PLAT-01 | Phase 1 | Complete |
 | PLAT-02 | Phase 1 | Complete |
-| PLAT-03 | Phase 5 | Pending |
+| PLAT-03 | Phase 5 | Complete |
 | PLAT-04 | Phase 8 | Pending |
 | PLAT-05 | Phase 8 | Pending |
 | PLAT-06 | Phase 9 | Pending |
