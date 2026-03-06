@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-03-06)
 
 **Core value:** Users can describe what to test in plain English, point at any URL, and get comprehensive test execution with visual proof -- no test code required.
-**Current focus:** Phase 6.1 - Step Details, Screenshots, and Browser Experience
+**Current focus:** Phase 6.1 complete -- ready for Phase 7
 
 ## Current Position
 
 Phase: 6.1 of 10 (Step Details, Screenshots, and Browser Experience)
-Plan: 1 of 2 in current phase
-Status: In progress
-Last activity: 2026-03-07 -- Completed 06.1-01-PLAN.md
+Plan: 2 of 2 in current phase
+Status: Phase complete
+Last activity: 2026-03-07 -- Completed 06.1-02-PLAN.md
 
-Progress: [█████████░] 96% (22/23 planned)
+Progress: [██████████] 100% (23/23 planned)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 22
-- Average duration: ~4.9 min
-- Total execution time: ~108 min
+- Total plans completed: 23
+- Average duration: ~4.8 min
+- Total execution time: ~111 min
 
 **By Phase:**
 
@@ -33,11 +33,11 @@ Progress: [█████████░] 96% (22/23 planned)
 | 04-workflow-orchestration | 3/3 | ~11 min | ~3.7 min |
 | 05-frontend-dashboard | 4/4 | ~31 min | ~7.8 min |
 | 06-live-streaming | 2/2 | ~9 min | ~4.5 min |
-| 06.1-step-details | 1/2 | ~8 min | ~8 min |
+| 06.1-step-details | 2/2 | ~11 min | ~5.5 min |
 
 **Recent Trend:**
-- Last 5 plans: 05-03 (~13 min), 06-01 (~6 min), 06-02 (~3 min), 06.1-01 (~8 min)
-- Trend: 06.1-01 slightly longer -- schema changes + factory refactoring + 2 deviation fixes
+- Last 5 plans: 06-01 (~6 min), 06-02 (~3 min), 06.1-01 (~8 min), 06.1-02 (~3 min)
+- Trend: 06.1-02 fast -- pure frontend UI enrichment, no schema/infra changes
 
 *Updated after each plan completion*
 
@@ -129,6 +129,10 @@ Recent decisions affecting current work:
 - 06.1-01: Factory DI pattern extended to executeStepsActivity (createExecuteActivities) -- same as persist-results
 - 06.1-01: onConflictDoNothing for staging table upserts (simpler than onConflictDoUpdate, equivalent for retries)
 - 06.1-01: screenshotBase64 set to empty string (not stripped) in lightResults to maintain StepResult type compatibility
+- 06.1-02: Canvas double-buffered rendering (BrowserCanvas) for flicker-free live streaming frame display
+- 06.1-02: ACTION_COLORS duplicated in live viewer and results page (not shared module) -- small map, avoids cross-component coupling
+- 06.1-02: Nullable action/description in results page types for backward compatibility with existing test runs
+- 06.1-02: Screenshot thumbnails max-h-48 + object-cover for compact display; Dialog zoom preserves full-size
 
 ### Pending Todos
 
@@ -148,5 +152,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-07
-Stopped at: Completed 06.1-01-PLAN.md
+Stopped at: Completed 06.1-02-PLAN.md (Phase 6.1 complete)
 Resume file: None
