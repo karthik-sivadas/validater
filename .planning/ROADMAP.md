@@ -120,11 +120,11 @@ Plans:
   1. User sees a live browser feed during test execution showing what the browser is doing
   2. Step log updates in real-time alongside the browser feed as each step executes
   3. Stream reconnects automatically if connection drops without losing context
-**Plans**: 4 plans
+**Plans**: 2 plans
 
 Plans:
-- [ ] 06-01: CDP screencast integration in browser workers + Redis pub/sub
-- [ ] 06-02: Hono WebSocket sidecar + live viewer component in frontend
+- [ ] 06-01-PLAN.md -- Infrastructure (Redis), CDP screencast, Redis publisher, Hono WebSocket sidecar, activity and workflow wiring
+- [ ] 06-02-PLAN.md -- Frontend live viewer (WebSocket hook with auto-reconnect, LiveViewer component, dashboard integration)
 
 ### Phase 7: Video and Reporting
 **Goal**: Users can get debug video recordings of test runs and export polished videos and reports for sharing
