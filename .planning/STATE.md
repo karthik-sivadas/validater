@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-03-06)
 ## Current Position
 
 Phase: 5 of 10 (Frontend -- Dashboard and Results)
-Plan: 0 of 4 in current phase
-Status: Ready to plan
-Last activity: 2026-03-06 -- Phase 4 complete, verified 4/4 must-haves
+Plan: 1 of 4 in current phase
+Status: In progress
+Last activity: 2026-03-06 -- Completed 05-01-PLAN.md
 
-Progress: [████░░░░░░] 40%
+Progress: [████▓░░░░░] 43%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 15
-- Average duration: ~4.0 min
-- Total execution time: ~60 min
+- Total plans completed: 16
+- Average duration: ~4.1 min
+- Total execution time: ~65 min
 
 **By Phase:**
 
@@ -31,10 +31,11 @@ Progress: [████░░░░░░] 40%
 | 02-ai-agent | 5/5 | ~19 min | ~3.8 min |
 | 03-browser-execution-engine | 2/2 | ~5 min | ~2.5 min |
 | 04-workflow-orchestration | 3/3 | ~11 min | ~3.7 min |
+| 05-frontend-dashboard | 1/4 | ~5 min | ~5 min |
 
 **Recent Trend:**
-- Last 5 plans: 03-02 (~2 min), 04-01 (~6 min), 04-02 (~2 min), 04-03 (~3 min)
-- Trend: Stable-fast, Phase 4 averaged 3.7 min/plan
+- Last 5 plans: 04-01 (~6 min), 04-02 (~2 min), 04-03 (~3 min), 05-01 (~5 min)
+- Trend: Stable, Phase 5 start consistent with Phase 1 complexity
 
 *Updated after each plan completion*
 
@@ -102,6 +103,9 @@ Recent decisions affecting current work:
 - 04-03: nanoid and drizzle-orm added as direct web dependencies for dynamic import type resolution
 - 04-03: DB fallback in getTestRunStatusFn uses db.select().from().where() builder API (not relational query API)
 - 04-03: Anonymous userId placeholder in test_runs insert -- Phase 5 wires auth context
+- 05-01: Cast jsonb viewports to string[] in server function returns -- dynamic import creates incompatible Promise types with unknown vs {}
+- 05-01: Auth ownership check in getTestRunDetail returns null (not 403) to avoid leaking run existence
+- 05-01: Added stub /runs route for TanStack Router strict Link type-checking
 
 ### Pending Todos
 
@@ -117,5 +121,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-06
-Stopped at: Phase 4 complete, starting Phase 5
+Stopped at: Completed 05-01-PLAN.md
 Resume file: None
