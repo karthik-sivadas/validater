@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-03-06)
 
 **Core value:** Users can describe what to test in plain English, point at any URL, and get comprehensive test execution with visual proof -- no test code required.
-**Current focus:** Phase 4 - Workflow Orchestration
+**Current focus:** Phase 4 complete -- next up Phase 5 (Frontend -- Dashboard and Results)
 
 ## Current Position
 
-Phase: 4 of 10 (Workflow Orchestration)
-Plan: 2 of 3 in current phase
-Status: In progress
-Last activity: 2026-03-06 -- Completed 04-02-PLAN.md
+Phase: 4 of 10 (Workflow Orchestration) -- COMPLETE
+Plan: 3 of 3 in current phase (all complete)
+Status: Phase complete
+Last activity: 2026-03-06 -- Completed 04-03-PLAN.md
 
-Progress: [████████░░] 67%
+Progress: [█████░░░░░] 48%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 14
-- Average duration: ~4.1 min
-- Total execution time: ~57 min
+- Total plans completed: 15
+- Average duration: ~4.0 min
+- Total execution time: ~60 min
 
 **By Phase:**
 
@@ -30,11 +30,11 @@ Progress: [████████░░] 67%
 | 01-foundation | 5/5 | ~25 min | ~5 min |
 | 02-ai-agent | 5/5 | ~19 min | ~3.8 min |
 | 03-browser-execution-engine | 2/2 | ~5 min | ~2.5 min |
-| 04-workflow-orchestration | 2/3 | ~8 min | ~4 min |
+| 04-workflow-orchestration | 3/3 | ~11 min | ~3.7 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-05 (~5 min), 03-01 (~3 min), 03-02 (~2 min), 04-01 (~6 min), 04-02 (~2 min)
-- Trend: Stable-fast (04-02 straightforward, no blockers)
+- Last 5 plans: 03-02 (~2 min), 04-01 (~6 min), 04-02 (~2 min), 04-03 (~3 min)
+- Trend: Stable-fast, Phase 4 averaged 3.7 min/plan
 
 *Updated after each plan completion*
 
@@ -98,6 +98,10 @@ Recent decisions affecting current work:
 - 04-02: Separate proxyActivities per activity file with differentiated retry policies (AI longer intervals, DB more retries)
 - 04-02: PersistActivities type alias (ReturnType<typeof factory>) for proxyActivities on factory-produced activities
 - 04-02: drizzle-orm added as worker dependency for eq() operator in persist activity
+- 04-03: @validater/worker added as web dependency for TypeScript type resolution of dynamic imports
+- 04-03: nanoid and drizzle-orm added as direct web dependencies for dynamic import type resolution
+- 04-03: DB fallback in getTestRunStatusFn uses db.select().from().where() builder API (not relational query API)
+- 04-03: Anonymous userId placeholder in test_runs insert -- Phase 5 wires auth context
 
 ### Pending Todos
 
@@ -112,6 +116,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T18:58:38Z
-Stopped at: Completed 04-02-PLAN.md
+Last session: 2026-03-06T19:03:42Z
+Stopped at: Completed 04-03-PLAN.md (Phase 4 complete)
 Resume file: None
