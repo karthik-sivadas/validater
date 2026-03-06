@@ -13,7 +13,7 @@ Validater delivers an AI-powered web testing platform in 10 phases: starting wit
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation and Infrastructure** - Monorepo, database, Temporal dev environment, auth, shared types
-- [ ] **Phase 2: AI Agent -- Test Generation** - DOM grounding, Claude integration, NL-to-test-steps with smart locators
+- [x] **Phase 2: AI Agent -- Test Generation** - DOM grounding, Claude integration, NL-to-test-steps with smart locators
 - [ ] **Phase 3: Browser Execution Engine** - Playwright execution, screenshots, multi-viewport, browser pool
 - [ ] **Phase 4: Workflow Orchestration** - Wire AI + browser into end-to-end Temporal workflows
 - [ ] **Phase 5: Frontend -- Dashboard and Results** - TanStack Start app, test creation, results viewer, test history
@@ -57,11 +57,11 @@ Plans:
 **Plans**: 5 plans
 
 Plans:
-- [ ] 02-01-PLAN.md -- Shared types, Zod schemas, and dependency installation for the AI test generation pipeline
-- [ ] 02-02-PLAN.md -- DOM crawling and semantic extraction pipeline (Playwright + Cheerio)
-- [ ] 02-03-PLAN.md -- Claude API integration (AI SDK, prompt engineering, caching, rate limiting, cost tracking)
-- [ ] 02-04-PLAN.md -- Selector validation and self-healing locator system
-- [ ] 02-05-PLAN.md -- Generation pipeline orchestrator, Temporal activities, and user-facing server function
+- [x] 02-01-PLAN.md -- Shared types, Zod schemas, and dependency installation for the AI test generation pipeline
+- [x] 02-02-PLAN.md -- DOM crawling and semantic extraction pipeline (Playwright + Cheerio)
+- [x] 02-03-PLAN.md -- Claude API integration (AI SDK, prompt engineering, caching, rate limiting, cost tracking)
+- [x] 02-04-PLAN.md -- Selector validation and self-healing locator system
+- [x] 02-05-PLAN.md -- Generation pipeline orchestrator, Temporal activities, and user-facing server function
 
 ### Phase 3: Browser Execution Engine
 **Goal**: Generated test steps can be executed against any URL via Playwright across multiple viewports with screenshot capture and resource management
@@ -195,7 +195,7 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation and Infrastructure | 5/5 | Complete | 2026-03-06 |
-| 2. AI Agent -- Test Generation | 0/5 | Not started | - |
+| 2. AI Agent -- Test Generation | 5/5 | Complete | 2026-03-06 |
 | 3. Browser Execution Engine | 0/3 | Not started | - |
 | 4. Workflow Orchestration | 0/3 | Not started | - |
 | 5. Frontend -- Dashboard and Results | 0/4 | Not started | - |
