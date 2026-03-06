@@ -1,3 +1,12 @@
 // @validater/worker - Temporal worker entry point
-// Worker entry point - implemented in plan 01-05
-export {};
+// Re-exports for consumer packages (web server functions need client + workflow types)
+
+export { createTemporalClient } from "./client.js";
+export type {
+  TestRunParams,
+  TestRunResult,
+  TestRunStatus,
+  TestRunPhase,
+} from "./workflows/test-run.workflow.js";
+export { getTestRunStatus } from "./workflows/test-run.workflow.js";
+export { testRunWorkflow } from "./workflows/test-run.workflow.js";
