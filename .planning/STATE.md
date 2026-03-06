@@ -10,27 +10,28 @@ See: .planning/PROJECT.md (updated 2026-03-06)
 ## Current Position
 
 Phase: 2 of 10 (AI Agent -- Test Generation)
-Plan: 0 of 4 in current phase
-Status: Ready to plan
-Last activity: 2026-03-06 -- Phase 1 complete, verified 5/5 must-haves
+Plan: 1 of 5 in current phase
+Status: In progress
+Last activity: 2026-03-06 -- Completed 02-01-PLAN.md (Types and Schemas)
 
-Progress: [█░░░░░░░░░] 10%
+Progress: [██░░░░░░░░] 12%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5
+- Total plans completed: 6
 - Average duration: ~5 min
-- Total execution time: ~25 min
+- Total execution time: ~28 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation | 5/5 | ~25 min | ~5 min |
+| 02-ai-agent | 1/5 | ~3 min | ~3 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (~5 min), 01-02 (~2 min), 01-03 (~8 min), 01-04 (~6 min), 01-05 (~4 min)
+- Last 5 plans: 01-02 (~2 min), 01-03 (~8 min), 01-04 (~6 min), 01-05 (~4 min), 02-01 (~3 min)
 - Trend: Stable
 
 *Updated after each plan completion*
@@ -59,6 +60,10 @@ Recent decisions affecting current work:
 - 01-05: Used createRequire(import.meta.url) for workflowsPath in ESM context
 - 01-05: Type-only imports for activities in workflow files (Temporal sandbox restriction)
 - 01-05: Parent-child workflow pattern with executeChild + Promise.all for aggregation
+- 02-01: Playwright as devDependency in core (type-only) and runtime dependency in worker
+- 02-01: RawTestStep = Omit<TestStep, 'id'> -- AI generates without IDs, nanoid assigned post-generation
+- 02-01: SemanticElementSchema uses z.lazy() for recursive children
+- 02-01: TestStepSchema locators require min(2) for fallback reliability
 
 ### Pending Todos
 
@@ -74,5 +79,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-06
-Stopped at: Phase 1 complete, starting Phase 2
+Stopped at: Completed 02-01-PLAN.md (Types and Schemas)
 Resume file: None
