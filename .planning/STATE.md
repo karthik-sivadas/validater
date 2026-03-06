@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-03-06)
 ## Current Position
 
 Phase: 5 of 10 (Frontend -- Dashboard and Results)
-Plan: 2 of 4 in current phase
-Status: In progress
-Last activity: 2026-03-06 -- Completed 05-02-PLAN.md
+Plan: 4 of 4 in current phase
+Status: In progress (05-03 pending)
+Last activity: 2026-03-06 -- Completed 05-04-PLAN.md
 
-Progress: [█████▓░░░░] 46%
+Progress: [█████▓░░░░] 44%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 17
-- Average duration: ~3.9 min
-- Total execution time: ~67 min
+- Total plans completed: 18
+- Average duration: ~4.3 min
+- Total execution time: ~78 min
 
 **By Phase:**
 
@@ -31,11 +31,11 @@ Progress: [█████▓░░░░] 46%
 | 02-ai-agent | 5/5 | ~19 min | ~3.8 min |
 | 03-browser-execution-engine | 2/2 | ~5 min | ~2.5 min |
 | 04-workflow-orchestration | 3/3 | ~11 min | ~3.7 min |
-| 05-frontend-dashboard | 2/4 | ~7 min | ~3.5 min |
+| 05-frontend-dashboard | 3/4 | ~18 min | ~6 min |
 
 **Recent Trend:**
-- Last 5 plans: 04-02 (~2 min), 04-03 (~3 min), 05-01 (~5 min), 05-02 (~2 min)
-- Trend: Fast execution, simple UI plans completing quickly
+- Last 5 plans: 04-03 (~3 min), 05-01 (~5 min), 05-02 (~2 min), 05-04 (~11 min)
+- Trend: 05-04 took longer due to TypeScript type resolution complexity with zod-adapter and base-ui Select
 
 *Updated after each plan completion*
 
@@ -108,6 +108,10 @@ Recent decisions affecting current work:
 - 05-01: Added stub /runs route for TanStack Router strict Link type-checking
 - 05-02: Phase-to-progress mapping with interpolation during executing phase based on viewport completion ratio
 - 05-02: Stub /runs/$runId route for type-safe navigate() -- will be expanded in plan 05-03/05-04
+- 05-04: z.catch() instead of fallback() from zod-adapter -- avoids TS2589 deep type instantiation with TanStack Router generic inference
+- 05-04: Navigate with direct merged search object instead of reducer function for strict TanStack Router typing
+- 05-04: Directory-based routing for runs/ (layout Outlet in runs.tsx, children in runs/ directory)
+- 05-04: base-ui Select onValueChange accepts string | null -- null guard required
 
 ### Pending Todos
 
@@ -123,5 +127,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-06
-Stopped at: Completed 05-02-PLAN.md
+Stopped at: Completed 05-04-PLAN.md
 Resume file: None
