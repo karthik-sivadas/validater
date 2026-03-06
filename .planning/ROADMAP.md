@@ -88,12 +88,12 @@ Plans:
   2. Multi-viewport test runs fan out to parallel child workflows and aggregate results
   3. Workflow status is queryable in real-time (pending, generating, executing, complete)
   4. Failed activities retry automatically according to policy without losing progress
-**Plans**: 4 plans
+**Plans**: 3 plans
 
 Plans:
-- [ ] 04-01: End-to-end test run workflow (parent workflow, activity wiring, result persistence)
-- [ ] 04-02: Multi-viewport fan-out (child workflows per viewport, result aggregation)
-- [ ] 04-03: Status queries, heartbeats, error handling, and retry policies
+- [ ] 04-01-PLAN.md -- DB schema (test_runs, test_run_results, test_run_steps) and update crawlDom/validateSteps to browser pool
+- [ ] 04-02-PLAN.md -- Persist-results activity and parent/child Temporal workflows (test-run + viewport-execution)
+- [ ] 04-03-PLAN.md -- Production worker setup, runTest and getTestRunStatus server functions
 
 ### Phase 5: Frontend -- Dashboard and Results
 **Goal**: Users have a complete web interface to create tests, view results with step-by-step screenshots, and browse test history
