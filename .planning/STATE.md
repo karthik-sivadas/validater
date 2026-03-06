@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-03-06)
 ## Current Position
 
 Phase: 6 of 10 (Live Streaming and Real-Time Updates)
-Plan: 0 of 2 in current phase
-Status: Not started
-Last activity: 2026-03-07 -- Completed Phase 5
+Plan: 1 of 2 in current phase
+Status: In progress
+Last activity: 2026-03-07 -- Completed 06-01-PLAN.md
 
-Progress: [█████░░░░░] 50%
+Progress: [██████░░░░] 53%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 19
-- Average duration: ~4.8 min
-- Total execution time: ~91 min
+- Total plans completed: 20
+- Average duration: ~4.9 min
+- Total execution time: ~97 min
 
 **By Phase:**
 
@@ -32,10 +32,11 @@ Progress: [█████░░░░░] 50%
 | 03-browser-execution-engine | 2/2 | ~5 min | ~2.5 min |
 | 04-workflow-orchestration | 3/3 | ~11 min | ~3.7 min |
 | 05-frontend-dashboard | 4/4 | ~31 min | ~7.8 min |
+| 06-live-streaming | 1/2 | ~6 min | ~6 min |
 
 **Recent Trend:**
-- Last 5 plans: 05-01 (~5 min), 05-02 (~2 min), 05-04 (~11 min), 05-03 (~13 min)
-- Trend: 05-03 longer due to TypeScript OOM requiring increased heap and type inference debugging
+- Last 5 plans: 05-02 (~2 min), 05-04 (~11 min), 05-03 (~13 min), 06-01 (~6 min)
+- Trend: 06-01 straightforward -- two tasks, CDP/Redis/WS wiring with minor type fixes
 
 *Updated after each plan completion*
 
@@ -114,6 +115,12 @@ Recent decisions affecting current work:
 - 05-04: base-ui Select onValueChange accepts string | null -- null guard required
 - 05-03: Explicit TypeScript type cast on Route.useLoaderData() for dynamic-import server function return types (TanStack Router type inference breaks through dynamic imports)
 - 05-03: Renders stepOrder as "Step N" -- test_run_steps schema has no action_description column
+- 06-01: Hono WebSocket sidecar on port 3001 -- TanStack Start does not support WebSockets natively
+- 06-01: Each WS connection gets its own Redis subscriber (ioredis requires separate pub/sub connections)
+- 06-01: Streaming enabled only for first viewport to avoid overwhelming client with multiple streams
+- 06-01: All streaming operations wrapped in try/catch -- streaming failures never break test execution
+- 06-01: Frame ack sent immediately before processing to prevent CDP backpressure stalling
+- 06-01: Step events published after executeSteps returns (core executor has no callback hooks)
 
 ### Pending Todos
 
@@ -121,13 +128,13 @@ None yet.
 
 ### Blockers/Concerns
 
-- Phase 6: CDP screencast + Redis + WebSocket has few production references -- needs prototyping spike
 - 01-03: New schema files must be manually added to drizzle.config.ts schema array (documented)
 - 04-01: drizzle-kit scripts now require NODE_OPTIONS='--require tsx/cjs' for cross-file .js imports (already added to package.json scripts)
 - Pre-existing: @validater/web typecheck fails on vite.config.ts test property type mismatch (unrelated to workflow phase)
+- Pre-existing: core/src/ai/client.ts structuredOutputs property error (OpenRouterChatSettings type mismatch)
 
 ## Session Continuity
 
 Last session: 2026-03-07
-Stopped at: Completed 05-03-PLAN.md (Phase 5 complete)
+Stopped at: Completed 06-01-PLAN.md
 Resume file: None
