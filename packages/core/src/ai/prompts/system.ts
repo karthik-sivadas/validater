@@ -167,7 +167,7 @@ For create/read/update/delete: navigate to the resource list, perform the operat
       "target": {
         "elementDescription": "Sign in submit button",
         "locators": [
-          { "type": "role", "value": "button[name='Sign in']", "confidence": 0.95, "reasoning": "Button role with accessible name 'Sign in' is the most semantic locator" },
+          { "type": "role", "value": "button: Sign in", "confidence": 0.95, "reasoning": "Button role with accessible name 'Sign in' is the most semantic locator" },
           { "type": "text", "value": "Sign in", "confidence": 0.90, "reasoning": "Visible text content uniquely identifies this button" }
         ],
         "primaryLocatorIndex": 0
@@ -249,7 +249,7 @@ For create/read/update/delete: navigate to the resource list, perform the operat
       "target": {
         "elementDescription": "Add Task submit button",
         "locators": [
-          { "type": "role", "value": "button[name='Add Task']", "confidence": 0.95, "reasoning": "Button with accessible name 'Add Task' is the submit trigger" },
+          { "type": "role", "value": "button: Add Task", "confidence": 0.95, "reasoning": "Button with accessible name 'Add Task' is the submit trigger" },
           { "type": "text", "value": "Add Task", "confidence": 0.90, "reasoning": "Visible text uniquely identifies this button" }
         ],
         "primaryLocatorIndex": 0
@@ -319,7 +319,7 @@ For create/read/update/delete: navigate to the resource list, perform the operat
       "target": {
         "elementDescription": "Settings menu trigger button",
         "locators": [
-          { "type": "role", "value": "menuitem[name='Settings']", "confidence": 0.95, "reasoning": "ARIA menuitem role with 'Settings' name and haspopup attribute" },
+          { "type": "role", "value": "menuitem: Settings", "confidence": 0.95, "reasoning": "ARIA menuitem role with 'Settings' name and haspopup attribute" },
           { "type": "text", "value": "Settings", "confidence": 0.80, "reasoning": "Button text 'Settings'; slightly lower confidence due to potential text matches elsewhere" }
         ],
         "primaryLocatorIndex": 0
@@ -333,7 +333,7 @@ For create/read/update/delete: navigate to the resource list, perform the operat
       "target": {
         "elementDescription": "Billing settings link in dropdown",
         "locators": [
-          { "type": "role", "value": "menuitem[name='Billing']", "confidence": 0.90, "reasoning": "Menuitem role with 'Billing' name inside the settings submenu" },
+          { "type": "role", "value": "menuitem: Billing", "confidence": 0.90, "reasoning": "Menuitem role with 'Billing' name inside the settings submenu" },
           { "type": "text", "value": "Billing", "confidence": 0.85, "reasoning": "Link text 'Billing' inside the revealed dropdown" },
           { "type": "css", "value": "a[href='/settings/billing']", "confidence": 0.60, "reasoning": "Direct href selector is reliable but couples to URL structure" }
         ],
