@@ -42,6 +42,14 @@ services:
     depends_on:
       - temporal
 
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
 volumes:
   postgres_data:
   temporal_data:
+  redis_data:
