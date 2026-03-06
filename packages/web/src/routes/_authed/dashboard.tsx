@@ -14,6 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { LiveViewer } from "@/components/live-viewer";
 
 export const Route = createFileRoute("/_authed/dashboard")({
   component: DashboardPage,
@@ -91,7 +92,7 @@ function DashboardPage() {
 
     return (
       <div className="flex min-h-[60vh] items-center justify-center px-4">
-        <Card className="w-full max-w-xl">
+        <Card className={`w-full ${status?.phase === 'executing' ? 'max-w-5xl' : 'max-w-xl'}`}>
           <CardHeader>
             <CardTitle className="text-lg font-semibold">Test Run in Progress</CardTitle>
             <p className="text-xs text-muted-foreground font-mono">{testRunId}</p>
@@ -112,6 +113,11 @@ function DashboardPage() {
 
             {/* Progress bar */}
             <Progress value={progressPercent} />
+
+            {/* Live viewer during execution */}
+            {status?.phase === 'executing' && testRunId && (
+              <LiveViewer testRunId={testRunId} />
+            )}
 
             {/* Viewport progress */}
             {status && (
