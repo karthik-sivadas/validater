@@ -107,10 +107,10 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 05-01: TanStack Start app scaffolding (routing, auth integration, server function wiring, layout)
-- [ ] 05-02: Test creation flow (URL + description form, submission, progress indicator)
-- [ ] 05-03: Results viewer (step-by-step replay, screenshots, multi-viewport comparison)
-- [ ] 05-04: Test history and inline reporting (list view, filtering, pass/fail summary)
+- [ ] 05-01-PLAN.md -- Dependencies, shadcn components, dashboard layout, server functions, auth wiring
+- [ ] 05-02-PLAN.md -- Test creation form with progress polling and status display
+- [ ] 05-03-PLAN.md -- Results viewer with step replay, screenshots, viewport tabs, inline report
+- [ ] 05-04-PLAN.md -- Test history list with URL-driven filtering, pagination, and navigation
 
 ### Phase 6: Live Streaming and Real-Time Updates
 **Goal**: Users can watch test execution in real-time with a live browser view and synchronized step log
