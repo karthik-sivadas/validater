@@ -189,6 +189,7 @@ export function simplifyDom(
   };
 
   return {
+    html: $.html(),
     elements: semanticElements,
     interactiveElements,
     pageContext,

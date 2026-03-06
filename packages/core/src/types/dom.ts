@@ -44,6 +44,7 @@ export interface PageContext {
 }
 
 export interface SimplifiedDom {
+  html: string;
   elements: SemanticElement[];
   interactiveElements: InteractiveElement[];
   pageContext: PageContext;
