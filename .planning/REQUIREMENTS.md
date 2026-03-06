@@ -97,8 +97,8 @@
 | PLAT-04 | Phase 8 | Pending |
 | PLAT-05 | Phase 8 | Pending |
 | PLAT-06 | Phase 9 | Pending |
-| INFR-01 | Phase 4 | Pending |
-| INFR-02 | Phase 4 | Pending |
+| INFR-01 | Phase 4 | Complete |
+| INFR-02 | Phase 4 | Complete |
 | INFR-03 | Deferred | Deferred -- architecture supports it; single queue until scaling demands separation |
 | INFR-04 | Phase 2 | Complete |
 | INFR-05 | Phase 3 | Complete |
@@ -112,4 +112,4 @@
 
 ---
 *Requirements defined: 2026-03-06*
-*Last updated: 2026-03-07 -- INFR-03 deferred from Phase 4 (architecture supports it, single queue sufficient for now)*
+*Last updated: 2026-03-06 after Phase 4 completion*
