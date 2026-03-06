@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "tsx src/worker.ts",
+    "run:hello": "tsx src/run-hello.ts",
     "build": "tsc",
     "typecheck": "tsc --noEmit"
   },
