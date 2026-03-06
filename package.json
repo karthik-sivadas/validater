@@ -1,0 +1,28 @@
+{
+  "name": "validater",
+  "private": true,
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "typecheck": "turbo typecheck",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "test": "turbo test",
+    "db:push": "pnpm --filter @validater/db db:push",
+    "db:generate": "pnpm --filter @validater/db db:generate",
+    "db:migrate": "pnpm --filter @validater/db db:migrate",
+    "docker:up": "docker compose -f docker/docker-compose.yml up -d",
+    "docker:down": "docker compose -f docker/docker-compose.yml down",
+    "temporal:worker": "pnpm --filter @validater/worker start"
+  },
+  "devDependencies": {
+    "turbo": "^2.8.0",
+    "@biomejs/biome": "^1.0.0",
+    "typescript": "^5.7.0"
+  },
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

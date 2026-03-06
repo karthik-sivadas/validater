@@ -1,0 +1,36 @@
+# Dependencies
+node_modules
+
+# Build outputs
+.output
+dist
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Turbo
+.turbo
+
+# TypeScript
+*.tsbuildinfo
+
+# TanStack Start / Vinxi
+.vinxi
+
+# Temporal
+.temporal
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Lock files (using pnpm)
+bun.lock
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
