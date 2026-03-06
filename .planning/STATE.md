@@ -10,29 +10,29 @@ See: .planning/PROJECT.md (updated 2026-03-06)
 ## Current Position
 
 Phase: 2 of 10 (AI Agent -- Test Generation)
-Plan: 3 of 5 in current phase
+Plan: 4 of 5 in current phase
 Status: In progress
-Last activity: 2026-03-06 -- Completed 02-03-PLAN.md (AI Client Integration)
+Last activity: 2026-03-06 -- Completed 02-04-PLAN.md (Selector Validation and Self-Healing)
 
-Progress: [████░░░░░░] 16%
+Progress: [█████░░░░░] 18%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 8
-- Average duration: ~5 min
-- Total execution time: ~37 min
+- Total plans completed: 9
+- Average duration: ~4 min
+- Total execution time: ~39 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation | 5/5 | ~25 min | ~5 min |
-| 02-ai-agent | 3/5 | ~12 min | ~4 min |
+| 02-ai-agent | 4/5 | ~14 min | ~3.5 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-03 (~8 min), 01-04 (~6 min), 01-05 (~4 min), 02-01 (~3 min), 02-03 (~6 min)
-- Trend: Stable
+- Last 5 plans: 01-04 (~6 min), 01-05 (~4 min), 02-01 (~3 min), 02-03 (~6 min), 02-04 (~2 min)
+- Trend: Stable/Improving
 
 *Updated after each plan completion*
 
@@ -73,6 +73,10 @@ Recent decisions affecting current work:
 - 02-03: LanguageModel return type annotation on createAIClient to avoid non-portable type inference
 - 02-03: Rate limiter defaults: concurrency 5, intervalCap 40, interval 60s (conservative Tier 1)
 - 02-03: Singleton defaultApiQueue ensures all API calls share rate limits application-wide
+- 02-04: verifyLocator wraps .count() in try/catch -- invalid selectors return found: false (no throw)
+- 02-04: healLocator cheapest-first: working alternatives (free) > AI-generated locators (expensive)
+- 02-04: healStepLocators returns new array (no mutation) -- downstream decides what to do with unhealed steps
+- 02-04: Role locator parsing supports "roleName" and "roleName: accessible name" formats
 
 ### Pending Todos
 
@@ -87,6 +91,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-06T17:29:29Z
-Stopped at: Completed 02-03-PLAN.md (AI Client Integration)
+Last session: 2026-03-06T17:35:02Z
+Stopped at: Completed 02-04-PLAN.md (Selector Validation and Self-Healing)
 Resume file: None
