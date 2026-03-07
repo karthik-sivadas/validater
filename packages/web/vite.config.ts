@@ -22,6 +22,7 @@ const config = defineConfig({
   test: {
     passWithNoTests: true,
     environment: 'jsdom',
+    exclude: ['e2e/**', 'node_modules/**'],
   },
 })
 
