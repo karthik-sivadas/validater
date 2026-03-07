@@ -1,0 +1,200 @@
+name: 'Validater Test'
+description: 'Run AI-powered Validater tests against a URL and report results'
+
+inputs:
+  api-url:
+    description: 'Validater API base URL (e.g., https://validater.example.com)'
+    required: true
+  api-key:
+    description: 'Validater API key (store as a GitHub secret, e.g., secrets.VALIDATER_API_KEY)'
+    required: true
+  url:
+    description: 'URL to test'
+    required: true
+  description:
+    description: 'Test description in natural language'
+    required: true
+  viewports:
+    description: 'Comma-separated viewport list (desktop,tablet,mobile)'
+    required: false
+    default: 'desktop,tablet,mobile'
+  timeout:
+    description: 'Timeout in seconds for the test run to complete'
+    required: false
+    default: '300'
+
+outputs:
+  test-run-id:
+    description: 'The Validater test run ID'
+    value: ${{ steps.trigger.outputs.test-run-id }}
+  status:
+    description: 'Final test run status (complete/failed/timeout)'
+    value: ${{ steps.poll.outputs.status }}
+  results-url:
+    description: 'URL to view results in the Validater dashboard'
+    value: ${{ steps.trigger.outputs.results-url }}
+  results-json:
+    description: 'Full JSON results payload for downstream processing'
+    value: ${{ steps.poll.outputs.results-json }}
+
+runs:
+  using: 'composite'
+  steps:
+    # Step 1: Mask the API key so it never appears in logs
+    - name: Mask API key
+      id: mask
+      shell: bash
+      run: |
+        echo "::add-mask::${{ inputs.api-key }}"
+
+    # Step 2: Trigger a new test run via the Validater REST API
+    - name: Trigger test run
+      id: trigger
+      shell: bash
+      run: |
+        # Build viewports JSON array from comma-separated input
+        VIEWPORTS_JSON=$(echo '${{ inputs.viewports }}' | jq -R 'split(",")')
+
+        # POST to create a new test run (curl -s to suppress progress output)
+        RESPONSE=$(curl -s -w "\n%{http_code}" \
+          -X POST "${{ inputs.api-url }}/api/v1/runs" \
+          -H "Authorization: Bearer ${{ inputs.api-key }}" \
+          -H "Content-Type: application/json" \
+          -d "{\"url\":\"${{ inputs.url }}\",\"testDescription\":\"${{ inputs.description }}\",\"viewports\":${VIEWPORTS_JSON}}")
+
+        # Separate HTTP status code from response body
+        HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+        BODY=$(echo "$RESPONSE" | sed '$d')
+
+        if [ "$HTTP_CODE" != "201" ]; then
+          echo "::error::Failed to trigger test run (HTTP ${HTTP_CODE}): ${BODY}"
+          exit 1
+        fi
+
+        TEST_RUN_ID=$(echo "$BODY" | jq -r '.testRunId')
+
+        if [ -z "$TEST_RUN_ID" ] || [ "$TEST_RUN_ID" = "null" ]; then
+          echo "::error::Failed to parse testRunId from response: ${BODY}"
+          exit 1
+        fi
+
+        echo "Test run triggered: ${TEST_RUN_ID}"
+        echo "test-run-id=${TEST_RUN_ID}" >> "$GITHUB_OUTPUT"
+        echo "results-url=${{ inputs.api-url }}/runs/${TEST_RUN_ID}" >> "$GITHUB_OUTPUT"
+
+    # Step 3: Poll the test run until completion or timeout
+    - name: Poll for completion
+      id: poll
+      shell: bash
+      run: |
+        TIMEOUT=${{ inputs.timeout }}
+        ELAPSED=0
+        INTERVAL=10
+        TEST_RUN_ID="${{ steps.trigger.outputs.test-run-id }}"
+
+        while [ "$ELAPSED" -lt "$TIMEOUT" ]; do
+          RESPONSE=$(curl -s \
+            "${{ inputs.api-url }}/api/v1/runs/${TEST_RUN_ID}" \
+            -H "Authorization: Bearer ${{ inputs.api-key }}")
+
+          STATUS=$(echo "$RESPONSE" | jq -r '.status')
+          PHASE=$(echo "$RESPONSE" | jq -r '.phase // empty')
+          VIEWPORTS_COMPLETE=$(echo "$RESPONSE" | jq -r '.viewportsComplete // 0')
+          VIEWPORTS_TOTAL=$(echo "$RESPONSE" | jq -r '.viewportsTotal // 0')
+
+          if [ "$STATUS" = "complete" ]; then
+            echo "status=complete" >> "$GITHUB_OUTPUT"
+            # Store results JSON (use delimiter for multi-line output)
+            EOF_MARKER=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+            echo "results-json<<${EOF_MARKER}" >> "$GITHUB_OUTPUT"
+            echo "$RESPONSE" >> "$GITHUB_OUTPUT"
+            echo "${EOF_MARKER}" >> "$GITHUB_OUTPUT"
+            echo "Test run complete!"
+            break
+          fi
+
+          if [ "$STATUS" = "failed" ]; then
+            echo "status=failed" >> "$GITHUB_OUTPUT"
+            echo "::error::Test run failed"
+            exit 1
+          fi
+
+          echo "Test run phase: ${PHASE:-pending} (${ELAPSED}s elapsed, ${VIEWPORTS_COMPLETE}/${VIEWPORTS_TOTAL} viewports)"
+          sleep "$INTERVAL"
+          ELAPSED=$((ELAPSED + INTERVAL))
+        done
+
+        if [ "$ELAPSED" -ge "$TIMEOUT" ]; then
+          echo "status=timeout" >> "$GITHUB_OUTPUT"
+          echo "::error::Test run timed out after ${TIMEOUT}s"
+          exit 1
+        fi
+
+    # Step 4: Generate a summary report in the GitHub Actions UI
+    - name: Report results
+      id: report
+      shell: bash
+      if: always() && steps.trigger.outputs.test-run-id != ''
+      run: |
+        TEST_RUN_ID="${{ steps.trigger.outputs.test-run-id }}"
+        STATUS="${{ steps.poll.outputs.status }}"
+        RESULTS_URL="${{ steps.trigger.outputs.results-url }}"
+
+        # Header
+        if [ "$STATUS" = "complete" ]; then
+          STATUS_ICON="Pass"
+        elif [ "$STATUS" = "failed" ]; then
+          STATUS_ICON="Fail"
+        else
+          STATUS_ICON="Timeout"
+        fi
+
+        {
+          echo "## Validater Test Results"
+          echo ""
+          echo "| Field | Value |"
+          echo "|-------|-------|"
+          echo "| **Status** | ${STATUS_ICON} |"
+          echo "| **Test Run ID** | \`${TEST_RUN_ID}\` |"
+          echo "| **URL Tested** | ${{ inputs.url }} |"
+          echo "| **Results** | [View in Validater](${RESULTS_URL}) |"
+          echo ""
+        } >> "$GITHUB_STEP_SUMMARY"
+
+        # Per-viewport breakdown (only if we have results JSON)
+        RESULTS_JSON='${{ steps.poll.outputs.results-json }}'
+        if [ -n "$RESULTS_JSON" ] && echo "$RESULTS_JSON" | jq -e '.results' > /dev/null 2>&1; then
+          {
+            echo "### Viewport Results"
+            echo ""
+            echo "| Viewport | Steps | Duration |"
+            echo "|----------|-------|----------|"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          echo "$RESULTS_JSON" | jq -r '.results[] | "| \(.viewport) | \(.steps | length) steps | \(.totalDurationMs // 0)ms |"' >> "$GITHUB_STEP_SUMMARY"
+
+          # Count any failed steps
+          FAILED_STEPS=$(echo "$RESULTS_JSON" | jq '[.results[].steps[] | select(.status == "failed")] | length')
+          TOTAL_STEPS=$(echo "$RESULTS_JSON" | jq '[.results[].steps[]] | length')
+          PASSED_STEPS=$((TOTAL_STEPS - FAILED_STEPS))
+
+          {
+            echo ""
+            echo "**Steps:** ${PASSED_STEPS}/${TOTAL_STEPS} passed"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [ "$FAILED_STEPS" -gt 0 ]; then
+            {
+              echo ""
+              echo "<details>"
+              echo "<summary>Failed Steps</summary>"
+              echo ""
+              echo "| Viewport | Step | Action | Error |"
+              echo "|----------|------|--------|-------|"
+            } >> "$GITHUB_STEP_SUMMARY"
+
+            echo "$RESULTS_JSON" | jq -r '.results[] as $r | $r.steps[] | select(.status == "failed") | "| \($r.viewport) | Step \(.stepOrder) | \(.action // "unknown") | \(.errorMessage // "N/A") |"' >> "$GITHUB_STEP_SUMMARY"
+
+            echo "</details>" >> "$GITHUB_STEP_SUMMARY"
+          fi
+        fi
