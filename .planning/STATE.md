@@ -185,6 +185,10 @@ Recent decisions affecting current work:
 - 10-01: coverage.enabled: false in root config -- coverage only runs with explicit --coverage flag
 - 10-01: 50% global floor thresholds will cause exit code 1 until tests are written in plans 10-02/10-03
 - 10-01: __test-utils__ subpath export on @validater/core for cross-package mock imports
+- 10-02: vi.hoisted() required for mock variable sharing with vi.mock factory functions (hoisted call order)
+- 10-02: vi.mock paths must be relative to the test file, not the source module being tested
+- 10-02: simplifyDom strips head via STRIP_ELEMENTS so title is unavailable for pageContext.title
+- 10-02: Progressive token reduction in simplifyDom reduces but may not fully enforce strict token budget
 - 10-03: vi.advanceTimersByTimeAsync instead of waitFor for hook tests (waitFor deadlocks with vi.useFakeTimers)
 - 10-03: Coverage thresholds set at actual minus 5% buffer: lines 27%, branches 74%, functions 63%, statements 27%
 - 10-03: vite-tsconfig-paths plugin added to web vitest.config.ts for @ alias resolution in test environment
