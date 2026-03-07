@@ -12,6 +12,8 @@ import * as validateActivities from "./activities/validate-steps.activity.js";
 import { createExecuteActivities } from "./activities/execute-steps.activity.js";
 import { createPersistActivities } from "./activities/persist-results.activity.js";
 import * as exportVideoActivities from "./activities/export-video.activity.js";
+import * as suiteGenActivities from "./activities/generate-suite.activity.js";
+import { createPersistSuiteActivities } from "./activities/persist-suite.activity.js";
 
 const require = createRequire(import.meta.url);
 
@@ -21,6 +23,7 @@ async function run() {
 
   const persistActivities = createPersistActivities(db);
   const executeActivities = createExecuteActivities(db);
+  const persistSuiteActivities = createPersistSuiteActivities(db);
 
   const worker = await Worker.create({
     workflowsPath: require.resolve("./workflows/test-run.workflow"),
@@ -31,6 +34,8 @@ async function run() {
       ...executeActivities,
       ...persistActivities,
       ...exportVideoActivities,
+      ...suiteGenActivities,
+      ...persistSuiteActivities,
     },
     taskQueue: "test-pipeline",
   });

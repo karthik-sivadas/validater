@@ -17,6 +17,10 @@ import { exportVideoWorkflow } from './export-video.workflow.js';
 // Re-export so Temporal registers the export workflow in the bundle
 export { exportVideoWorkflow };
 
+import { testSuiteWorkflow } from './test-suite.workflow.js';
+// Re-export so Temporal registers the suite workflow in the bundle
+export { testSuiteWorkflow };
+
 // ---------------------------------------------------------------------------
 // Status query (queryable at any point during workflow execution)
 // ---------------------------------------------------------------------------
