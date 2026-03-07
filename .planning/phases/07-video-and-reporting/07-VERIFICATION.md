@@ -116,12 +116,12 @@ functional_scenarios:
 
 | # | Truth | Functional | Static | Final | Evidence |
 |---|-------|-----------|--------|-------|----------|
-| 1 | Every test run produces a debug video recording viewable in the results page | DEFERRED | VERIFIED | VERIFIED | recordVideo wired in execute-steps activity, saveVideo saves to disk, videoPath persisted in DB, video player UI in results page |
-| 2 | User can export a polished video with step annotations and trimmed dead time at a selected resolution | DEFERRED | VERIFIED | VERIFIED | FFmpeg processor with drawtext+trim+scale, Temporal export workflow, export UI with resolution picker and checkboxes |
-| 3 | User can export test report as PDF or HTML for sharing with stakeholders | DEFERRED | VERIFIED | VERIFIED | HTML template + generator, PDF via Playwright Chromium, server functions, export buttons on results page |
+| 1 | Every test run produces a debug video recording viewable in the results page | SKIPPED | VERIFIED | VERIFIED | recordVideo wired in execute-steps activity, saveVideo saves to disk, videoPath persisted in DB, video player UI in results page. Functional SKIPPED: no completed test runs with video recordings exist (video code deployed in Phase 7 but no new test runs created since) |
+| 2 | User can export a polished video with step annotations and trimmed dead time at a selected resolution | SKIPPED | VERIFIED | VERIFIED | FFmpeg processor with drawtext+trim+scale, Temporal export workflow, export UI with resolution picker and checkboxes. Functional SKIPPED: no completed test runs with video recordings exist |
+| 3 | User can export test report as PDF or HTML for sharing with stakeholders | PASSED | VERIFIED | VERIFIED | HTML template + generator, PDF via Playwright Chromium, server functions, export buttons on results page. Functional PASSED: Export HTML downloaded validater-report-p6B3TMmUICg2w81N50dSL.html, Export PDF downloaded validater-report-p6B3TMmUICg2w81N50dSL.pdf, zero console errors |
 
-**Score:** 3/3 truths verified (static)
-**Functional tests:** DEFERRED to orchestrator (3 scenarios defined)
+**Score:** 3/3 truths verified (1 functional PASSED, 2 functional SKIPPED per skip_if conditions, 3 static VERIFIED)
+**Functional tests:** Executed by orchestrator via Playwright MCP (2026-03-07)
 
 ### Required Artifacts
 
