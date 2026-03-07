@@ -1,0 +1,103 @@
+# Validater Tests on Deploy
+# ========================
+#
+# This example workflow runs Validater AI-powered tests when:
+# 1. Manually triggered via workflow_dispatch (for testing/debugging)
+# 2. Automatically on deployment success (via deployment_status event)
+#
+# Setup:
+# 1. Go to your repo Settings > Secrets and variables > Actions
+# 2. Add these repository secrets:
+#    - VALIDATER_API_URL: Your Validater instance URL (e.g., https://validater.example.com)
+#    - VALIDATER_API_KEY: Your Validater API key (create one in the Validater dashboard)
+#
+# Customization:
+# - Change triggers: Replace deployment_status with push/pull_request for different workflows
+# - Add scheduled runs: Use `schedule: - cron: '0 6 * * *'` for daily smoke tests
+# - Multiple environments: Create separate jobs with different URLs per environment
+# - Custom viewports: Adjust the viewports input (e.g., 'desktop' for faster checks)
+
+name: Validater Tests on Deploy
+
+on:
+  # Manual trigger for testing the workflow
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'URL to test'
+        required: true
+        type: string
+      description:
+        description: 'Test description (plain English)'
+        required: true
+        default: 'Verify the deployed application works correctly'
+        type: string
+
+  # Automatic trigger when a deployment succeeds
+  deployment_status:
+
+jobs:
+  validater-test:
+    name: Run Validater Tests
+    runs-on: ubuntu-latest
+
+    # For deployment_status: only run when the deployment succeeds
+    # For workflow_dispatch: always run (the if condition is true when event is not deployment_status)
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.deployment_status.state == 'success'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Run Validater tests using the composite action
+      - name: Run Validater tests
+        id: validater
+        uses: ./.github/actions/validater-test
+        with:
+          api-url: ${{ secrets.VALIDATER_API_URL }}
+          api-key: ${{ secrets.VALIDATER_API_KEY }}
+          url: ${{ github.event.inputs.url || github.event.deployment_status.target_url }}
+          description: ${{ github.event.inputs.description || 'Verify deployment works correctly' }}
+          viewports: 'desktop,mobile'
+          timeout: '300'
+
+      # Post results as a comment on the associated PR (deployment triggers only)
+      - name: Comment on PR with results
+        if: github.event_name == 'deployment_status' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const status = '${{ steps.validater.outputs.status }}';
+            const testRunId = '${{ steps.validater.outputs.test-run-id }}';
+            const resultsUrl = '${{ steps.validater.outputs.results-url }}';
+
+            const statusIcon = status === 'complete' ? ':white_check_mark:' : ':x:';
+            const body = [
+              `## ${statusIcon} Validater Test Results`,
+              '',
+              `| Field | Value |`,
+              `|-------|-------|`,
+              `| **Status** | ${status} |`,
+              `| **Test Run** | \`${testRunId}\` |`,
+              `| **Results** | [View in Validater](${resultsUrl}) |`,
+              '',
+              `*Triggered by deployment to \`${context.payload.deployment_status?.environment || 'unknown'}\`*`
+            ].join('\n');
+
+            // Find PRs associated with the deployment commit
+            const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.payload.deployment?.sha || context.sha,
+            });
+
+            for (const pr of prs) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                body,
+              });
+            }
