@@ -58,6 +58,13 @@ function AuthedLayout() {
                 History
               </Link>
               <Link
+                to="/suites"
+                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                activeProps={{ className: "text-primary font-medium" }}
+              >
+                Suites
+              </Link>
+              <Link
                 to="/settings"
                 className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 activeProps={{ className: "text-primary font-medium" }}
