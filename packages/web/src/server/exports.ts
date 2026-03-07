@@ -9,6 +9,11 @@ const ExportInputSchema = z.object({
   testRunId: z.string().min(1),
 });
 
+const VideoFileInputSchema = z.object({
+  testRunId: z.string().min(1),
+  viewport: z.string().min(1),
+});
+
 // ---------------------------------------------------------------------------
 // Shared helper: fetch test run data and build ReportData
 // ---------------------------------------------------------------------------
@@ -111,5 +116,61 @@ export const exportPdfReport = createServerFn({ method: "GET" })
     return {
       pdfBase64,
       filename: `validater-report-${data.testRunId}.pdf`,
+    };
+  });
+
+// ---------------------------------------------------------------------------
+// getVideoFile -- serve debug video recording as base64
+// ---------------------------------------------------------------------------
+
+export const getVideoFile = createServerFn({ method: "GET" })
+  .inputValidator(VideoFileInputSchema)
+  .handler(async ({ data }) => {
+    const { getRequestHeaders } = await import("@tanstack/react-start/server");
+    const { auth } = await import("@/lib/auth");
+    const { db, testRuns, testRunResults } = await import("@validater/db");
+    const { eq, and } = await import("drizzle-orm");
+    const { readFile } = await import("fs/promises");
+
+    const headers = getRequestHeaders();
+    const session = await auth.api.getSession({ headers });
+    if (!session) throw new Error("Unauthorized");
+
+    // Verify test run ownership
+    const runRows = await db
+      .select()
+      .from(testRuns)
+      .where(eq(testRuns.id, data.testRunId))
+      .limit(1);
+    const run = runRows[0];
+    if (!run) throw new Error("Not found");
+    if (run.userId !== session.user.id) throw new Error("Not found");
+
+    // Fetch result for the viewport
+    const resultRows = await db
+      .select()
+      .from(testRunResults)
+      .where(
+        and(
+          eq(testRunResults.testRunId, data.testRunId),
+          eq(testRunResults.viewport, data.viewport),
+        ),
+      )
+      .limit(1);
+    const result = resultRows[0];
+    if (!result?.videoPath) {
+      return { found: false as const };
+    }
+
+    // Resolve absolute path and read file
+    const { getVideoPath } = await import("@validater/worker");
+    const absPath = getVideoPath(result.videoPath);
+    const fileBuffer = await readFile(absPath);
+    const videoBase64 = fileBuffer.toString("base64");
+
+    return {
+      found: true as const,
+      videoBase64,
+      mimeType: "video/webm" as const,
     };
   });

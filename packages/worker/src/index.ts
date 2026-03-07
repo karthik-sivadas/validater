@@ -15,3 +15,6 @@ export { testRunWorkflow } from "./workflows/test-run.workflow.js";
 export { generateHtmlReport } from "./reports/html-generator.js";
 export type { ReportData, ReportViewport, ReportStep } from "./reports/html-generator.js";
 export { generatePdfReport } from "./reports/pdf-generator.js";
+
+// Video storage
+export { getVideoPath } from "./video/storage.js";

@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { getTestRunDetail } from "@/server/test-runs";
-import { exportHtmlReport, exportPdfReport } from "@/server/exports";
+import { exportHtmlReport, exportPdfReport, getVideoFile } from "@/server/exports";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -48,6 +48,7 @@ interface TestRunResult {
   viewport: string;
   url: string;
   totalDurationMs: number;
+  videoPath: string | null;
   startedAt: Date;
   completedAt: Date;
   createdAt: Date;
@@ -326,6 +327,7 @@ function TestRunDetailPage() {
           {results.map((result) => (
             <TabsContent key={result.viewport} value={result.viewport}>
               <ViewportPanel
+                testRunId={run.id}
                 result={result}
                 onScreenshotClick={setSelectedScreenshot}
               />
@@ -361,9 +363,11 @@ function TestRunDetailPage() {
 // ---------------------------------------------------------------------------
 
 interface ViewportPanelProps {
+  testRunId: string;
   result: {
     viewport: string;
     totalDurationMs: number;
+    videoPath?: string | null;
     startedAt: string | Date;
     completedAt: string | Date;
     steps: Array<{
@@ -383,7 +387,17 @@ interface ViewportPanelProps {
   onScreenshotClick: (base64: string) => void;
 }
 
-function ViewportPanel({ result, onScreenshotClick }: ViewportPanelProps) {
+function ViewportPanel({ testRunId, result, onScreenshotClick }: ViewportPanelProps) {
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const [loadingVideo, setLoadingVideo] = useState(false);
+
+  // Clean up object URL on unmount or when videoUrl changes
+  useEffect(() => {
+    return () => {
+      if (videoUrl) URL.revokeObjectURL(videoUrl);
+    };
+  }, [videoUrl]);
+
   const durationSec = (result.totalDurationMs / 1000).toFixed(1);
   const sortedSteps = [...result.steps].sort(
     (a, b) => a.stepOrder - b.stepOrder,
@@ -410,6 +424,54 @@ function ViewportPanel({ result, onScreenshotClick }: ViewportPanelProps) {
         <span>Started {formatDate(result.startedAt)}</span>
         <span>Completed {formatDate(result.completedAt)}</span>
       </div>
+
+      {/* Debug video playback */}
+      {result.videoPath && (
+        <div className="flex flex-col gap-2">
+          {!videoUrl && (
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={loadingVideo}
+              onClick={async () => {
+                setLoadingVideo(true);
+                try {
+                  const res = await getVideoFile({
+                    data: { testRunId, viewport: result.viewport },
+                  });
+                  if (res.found) {
+                    const binary = atob(res.videoBase64);
+                    const bytes = new Uint8Array(binary.length);
+                    for (let i = 0; i < binary.length; i++)
+                      bytes[i] = binary.charCodeAt(i);
+                    const blob = new Blob([bytes], { type: res.mimeType });
+                    setVideoUrl(URL.createObjectURL(blob));
+                  }
+                } finally {
+                  setLoadingVideo(false);
+                }
+              }}
+            >
+              {loadingVideo ? "Loading..." : "Play Debug Video"}
+            </Button>
+          )}
+
+          {videoUrl && (
+            <div className="rounded-md border border-border overflow-hidden">
+              <video
+                controls
+                preload="metadata"
+                className="w-full max-h-[480px]"
+                src={videoUrl}
+              >
+                <p className="text-sm text-muted-foreground p-4">
+                  Your browser does not support WebM video playback.
+                </p>
+              </video>
+            </div>
+          )}
+        </div>
+      )}
 
       {useScrollArea ? (
         <ScrollArea className="h-[600px]">{stepList}</ScrollArea>
