@@ -19,6 +19,9 @@ const config = defineConfig({
     tanstackStart(),
     viteReact(),
   ],
+  optimizeDeps: {
+    exclude: ['playwright', 'playwright-core'],
+  },
   test: {
     passWithNoTests: true,
     environment: 'jsdom',
