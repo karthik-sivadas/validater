@@ -20,7 +20,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 6: Live Streaming and Real-Time Updates** - CDP screencast, Redis pub/sub, Hono WebSocket sidecar, live viewer
 - [x] **Phase 6.1: Step Details, Screenshots, and Browser Experience** - Rich step metadata, screenshot persistence, streaming quality (INSERTED)
 - [x] **Phase 7: Video and Reporting** - Debug recording, polished video export, PDF/HTML reports
-- [ ] **Phase 8: CI/CD and API Layer** - Public REST API, GitHub Actions integration, webhooks
+- [x] **Phase 8: CI/CD and API Layer** - Public REST API, GitHub Actions integration, webhooks
 - [ ] **Phase 9: Test Suite Generation and Accessibility** - Full suite from feature descriptions, axe-core integration
 - [ ] **Phase 10: Quality and Coverage** - Tiered test coverage across all platform packages
 
@@ -168,9 +168,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 08-01-PLAN.md -- API key infrastructure, Better Auth plugin, verification helper, key management UI (settings page)
-- [ ] 08-02-PLAN.md -- REST API endpoints (POST /api/v1/runs, GET /api/v1/runs/:id) with shared core logic
-- [ ] 08-03-PLAN.md -- GitHub Actions composite action and example workflow for CI/CD integration
+- [x] 08-01-PLAN.md -- API key infrastructure, Better Auth plugin, verification helper, key management UI (settings page)
+- [x] 08-02-PLAN.md -- REST API endpoints (POST /api/v1/runs, GET /api/v1/runs/:id) with shared core logic
+- [x] 08-03-PLAN.md -- GitHub Actions composite action and example workflow for CI/CD integration
 
 ### Phase 9: Test Suite Generation and Accessibility
 **Goal**: Users can generate comprehensive test suites from feature descriptions and get accessibility insights on every test run
@@ -218,6 +218,6 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 | 6. Live Streaming and Real-Time Updates | 2/2 | Complete | 2026-03-07 |
 | 6.1. Step Details, Screenshots, and Browser Experience | 2/2 | Complete | 2026-03-07 |
 | 7. Video and Reporting | 3/3 | Complete | 2026-03-07 |
-| 8. CI/CD and API Layer | 0/3 | Not started | - |
+| 8. CI/CD and API Layer | 3/3 | Complete | 2026-03-07 |
 | 9. Test Suite Generation and Accessibility | 0/2 | Not started | - |
 | 10. Quality and Coverage | 0/3 | Not started | - |
