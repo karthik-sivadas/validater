@@ -29,6 +29,7 @@ export function createPersistActivities(db: Database) {
         totalDurationMs: result.totalDurationMs,
         startedAt: new Date(result.startedAt),
         completedAt: new Date(result.completedAt),
+        videoPath: result.videoPath ?? null,
       });
 
       for (const stepResult of result.stepResults) {

@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile, rm } from 'fs/promises';
+import { mkdir, readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
 
 const DATA_DIR = process.env.DATA_DIR ?? join(process.cwd(), 'data');

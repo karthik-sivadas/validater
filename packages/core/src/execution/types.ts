@@ -22,6 +22,7 @@ export interface ExecutionResult {
   totalDurationMs: number;
   startedAt: string; // ISO 8601
   completedAt: string; // ISO 8601
+  videoPath?: string; // Relative path to debug video (e.g., "{testRunId}/{viewport}.webm")
 }
 
 export interface ExecutionConfig {

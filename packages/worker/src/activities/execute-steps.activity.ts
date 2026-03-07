@@ -8,6 +8,10 @@ import { heartbeat } from '@temporalio/activity';
 import type { Database } from '@validater/db';
 import { stepScreenshots } from '@validater/db';
 import { nanoid } from 'nanoid';
+import { mkdtemp, rm } from 'fs/promises';
+import { join } from 'path';
+import { tmpdir } from 'os';
+import { saveVideo } from '../video/storage.js';
 
 export interface ExecuteStepsParams {
   url: string;
@@ -32,8 +36,9 @@ export function createExecuteActivities(db: Database) {
    * Temporal activity: execute test steps in a single viewport.
    *
    * Acquires a pooled browser, creates an isolated BrowserContext with
-   * the specified viewport settings, runs all steps via the core execution
-   * engine, captures screenshots, and returns a fully serializable
+   * the specified viewport settings and video recording, runs all steps
+   * via the core execution engine, captures screenshots, saves the debug
+   * video to persistent storage, and returns a fully serializable
    * ExecutionResult.
    *
    * Screenshots are persisted to the step_screenshots staging table
@@ -41,12 +46,16 @@ export function createExecuteActivities(db: Database) {
    * The persist-results activity reads from this staging table when
    * creating final test_run_steps rows.
    *
+   * Debug video is recorded via Playwright's built-in recordVideo and
+   * saved to data/videos/{testRunId}/{viewport}.webm after context close.
+   * The relative path is returned in the ExecutionResult for DB persistence.
+   *
    * When streamingConfig.enabled is true, starts CDP screencast to capture
    * browser frames and publishes them to Redis. Step events include
    * action and description for enriched live streaming.
    *
-   * All streaming and screenshot-staging operations are best-effort --
-   * failures are caught and do not affect test execution.
+   * All streaming, screenshot-staging, and video operations are best-effort
+   * -- failures are caught and do not affect test execution.
    *
    * Browser acquire/release and context lifecycle are guaranteed via
    * try/finally -- no leaked resources even on step failure.
@@ -57,13 +66,32 @@ export function createExecuteActivities(db: Database) {
     const pooled = await pool.acquire();
     heartbeat('browser acquired');
 
+    // Create temp directory for Playwright video recording
+    const tempVideoDir = await mkdtemp(join(tmpdir(), 'validater-video-'));
+
+    // Outer scope for video path -- set after context.close()
+    let videoRelativePath: string | undefined;
+
     try {
       const context = await pooled.browser.newContext({
         viewport: { width: params.viewport.width, height: params.viewport.height },
         deviceScaleFactor: params.viewport.deviceScaleFactor,
         isMobile: params.viewport.isMobile,
         hasTouch: params.viewport.hasTouch,
+        recordVideo: {
+          dir: tempVideoDir,
+          size: { width: params.viewport.width, height: params.viewport.height },
+        },
       });
+
+      // Track step results and video reference at this scope so they
+      // survive the try block and are accessible after context.close()
+      let lightResults: ExecutionResult['stepResults'] = [];
+      let totalDurationMs = 0;
+
+      // Capture video reference before context.close() -- the path is
+      // known before close, but the file is only finalized AFTER close.
+      let videoRef: Awaited<ReturnType<NonNullable<Awaited<ReturnType<typeof context.newPage>>['video']>>> | null = null;
 
       try {
         const page = await context.newPage();
@@ -140,25 +168,51 @@ export function createExecuteActivities(db: Database) {
           }
         }
 
+        // Capture video reference BEFORE context.close()
+        // path() returns where the video WILL be written; the file is
+        // finalized only after context.close() completes.
+        const pages = context.pages();
+        videoRef = pages[0]?.video() ?? null;
+
         // Strip screenshotBase64 from results to stay within Temporal's
         // gRPC payload size limit (~2MB). Screenshots are already persisted
         // to the staging table above.
-        const lightResults = stepResults.map(({ screenshotBase64, ...rest }) => ({
+        lightResults = stepResults.map(({ screenshotBase64, ...rest }) => ({
           ...rest,
           screenshotBase64: '',
         }));
-
-        return {
-          viewport: params.viewport.name,
-          url: params.url,
-          stepResults: lightResults,
-          totalDurationMs: stepResults.reduce((sum, r) => sum + r.durationMs, 0),
-          startedAt: startTime,
-          completedAt: new Date().toISOString(),
-        };
+        totalDurationMs = stepResults.reduce((sum, r) => sum + r.durationMs, 0);
       } finally {
+        // context.close() triggers video file finalization on disk
         await context.close();
+
+        // Save video to persistent storage (best-effort)
+        if (videoRef) {
+          try {
+            const videoFilePath = await videoRef.path();
+            videoRelativePath = await saveVideo(
+              params.streamingConfig?.testRunId ?? '',
+              params.viewport.name,
+              videoFilePath,
+            );
+          } catch {
+            // Video save failure must not break execution
+          }
+        }
+
+        // Cleanup temp directory (best-effort)
+        await rm(tempVideoDir, { recursive: true, force: true }).catch(() => {});
       }
+
+      return {
+        viewport: params.viewport.name,
+        url: params.url,
+        stepResults: lightResults,
+        totalDurationMs,
+        startedAt: startTime,
+        completedAt: new Date().toISOString(),
+        videoPath: videoRelativePath,
+      };
     } finally {
       pooled.pagesProcessed++;
       await pool.release(pooled);
