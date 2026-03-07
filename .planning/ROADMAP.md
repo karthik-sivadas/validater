@@ -197,12 +197,12 @@ Plans:
   2. Service layer has 80%+ test coverage
   3. UI components have 60%+ test coverage
   4. Integration tests cover the full pipeline from API call to result persistence
-**Plans**: 4 plans
+**Plans**: 3 plans
 
 Plans:
-- [ ] 10-01: Test infrastructure and coverage tooling (Vitest config, coverage reporters, CI gates)
-- [ ] 10-02: Business logic and service tests (95% and 80% targets)
-- [ ] 10-03: UI component tests and integration tests (60% target, end-to-end pipeline)
+- [ ] 10-01-PLAN.md -- Vitest test infrastructure, monorepo projects config, coverage thresholds, shared test utilities
+- [ ] 10-02-PLAN.md -- Business logic tests (core package) and service layer tests (worker package)
+- [ ] 10-03-PLAN.md -- UI component tests, hook tests, pipeline integration test, coverage threshold tuning
 
 ## Progress
 
