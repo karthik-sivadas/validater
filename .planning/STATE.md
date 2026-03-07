@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-03-06)
 ## Current Position
 
 Phase: 8 of 10 (CI/CD and API Layer)
-Plan: 1 of 2 in current phase
+Plan: 2 of 3 in current phase
 Status: In progress
-Last activity: 2026-03-07 -- Completed 08-01-PLAN.md
+Last activity: 2026-03-07 -- Completed 08-02-PLAN.md
 
-Progress: [████████░░] 79%
+Progress: [█████████░] 97%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 26
-- Average duration: ~4.9 min
-- Total execution time: ~127 min
+- Total plans completed: 28
+- Average duration: ~4.6 min
+- Total execution time: ~130 min
 
 **By Phase:**
 
@@ -35,11 +35,11 @@ Progress: [████████░░] 79%
 | 06-live-streaming | 2/2 | ~9 min | ~4.5 min |
 | 06.1-step-details | 2/2 | ~11 min | ~5.5 min |
 | 07-video-and-reporting | 3/3 | ~10 min | ~3.3 min |
-| 08-cicd-and-api-layer | 1/2 | ~6 min | ~6 min |
+| 08-cicd-and-api-layer | 2/3 | ~9 min | ~4.5 min |
 
 **Recent Trend:**
-- Last 5 plans: 06.1-02 (~3 min), 07-01 (~4 min), 07-02 (~4 min), 07-03 (~6 min), 08-01 (~6 min)
-- Trend: Consistent ~4-6 min per plan
+- Last 5 plans: 07-01 (~4 min), 07-02 (~4 min), 07-03 (~6 min), 08-01 (~6 min), 08-02 (~3 min)
+- Trend: Consistent ~3-6 min per plan
 
 *Updated after each plan completion*
 
@@ -155,6 +155,11 @@ Recent decisions affecting current work:
 - 08-01: Rate limiting uses timeWindow (ms) and maxRequests (not window/max as initially expected)
 - 08-01: listApiKeys returns { apiKeys, total, limit, offset } not a flat array
 - 08-01: verifyApiKey() helper uses dynamic import of auth to avoid circular deps in server routes
+- 08-02: Extracted triggerTestRun() to run-test-core.ts for server function and API route reuse
+- 08-02: Route files use runs/index.ts and runs/$runId.ts for TanStack file-based routing
+- 08-02: screenshotBase64 included inline (not URL-based) for single-request CI/CD consumption
+- 08-02: Ownership check returns 404 (not 403) to avoid leaking test run existence
+- 08-02: Invalid viewport errors surfaced as 400 (not 500) for actionable client feedback
 
 ### Pending Todos
 
@@ -174,5 +179,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-07
-Stopped at: Completed 08-01-PLAN.md -- API Key Infrastructure
+Stopped at: Completed 08-02-PLAN.md -- REST API Endpoints
 Resume file: None
