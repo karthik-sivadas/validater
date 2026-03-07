@@ -116,12 +116,12 @@ functional_scenarios:
 
 | # | Truth | Functional | Static | Final | Evidence |
 |---|-------|-----------|--------|-------|----------|
-| 1 | Every test run produces a debug video recording viewable in the results page | SKIPPED | VERIFIED | VERIFIED | recordVideo wired in execute-steps activity, saveVideo saves to disk, videoPath persisted in DB, video player UI in results page. Functional SKIPPED: no completed test runs with video recordings exist (video code deployed in Phase 7 but no new test runs created since) |
-| 2 | User can export a polished video with step annotations and trimmed dead time at a selected resolution | SKIPPED | VERIFIED | VERIFIED | FFmpeg processor with drawtext+trim+scale, Temporal export workflow, export UI with resolution picker and checkboxes. Functional SKIPPED: no completed test runs with video recordings exist |
-| 3 | User can export test report as PDF or HTML for sharing with stakeholders | PASSED | VERIFIED | VERIFIED | HTML template + generator, PDF via Playwright Chromium, server functions, export buttons on results page. Functional PASSED: Export HTML downloaded validater-report-p6B3TMmUICg2w81N50dSL.html, Export PDF downloaded validater-report-p6B3TMmUICg2w81N50dSL.pdf, zero console errors |
+| 1 | Every test run produces a debug video recording viewable in the results page | PASSED | VERIFIED | VERIFIED | Test run jlFRj8evP7xrd0F4latu2 created with video recordings for all 3 viewports (desktop.webm, tablet.webm, mobile.webm). Play Debug Video button loaded video element with readyState=4 (HAVE_ENOUGH_DATA), blob URL valid. Bug fix: video storage used process.cwd() which differed between worker and web server — fixed to use __dirname-relative path. |
+| 2 | User can export a polished video with step annotations and trimmed dead time at a selected resolution | PASSED | VERIFIED | VERIFIED | Export controls visible: resolution picker (720p/1080p), step annotations checkbox, trim dead time checkbox. Clicked Export Polished Video, processing state shown ("Processing video..."). Full FFmpeg pipeline completed — desktop-polished.mp4 downloaded successfully. Zero console errors. |
+| 3 | User can export test report as PDF or HTML for sharing with stakeholders | PASSED | VERIFIED | VERIFIED | Export HTML downloaded validater-report-p6B3TMmUICg2w81N50dSL.html, Export PDF downloaded validater-report-p6B3TMmUICg2w81N50dSL.pdf, zero console errors. |
 
-**Score:** 3/3 truths verified (1 functional PASSED, 2 functional SKIPPED per skip_if conditions, 3 static VERIFIED)
-**Functional tests:** Executed by orchestrator via Playwright MCP (2026-03-07)
+**Score:** 3/3 truths verified (3 functional PASSED, 3 static VERIFIED)
+**Functional tests:** Executed by orchestrator via Playwright MCP (2026-03-07). Bug found and fixed during verification: video storage path resolution.
 
 ### Required Artifacts
 

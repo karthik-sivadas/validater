@@ -1,7 +1,10 @@
 import { mkdir, readFile, writeFile } from 'fs/promises';
-import { join } from 'path';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
 
-const DATA_DIR = process.env.DATA_DIR ?? join(process.cwd(), 'data');
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const PACKAGE_ROOT = join(__dirname, '..', '..');
+const DATA_DIR = process.env.DATA_DIR ?? join(PACKAGE_ROOT, 'data');
 export const VIDEOS_DIR = join(DATA_DIR, 'videos');
 
 /**
