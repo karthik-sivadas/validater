@@ -8,7 +8,8 @@
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",
-    "test": "turbo test",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "db:push": "pnpm --filter @validater/db db:push",
     "db:generate": "pnpm --filter @validater/db db:generate",
     "db:migrate": "pnpm --filter @validater/db db:migrate",
@@ -17,9 +18,11 @@
     "temporal:worker": "pnpm --filter @validater/worker start"
   },
   "devDependencies": {
-    "turbo": "^2.8.0",
     "@biomejs/biome": "^1.0.0",
-    "typescript": "^5.7.0"
+    "@vitest/coverage-v8": "^3.2.4",
+    "turbo": "^2.8.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.2.4"
   },
   "packageManager": "pnpm@9.15.0",
   "engines": {

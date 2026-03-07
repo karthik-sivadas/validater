@@ -22,11 +22,6 @@ const config = defineConfig({
   optimizeDeps: {
     exclude: ['playwright', 'playwright-core'],
   },
-  test: {
-    passWithNoTests: true,
-    environment: 'jsdom',
-    exclude: ['e2e/**', 'node_modules/**'],
-  },
 })
 
 export default config
