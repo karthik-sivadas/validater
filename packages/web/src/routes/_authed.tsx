@@ -57,6 +57,13 @@ function AuthedLayout() {
               >
                 History
               </Link>
+              <Link
+                to="/settings"
+                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                activeProps={{ className: "text-primary font-medium" }}
+              >
+                Settings
+              </Link>
             </div>
           </div>
           <div className="flex items-center gap-3">
