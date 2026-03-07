@@ -150,12 +150,12 @@ Plans:
   1. Every test run produces a debug video recording viewable in the results page
   2. User can export a polished video with step annotations and trimmed dead time at a selected resolution
   3. User can export test report as PDF or HTML for sharing with stakeholders
-**Plans**: 4 plans
+**Plans**: 3 plans
 
 Plans:
-- [ ] 07-01: Debug video recording (Playwright built-in recording, storage, playback in UI)
-- [ ] 07-02: Polished video export (annotations, dead time trimming, resolution selection)
-- [ ] 07-03: Report export (PDF and HTML generation from test results)
+- [ ] 07-01-PLAN.md -- Debug video recording backend (DB schema, video storage module, Playwright recordVideo in executeSteps, persist video path)
+- [ ] 07-02-PLAN.md -- Report generation and export (HTML template, PDF generator, server functions, export buttons in results page)
+- [ ] 07-03-PLAN.md -- Video playback and polished video export (video player UI, FFmpeg processor, export workflow, resolution picker)
 
 ### Phase 8: CI/CD and API Layer
 **Goal**: Engineering teams can trigger test runs programmatically and integrate Validater into their deployment pipelines
