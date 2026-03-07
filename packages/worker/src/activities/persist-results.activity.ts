@@ -1,5 +1,5 @@
 import type { Database } from '@validater/db';
-import { testRuns, testRunResults, testRunSteps, stepScreenshots } from '@validater/db';
+import { testRuns, testRunResults, testRunSteps, stepScreenshots, accessibilityResults } from '@validater/db';
 import type { ExecutionResult } from '@validater/core';
 import { nanoid } from 'nanoid';
 import { eq, and } from 'drizzle-orm';
@@ -60,6 +60,23 @@ export function createPersistActivities(db: Database) {
           screenshotBase64: cached[0]?.screenshotBase64 ?? stepResult.screenshotBase64 ?? null,
           durationMs: stepResult.durationMs,
         });
+      }
+
+      // Persist accessibility results for this viewport (if available)
+      if (result.accessibilityData) {
+        try {
+          await db.insert(accessibilityResults).values({
+            id: nanoid(),
+            resultId,
+            violationCount: result.accessibilityData.violationCount,
+            passCount: result.accessibilityData.passCount,
+            incompleteCount: result.accessibilityData.incompleteCount,
+            inapplicableCount: result.accessibilityData.inapplicableCount,
+            violations: result.accessibilityData.violations,
+          });
+        } catch {
+          // Accessibility persist failure must not break result persistence
+        }
       }
     }
 

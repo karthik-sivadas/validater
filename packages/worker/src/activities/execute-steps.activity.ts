@@ -1,4 +1,4 @@
-import type { TestStep, ViewportConfig, ExecutionConfig, ExecutionResult } from '@validater/core';
+import type { TestStep, ViewportConfig, ExecutionConfig, ExecutionResult, AccessibilityData } from '@validater/core';
 import { executeSteps } from '@validater/core';
 import { getDefaultPool } from '../browser/pool.js';
 import type { StreamingConfig } from '../streaming/types.js';
@@ -12,6 +12,7 @@ import { mkdtemp, rm } from 'fs/promises';
 import { join } from 'path';
 import { tmpdir } from 'os';
 import { saveVideo } from '../video/storage.js';
+import { AxeBuilder } from '@axe-core/playwright';
 
 export interface ExecuteStepsParams {
   url: string;
@@ -84,10 +85,12 @@ export function createExecuteActivities(db: Database) {
         },
       });
 
-      // Track step results and video reference at this scope so they
-      // survive the try block and are accessible after context.close()
+      // Track step results, accessibility data, and video reference at
+      // this scope so they survive the try block and are accessible after
+      // context.close()
       let lightResults: ExecutionResult['stepResults'] = [];
       let totalDurationMs = 0;
+      let accessibilityData: AccessibilityData | null = null;
 
       // Capture video reference before context.close() -- the path is
       // known before close, but the file is only finalized AFTER close.
@@ -159,6 +162,37 @@ export function createExecuteActivities(db: Database) {
           }
         }
 
+        // Run accessibility scan on final page state (best-effort)
+        try {
+          const axeResults = await new AxeBuilder({ page })
+            .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+            .analyze();
+
+          accessibilityData = {
+            violationCount: axeResults.violations.length,
+            passCount: axeResults.passes.length,
+            incompleteCount: axeResults.incomplete.length,
+            inapplicableCount: axeResults.inapplicable.length,
+            violations: axeResults.violations.map(v => ({
+              id: v.id,
+              impact: v.impact ?? null,
+              description: v.description,
+              help: v.help,
+              helpUrl: v.helpUrl,
+              tags: v.tags,
+              nodes: v.nodes.slice(0, 10).map(n => ({
+                target: n.target as string[],
+                html: n.html.substring(0, 500),
+                impact: n.impact ?? null,
+                failureSummary: n.failureSummary,
+              })),
+              nodeCount: v.nodes.length,
+            })),
+          };
+        } catch {
+          // Accessibility scanning is best-effort -- never break test execution
+        }
+
         // Signal stream end (best-effort)
         if (params.streamingConfig?.enabled) {
           try {
@@ -212,6 +246,7 @@ export function createExecuteActivities(db: Database) {
         startedAt: startTime,
         completedAt: new Date().toISOString(),
         videoPath: videoRelativePath,
+        accessibilityData: accessibilityData ?? undefined,
       };
     } finally {
       pooled.pagesProcessed++;

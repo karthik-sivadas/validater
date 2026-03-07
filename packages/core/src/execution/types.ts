@@ -15,6 +15,30 @@ export interface StepResult {
   durationMs: number;
 }
 
+export interface AccessibilityViolation {
+  id: string;
+  impact: string | null;
+  description: string;
+  help: string;
+  helpUrl: string;
+  tags: string[];
+  nodes: Array<{
+    target: string[];
+    html: string;
+    impact: string | null;
+    failureSummary: string | undefined;
+  }>;
+  nodeCount: number;
+}
+
+export interface AccessibilityData {
+  violationCount: number;
+  passCount: number;
+  incompleteCount: number;
+  inapplicableCount: number;
+  violations: AccessibilityViolation[];
+}
+
 export interface ExecutionResult {
   viewport: string;
   url: string;
@@ -23,6 +47,7 @@ export interface ExecutionResult {
   startedAt: string; // ISO 8601
   completedAt: string; // ISO 8601
   videoPath?: string; // Relative path to debug video (e.g., "{testRunId}/{viewport}.webm")
+  accessibilityData?: AccessibilityData; // axe-core scan results (best-effort, may be absent)
 }
 
 export interface ExecutionConfig {
