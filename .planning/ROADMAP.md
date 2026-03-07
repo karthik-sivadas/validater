@@ -165,11 +165,12 @@ Plans:
   1. User can trigger a test run via public REST API (TanStack Start server routes or Hono) with URL, description, and viewports
   2. API returns structured results including pass/fail, step details, and links to screenshots
   3. A GitHub Actions workflow can run Validater tests on deploy and report results back to the PR
-**Plans**: 4 plans
+**Plans**: 3 plans
 
 Plans:
-- [ ] 08-01: Public REST API (endpoints, API key management, rate limiting)
-- [ ] 08-02: GitHub Actions integration (action definition, webhook support, PR status reporting)
+- [ ] 08-01-PLAN.md -- API key infrastructure, Better Auth plugin, verification helper, key management UI (settings page)
+- [ ] 08-02-PLAN.md -- REST API endpoints (POST /api/v1/runs, GET /api/v1/runs/:id) with shared core logic
+- [ ] 08-03-PLAN.md -- GitHub Actions composite action and example workflow for CI/CD integration
 
 ### Phase 9: Test Suite Generation and Accessibility
 **Goal**: Users can generate comprehensive test suites from feature descriptions and get accessibility insights on every test run
@@ -217,6 +218,6 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 | 6. Live Streaming and Real-Time Updates | 2/2 | Complete | 2026-03-07 |
 | 6.1. Step Details, Screenshots, and Browser Experience | 2/2 | Complete | 2026-03-07 |
 | 7. Video and Reporting | 3/3 | Complete | 2026-03-07 |
-| 8. CI/CD and API Layer | 0/2 | Not started | - |
+| 8. CI/CD and API Layer | 0/3 | Not started | - |
 | 9. Test Suite Generation and Accessibility | 0/2 | Not started | - |
 | 10. Quality and Coverage | 0/3 | Not started | - |
