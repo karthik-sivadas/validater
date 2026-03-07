@@ -1,7 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { getTestRunDetail } from "@/server/test-runs";
-import { exportHtmlReport, exportPdfReport, getVideoFile } from "@/server/exports";
+import {
+  exportHtmlReport,
+  exportPdfReport,
+  getVideoFile,
+  triggerVideoExport,
+  getExportStatus,
+  downloadExportedVideo,
+} from "@/server/exports";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -110,6 +117,17 @@ function passRateColor(rate: number): string {
   if (rate > 50) return "text-yellow-600 dark:text-yellow-400";
   return "text-red-600 dark:text-red-400";
 }
+
+interface ResolutionOption {
+  label: string;
+  width: number;
+  height: number;
+}
+
+const RESOLUTION_OPTIONS: ResolutionOption[] = [
+  { label: "720p", width: 1280, height: 720 },
+  { label: "1080p", width: 1920, height: 1080 },
+];
 
 const ACTION_COLORS: Record<string, string> = {
   click: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
@@ -391,12 +409,86 @@ function ViewportPanel({ testRunId, result, onScreenshotClick }: ViewportPanelPr
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [loadingVideo, setLoadingVideo] = useState(false);
 
+  // Export state
+  const [exportState, setExportState] = useState<
+    "idle" | "processing" | "complete" | "failed"
+  >("idle");
+  const [resolution, setResolution] = useState<ResolutionOption>(RESOLUTION_OPTIONS[0]);
+  const [includeAnnotations, setIncludeAnnotations] = useState(true);
+  const [trimDeadTime, setTrimDeadTime] = useState(true);
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
   // Clean up object URL on unmount or when videoUrl changes
   useEffect(() => {
     return () => {
       if (videoUrl) URL.revokeObjectURL(videoUrl);
     };
   }, [videoUrl]);
+
+  // Clean up polling on unmount
+  useEffect(() => {
+    return () => {
+      if (pollRef.current) clearInterval(pollRef.current);
+    };
+  }, []);
+
+  const handleExport = useCallback(async () => {
+    setExportState("processing");
+    try {
+      const res = await triggerVideoExport({
+        data: {
+          testRunId,
+          viewport: result.viewport,
+          resolution: { width: resolution.width, height: resolution.height },
+          includeAnnotations,
+          trimDeadTime,
+        },
+      });
+      // Start polling
+      pollRef.current = setInterval(async () => {
+        try {
+          const status = await getExportStatus({
+            data: { exportId: res.exportId },
+          });
+
+          if (status.status === "complete") {
+            if (pollRef.current) clearInterval(pollRef.current);
+            pollRef.current = null;
+            setExportState("complete");
+
+            // Download the video
+            const dl = await downloadExportedVideo({
+              data: { outputPath: status.outputPath },
+            });
+            const binary = atob(dl.videoBase64);
+            const bytes = new Uint8Array(binary.length);
+            for (let i = 0; i < binary.length; i++)
+              bytes[i] = binary.charCodeAt(i);
+            const blob = new Blob([bytes], { type: dl.mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = dl.filename;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            // Reset to idle after download
+            setTimeout(() => setExportState("idle"), 2000);
+          } else if (status.status === "failed") {
+            if (pollRef.current) clearInterval(pollRef.current);
+            pollRef.current = null;
+            setExportState("failed");
+          }
+        } catch {
+          if (pollRef.current) clearInterval(pollRef.current);
+          pollRef.current = null;
+          setExportState("failed");
+        }
+      }, 2000);
+    } catch {
+      setExportState("failed");
+    }
+  }, [testRunId, result.viewport, resolution, includeAnnotations, trimDeadTime]);
 
   const durationSec = (result.totalDurationMs / 1000).toFixed(1);
   const sortedSteps = [...result.steps].sort(
@@ -425,36 +517,38 @@ function ViewportPanel({ testRunId, result, onScreenshotClick }: ViewportPanelPr
         <span>Completed {formatDate(result.completedAt)}</span>
       </div>
 
-      {/* Debug video playback */}
+      {/* Debug video playback and export controls */}
       {result.videoPath && (
-        <div className="flex flex-col gap-2">
-          {!videoUrl && (
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={loadingVideo}
-              onClick={async () => {
-                setLoadingVideo(true);
-                try {
-                  const res = await getVideoFile({
-                    data: { testRunId, viewport: result.viewport },
-                  });
-                  if (res.found) {
-                    const binary = atob(res.videoBase64);
-                    const bytes = new Uint8Array(binary.length);
-                    for (let i = 0; i < binary.length; i++)
-                      bytes[i] = binary.charCodeAt(i);
-                    const blob = new Blob([bytes], { type: res.mimeType });
-                    setVideoUrl(URL.createObjectURL(blob));
+        <div className="flex flex-col gap-3 rounded-md border border-border p-4">
+          <div className="flex items-center gap-2">
+            {!videoUrl && (
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={loadingVideo}
+                onClick={async () => {
+                  setLoadingVideo(true);
+                  try {
+                    const res = await getVideoFile({
+                      data: { testRunId, viewport: result.viewport },
+                    });
+                    if (res.found) {
+                      const binary = atob(res.videoBase64);
+                      const bytes = new Uint8Array(binary.length);
+                      for (let i = 0; i < binary.length; i++)
+                        bytes[i] = binary.charCodeAt(i);
+                      const blob = new Blob([bytes], { type: res.mimeType });
+                      setVideoUrl(URL.createObjectURL(blob));
+                    }
+                  } finally {
+                    setLoadingVideo(false);
                   }
-                } finally {
-                  setLoadingVideo(false);
-                }
-              }}
-            >
-              {loadingVideo ? "Loading..." : "Play Debug Video"}
-            </Button>
-          )}
+                }}
+              >
+                {loadingVideo ? "Loading..." : "Play Debug Video"}
+              </Button>
+            )}
+          </div>
 
           {videoUrl && (
             <div className="rounded-md border border-border overflow-hidden">
@@ -470,6 +564,75 @@ function ViewportPanel({ testRunId, result, onScreenshotClick }: ViewportPanelPr
               </video>
             </div>
           )}
+
+          {/* Polished video export controls */}
+          <div className="flex flex-col gap-2 border-t border-border pt-3">
+            <p className="text-sm font-medium">Export Polished Video</p>
+            <div className="flex flex-wrap items-center gap-3">
+              <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                Resolution:
+                <select
+                  className="rounded-sm border border-border bg-background px-2 py-1 text-xs"
+                  value={resolution.label}
+                  onChange={(e) => {
+                    const opt = RESOLUTION_OPTIONS.find(
+                      (o) => o.label === e.target.value,
+                    );
+                    if (opt) setResolution(opt);
+                  }}
+                >
+                  {RESOLUTION_OPTIONS.map((opt) => (
+                    <option key={opt.label} value={opt.label}>
+                      {opt.label} ({opt.width}x{opt.height})
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <input
+                  type="checkbox"
+                  checked={includeAnnotations}
+                  onChange={(e) => setIncludeAnnotations(e.target.checked)}
+                  className="rounded-sm"
+                />
+                Step annotations
+              </label>
+
+              <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <input
+                  type="checkbox"
+                  checked={trimDeadTime}
+                  onChange={(e) => setTrimDeadTime(e.target.checked)}
+                  className="rounded-sm"
+                />
+                Trim dead time
+              </label>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={exportState === "processing"}
+                onClick={handleExport}
+              >
+                {exportState === "processing"
+                  ? "Processing video..."
+                  : exportState === "complete"
+                    ? "Export complete"
+                    : exportState === "failed"
+                      ? "Export failed - Retry"
+                      : "Export Polished Video"}
+              </Button>
+
+              {exportState === "processing" && (
+                <span className="inline-flex items-center rounded-md bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 animate-pulse dark:bg-amber-900 dark:text-amber-200">
+                  Processing...
+                </span>
+              )}
+            </div>
+          </div>
         </div>
       )}
 
