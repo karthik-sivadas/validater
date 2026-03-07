@@ -37,6 +37,7 @@ export const testRunResults = pgTable("test_run_results", {
   totalDurationMs: integer("total_duration_ms").notNull(),
   startedAt: timestamp("started_at").notNull(),
   completedAt: timestamp("completed_at").notNull(),
+  videoPath: text("video_path"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
