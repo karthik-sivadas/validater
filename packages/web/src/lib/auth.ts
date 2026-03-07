@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
+import { apiKey } from "@better-auth/api-key";
 import { db } from "@validater/db";
 import * as schema from "@validater/db/schema";
 
@@ -20,5 +21,15 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
-  plugins: [tanstackStartCookies()], // MUST be last plugin
+  plugins: [
+    apiKey({
+      defaultPrefix: "vld_",
+      rateLimit: {
+        enabled: true,
+        timeWindow: 60 * 1000, // 60 seconds in milliseconds
+        maxRequests: 60, // 60 requests per window
+      },
+    }),
+    tanstackStartCookies(), // MUST be last plugin
+  ],
 });
