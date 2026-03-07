@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-03-06)
 
 **Core value:** Users can describe what to test in plain English, point at any URL, and get comprehensive test execution with visual proof -- no test code required.
-**Current focus:** Phase 9 - Test Suite Generation and Accessibility
+**Current focus:** Phase 9 Complete - Ready for Phase 10
 
 ## Current Position
 
 Phase: 9 of 10 (Test Suite Generation and Accessibility)
-Plan: 3 of 4 in current phase
-Status: In progress
-Last activity: 2026-03-07 -- Completed 09-03-PLAN.md
+Plan: 4 of 4 in current phase
+Status: Phase complete
+Last activity: 2026-03-07 -- Completed 09-04-PLAN.md
 
-Progress: [██████████░] 97%
+Progress: [███████████] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 32
-- Average duration: ~4.4 min
-- Total execution time: ~142 min
+- Total plans completed: 33
+- Average duration: ~4.5 min
+- Total execution time: ~147 min
 
 **By Phase:**
 
@@ -36,11 +36,11 @@ Progress: [██████████░] 97%
 | 06.1-step-details | 2/2 | ~11 min | ~5.5 min |
 | 07-video-and-reporting | 3/3 | ~10 min | ~3.3 min |
 | 08-cicd-and-api-layer | 3/3 | ~11 min | ~3.7 min |
-| 09-test-suite-gen | 3/4 | ~10 min | ~3.3 min |
+| 09-test-suite-gen | 4/4 | ~15 min | ~3.8 min |
 
 **Recent Trend:**
-- Last 5 plans: 08-02 (~3 min), 08-03 (~2 min), 09-02 (~3 min), 09-01 (~4 min), 09-03 (~3 min)
-- Trend: Consistent ~2-4 min per plan
+- Last 5 plans: 08-03 (~2 min), 09-01 (~4 min), 09-02 (~3 min), 09-03 (~3 min), 09-04 (~5 min)
+- Trend: Consistent ~2-5 min per plan
 
 *Updated after each plan completion*
 
@@ -176,6 +176,10 @@ Recent decisions affecting current work:
 - 09-03: Sequential step generation per test case to respect rate limiter (not parallel)
 - 09-03: testSuiteWorkflow re-exported from test-run.workflow.ts for Temporal bundle registration
 - 09-03: updateSuiteStatus activity mirrors updateTestRunStatus pattern for progress tracking
+- 09-04: jsonb violations field cast to typed array in getTestRunDetail for dynamic import Promise type compatibility
+- 09-04: Test cases grouped by category on suite detail page with color-coded section headers
+- 09-04: Suite generation progress interpolates during generating_steps phase (50-85% based on testCasesGenerated/testCasesTotal)
+- 09-04: runTestCase reuses triggerTestRun from run-test-core.ts and updates test_cases.testRunId for result linking
 
 ### Pending Todos
 
@@ -195,5 +199,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-07
-Stopped at: Completed 09-03-PLAN.md -- Temporal Workflow and Activities for Suite Generation
+Stopped at: Completed 09-04-PLAN.md -- Frontend Suite Management and Accessibility Panel (Phase 9 Complete)
 Resume file: None
