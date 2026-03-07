@@ -183,8 +183,10 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 09-01: Test suite generation (feature description to multiple test cases, suite management UI)
-- [ ] 09-02: Accessibility integration (axe-core in browser execution, results in report)
+- [ ] 09-01-PLAN.md -- DB schema (suites, cases, accessibility tables) and axe-core integration in execution pipeline
+- [ ] 09-02-PLAN.md -- Core AI suite generation (types, Zod schemas, prompts, generateSuiteSpecs function)
+- [ ] 09-03-PLAN.md -- Temporal workflow and activities for suite generation pipeline
+- [ ] 09-04-PLAN.md -- Frontend: suite management UI (list, generate, detail) and accessibility panel in results page
 
 ### Phase 10: Quality and Coverage
 **Goal**: Platform code meets tiered test coverage targets with comprehensive integration testing
@@ -219,5 +221,5 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 | 6.1. Step Details, Screenshots, and Browser Experience | 2/2 | Complete | 2026-03-07 |
 | 7. Video and Reporting | 3/3 | Complete | 2026-03-07 |
 | 8. CI/CD and API Layer | 3/3 | Complete | 2026-03-07 |
-| 9. Test Suite Generation and Accessibility | 0/2 | Not started | - |
+| 9. Test Suite Generation and Accessibility | 0/4 | Not started | - |
 | 10. Quality and Coverage | 0/3 | Not started | - |
