@@ -13,6 +13,10 @@ import { viewportExecutionWorkflow } from './viewport-execution.workflow.js';
 // Re-export so Temporal registers the child workflow in the bundle
 export { viewportExecutionWorkflow };
 
+import { exportVideoWorkflow } from './export-video.workflow.js';
+// Re-export so Temporal registers the export workflow in the bundle
+export { exportVideoWorkflow };
+
 // ---------------------------------------------------------------------------
 // Status query (queryable at any point during workflow execution)
 // ---------------------------------------------------------------------------

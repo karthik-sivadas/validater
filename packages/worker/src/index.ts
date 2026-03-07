@@ -16,5 +16,7 @@ export { generateHtmlReport } from "./reports/html-generator.js";
 export type { ReportData, ReportViewport, ReportStep } from "./reports/html-generator.js";
 export { generatePdfReport } from "./reports/pdf-generator.js";
 
-// Video storage
+// Video storage and processing
 export { getVideoPath } from "./video/storage.js";
+export { exportVideoWorkflow } from "./workflows/export-video.workflow.js";
+export type { ExportVideoParams, ExportVideoResult } from "./activities/export-video.activity.js";

@@ -11,6 +11,7 @@ import * as generateActivities from "./activities/generate-steps.activity.js";
 import * as validateActivities from "./activities/validate-steps.activity.js";
 import { createExecuteActivities } from "./activities/execute-steps.activity.js";
 import { createPersistActivities } from "./activities/persist-results.activity.js";
+import * as exportVideoActivities from "./activities/export-video.activity.js";
 
 const require = createRequire(import.meta.url);
 
@@ -29,6 +30,7 @@ async function run() {
       ...validateActivities,
       ...executeActivities,
       ...persistActivities,
+      ...exportVideoActivities,
     },
     taskQueue: "test-pipeline",
   });
