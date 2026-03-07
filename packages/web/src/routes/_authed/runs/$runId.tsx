@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { getTestRunDetail } from "@/server/test-runs";
+import { exportHtmlReport, exportPdfReport } from "@/server/exports";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -129,6 +131,7 @@ function TestRunDetailPage() {
   const [selectedScreenshot, setSelectedScreenshot] = useState<string | null>(
     null,
   );
+  const [exporting, setExporting] = useState<null | "html" | "pdf">(null);
 
   // Compute summary stats per viewport and overall
   const viewportSummaries = results.map((result: TestRunResult) => {
@@ -189,6 +192,66 @@ function TestRunDetailPage() {
           <p className="text-sm text-destructive">{run.error}</p>
         )}
       </div>
+
+      {/* ---- Export Actions ---- */}
+      {run.status === "complete" && (
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={exporting !== null}
+            onClick={async () => {
+              setExporting("html");
+              try {
+                const result = await exportHtmlReport({
+                  data: { testRunId: run.id },
+                });
+                const blob = new Blob([result.html], { type: "text/html" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = result.filename;
+                a.click();
+                URL.revokeObjectURL(url);
+              } finally {
+                setExporting(null);
+              }
+            }}
+          >
+            {exporting === "html" ? "Exporting..." : "Export HTML"}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={exporting !== null}
+            onClick={async () => {
+              setExporting("pdf");
+              try {
+                const result = await exportPdfReport({
+                  data: { testRunId: run.id },
+                });
+                const binary = atob(result.pdfBase64);
+                const bytes = new Uint8Array(binary.length);
+                for (let i = 0; i < binary.length; i++)
+                  bytes[i] = binary.charCodeAt(i);
+                const blob = new Blob([bytes], {
+                  type: "application/pdf",
+                });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = result.filename;
+                a.click();
+                URL.revokeObjectURL(url);
+              } finally {
+                setExporting(null);
+              }
+            }}
+          >
+            {exporting === "pdf" ? "Exporting..." : "Export PDF"}
+          </Button>
+        </div>
+      )}
 
       {/* ---- Summary Card ---- */}
       <Card>
