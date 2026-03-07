@@ -97,9 +97,8 @@ export const getTestRunDetail = createServerFn({ method: "GET" })
       "@tanstack/react-start/server"
     );
     const { auth } = await import("@/lib/auth");
-    const { db, testRuns, testRunResults, testRunSteps } = await import(
-      "@validater/db"
-    );
+    const { db, testRuns, testRunResults, testRunSteps, accessibilityResults } =
+      await import("@validater/db");
     const { eq, asc } = await import("drizzle-orm");
 
     const headers = getRequestHeaders();
@@ -128,7 +127,7 @@ export const getTestRunDetail = createServerFn({ method: "GET" })
       .from(testRunResults)
       .where(eq(testRunResults.testRunId, data.testRunId));
 
-    // For each result, query its steps ordered by stepOrder
+    // For each result, query its steps and accessibility results
     const resultsWithSteps = await Promise.all(
       results.map(async (result) => {
         const steps = await db
@@ -137,7 +136,40 @@ export const getTestRunDetail = createServerFn({ method: "GET" })
           .where(eq(testRunSteps.resultId, result.id))
           .orderBy(asc(testRunSteps.stepOrder));
 
-        return { ...result, steps };
+        // Query accessibility results for this viewport result
+        const a11yRows = await db
+          .select()
+          .from(accessibilityResults)
+          .where(eq(accessibilityResults.resultId, result.id))
+          .limit(1);
+
+        // Cast jsonb violations to typed array (jsonb returns unknown)
+        const a11y = a11yRows[0]
+          ? {
+              ...a11yRows[0],
+              violations: a11yRows[0].violations as Array<{
+                id: string;
+                impact: string | null;
+                description: string;
+                help: string;
+                helpUrl: string;
+                tags: string[];
+                nodes: Array<{
+                  target: string[];
+                  html: string;
+                  impact: string | null;
+                  failureSummary: string | undefined;
+                }>;
+                nodeCount: number;
+              }>,
+            }
+          : null;
+
+        return {
+          ...result,
+          steps,
+          accessibility: a11y,
+        };
       }),
     );
 
