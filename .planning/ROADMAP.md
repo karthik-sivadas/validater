@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 5: Frontend -- Dashboard and Results** - TanStack Start app, test creation, results viewer, test history
 - [x] **Phase 6: Live Streaming and Real-Time Updates** - CDP screencast, Redis pub/sub, Hono WebSocket sidecar, live viewer
 - [x] **Phase 6.1: Step Details, Screenshots, and Browser Experience** - Rich step metadata, screenshot persistence, streaming quality (INSERTED)
-- [ ] **Phase 7: Video and Reporting** - Debug recording, polished video export, PDF/HTML reports
+- [x] **Phase 7: Video and Reporting** - Debug recording, polished video export, PDF/HTML reports
 - [ ] **Phase 8: CI/CD and API Layer** - Public REST API, GitHub Actions integration, webhooks
 - [ ] **Phase 9: Test Suite Generation and Accessibility** - Full suite from feature descriptions, axe-core integration
 - [ ] **Phase 10: Quality and Coverage** - Tiered test coverage across all platform packages
@@ -153,9 +153,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 07-01-PLAN.md -- Debug video recording backend (DB schema, video storage module, Playwright recordVideo in executeSteps, persist video path)
-- [ ] 07-02-PLAN.md -- Report generation and export (HTML template, PDF generator, server functions, export buttons in results page)
-- [ ] 07-03-PLAN.md -- Video playback and polished video export (video player UI, FFmpeg processor, export workflow, resolution picker)
+- [x] 07-01-PLAN.md -- Debug video recording backend (DB schema, video storage module, Playwright recordVideo in executeSteps, persist video path)
+- [x] 07-02-PLAN.md -- Report generation and export (HTML template, PDF generator, server functions, export buttons in results page)
+- [x] 07-03-PLAN.md -- Video playback and polished video export (video player UI, FFmpeg processor, export workflow, resolution picker)
 
 ### Phase 8: CI/CD and API Layer
 **Goal**: Engineering teams can trigger test runs programmatically and integrate Validater into their deployment pipelines
@@ -216,7 +216,7 @@ Note: Phases 2 and 3 can execute in parallel (both depend only on Phase 1). Phas
 | 5. Frontend -- Dashboard and Results | 4/4 | Complete | 2026-03-07 |
 | 6. Live Streaming and Real-Time Updates | 2/2 | Complete | 2026-03-07 |
 | 6.1. Step Details, Screenshots, and Browser Experience | 2/2 | Complete | 2026-03-07 |
-| 7. Video and Reporting | 0/3 | Not started | - |
+| 7. Video and Reporting | 3/3 | Complete | 2026-03-07 |
 | 8. CI/CD and API Layer | 0/2 | Not started | - |
 | 9. Test Suite Generation and Accessibility | 0/2 | Not started | - |
 | 10. Quality and Coverage | 0/3 | Not started | - |
