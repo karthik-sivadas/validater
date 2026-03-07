@@ -21,8 +21,8 @@ const RunTestInputSchema = z.object({
  * Creates a test_runs DB record and starts the testRunWorkflow non-blocking.
  * Returns immediately with the testRunId so the frontend can poll for status.
  *
- * All server-only dependencies are dynamically imported to prevent bundling
- * into the client bundle (Temporal client, db, core, nanoid).
+ * Auth is session-based (for frontend). Core logic is delegated to
+ * triggerTestRun which is shared with the REST API route.
  */
 export const runTest = createServerFn({ method: "POST" })
   .inputValidator(RunTestInputSchema)
@@ -34,56 +34,14 @@ export const runTest = createServerFn({ method: "POST" })
     const session = await auth.api.getSession({ headers });
     if (!session) throw new Error("Unauthorized");
 
-    // Dynamic imports to avoid bundling server-only deps in client
-    const { nanoid } = await import("nanoid");
-    const { createTemporalClient, testRunWorkflow } = await import(
-      "@validater/worker"
-    );
-    const { db, testRuns } = await import("@validater/db");
-    const { VIEWPORT_PRESETS } = await import("@validater/core");
-
-    const testRunId = nanoid();
-
-    // Resolve viewport names to ViewportConfig objects
-    const resolvedViewports = data.viewports
-      .map((name) => VIEWPORT_PRESETS[name])
-      .filter(Boolean);
-
-    if (resolvedViewports.length === 0) {
-      throw new Error(
-        `No valid viewports found. Available: ${Object.keys(VIEWPORT_PRESETS).join(", ")}`,
-      );
-    }
-
-    // Insert initial test_run record
-    await db.insert(testRuns).values({
-      id: testRunId,
+    // Delegate to shared core logic
+    const { triggerTestRun } = await import("@/server/run-test-core");
+    return triggerTestRun({
       userId: session.user.id,
       url: data.url,
       testDescription: data.testDescription,
-      status: "pending",
       viewports: data.viewports,
     });
-
-    // Start workflow non-blocking
-    const client = await createTemporalClient();
-    const handle = await client.workflow.start(testRunWorkflow, {
-      args: [
-        {
-          testRunId,
-          url: data.url,
-          testDescription: data.testDescription,
-          viewports: resolvedViewports,
-        },
-      ],
-      taskQueue: "test-pipeline",
-      workflowId: testRunId,
-    });
-
-    return {
-      testRunId,
-      workflowId: handle.workflowId,
-    };
   });
 
 // ---------------------------------------------------------------------------

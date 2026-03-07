@@ -13,11 +13,13 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthedRouteImport } from './routes/_authed'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthedSettingsRouteImport } from './routes/_authed/settings'
 import { Route as AuthedRunsRouteImport } from './routes/_authed/runs'
 import { Route as AuthedDashboardRouteImport } from './routes/_authed/dashboard'
 import { Route as AuthedRunsIndexRouteImport } from './routes/_authed/runs/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as AuthedRunsRunIdRouteImport } from './routes/_authed/runs/$runId'
+import { Route as ApiV1RunsIndexRouteImport } from './routes/api/v1/runs/index'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -37,6 +39,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthedSettingsRoute = AuthedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthedRoute,
 } as any)
 const AuthedRunsRoute = AuthedRunsRouteImport.update({
   id: '/runs',
@@ -63,6 +70,11 @@ const AuthedRunsRunIdRoute = AuthedRunsRunIdRouteImport.update({
   path: '/$runId',
   getParentRoute: () => AuthedRunsRoute,
 } as any)
+const ApiV1RunsIndexRoute = ApiV1RunsIndexRouteImport.update({
+  id: '/api/v1/runs/',
+  path: '/api/v1/runs/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -70,18 +82,22 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthedDashboardRoute
   '/runs': typeof AuthedRunsRouteWithChildren
+  '/settings': typeof AuthedSettingsRoute
   '/runs/$runId': typeof AuthedRunsRunIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/runs/': typeof AuthedRunsIndexRoute
+  '/api/v1/runs/': typeof ApiV1RunsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthedDashboardRoute
+  '/settings': typeof AuthedSettingsRoute
   '/runs/$runId': typeof AuthedRunsRunIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/runs': typeof AuthedRunsIndexRoute
+  '/api/v1/runs': typeof ApiV1RunsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -91,9 +107,11 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/_authed/dashboard': typeof AuthedDashboardRoute
   '/_authed/runs': typeof AuthedRunsRouteWithChildren
+  '/_authed/settings': typeof AuthedSettingsRoute
   '/_authed/runs/$runId': typeof AuthedRunsRunIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_authed/runs/': typeof AuthedRunsIndexRoute
+  '/api/v1/runs/': typeof ApiV1RunsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -103,18 +121,22 @@ export interface FileRouteTypes {
     | '/signup'
     | '/dashboard'
     | '/runs'
+    | '/settings'
     | '/runs/$runId'
     | '/api/auth/$'
     | '/runs/'
+    | '/api/v1/runs/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/signup'
     | '/dashboard'
+    | '/settings'
     | '/runs/$runId'
     | '/api/auth/$'
     | '/runs'
+    | '/api/v1/runs'
   id:
     | '__root__'
     | '/'
@@ -123,9 +145,11 @@ export interface FileRouteTypes {
     | '/signup'
     | '/_authed/dashboard'
     | '/_authed/runs'
+    | '/_authed/settings'
     | '/_authed/runs/$runId'
     | '/api/auth/$'
     | '/_authed/runs/'
+    | '/api/v1/runs/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -134,6 +158,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiV1RunsIndexRoute: typeof ApiV1RunsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -165,6 +190,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authed/settings': {
+      id: '/_authed/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthedSettingsRouteImport
+      parentRoute: typeof AuthedRoute
     }
     '/_authed/runs': {
       id: '/_authed/runs'
@@ -201,6 +233,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedRunsRunIdRouteImport
       parentRoute: typeof AuthedRunsRoute
     }
+    '/api/v1/runs/': {
+      id: '/api/v1/runs/'
+      path: '/api/v1/runs'
+      fullPath: '/api/v1/runs/'
+      preLoaderRoute: typeof ApiV1RunsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -221,11 +260,13 @@ const AuthedRunsRouteWithChildren = AuthedRunsRoute._addFileChildren(
 interface AuthedRouteChildren {
   AuthedDashboardRoute: typeof AuthedDashboardRoute
   AuthedRunsRoute: typeof AuthedRunsRouteWithChildren
+  AuthedSettingsRoute: typeof AuthedSettingsRoute
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedDashboardRoute: AuthedDashboardRoute,
   AuthedRunsRoute: AuthedRunsRouteWithChildren,
+  AuthedSettingsRoute: AuthedSettingsRoute,
 }
 
 const AuthedRouteWithChildren =
@@ -237,6 +278,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiV1RunsIndexRoute: ApiV1RunsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
