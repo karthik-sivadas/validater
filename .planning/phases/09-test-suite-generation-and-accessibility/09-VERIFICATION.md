@@ -78,12 +78,12 @@ must_haves:
 
 | # | Truth | Functional | Static | Final | Evidence |
 |---|-------|-----------|--------|-------|----------|
-| 1 | User can describe a feature and receive a full test suite covering happy path, edge cases, and error states | SKIPPED | VERIFIED | VERIFIED | Form at /suites/new with URL + feature description, AI prompt enforces 4 categories, Zod schema min(4).max(8), workflow pipeline crawl->specs->steps->persist all wired |
-| 2 | User can review, select, and run individual tests from the generated suite | SKIPPED | VERIFIED | VERIFIED | Suite detail page at /suites/$suiteId groups by category, shows run/view buttons, runTestCase server function delegates to triggerTestRun and links testRunId |
-| 3 | Every test run includes accessibility insights with issues categorized by severity | SKIPPED | VERIFIED | VERIFIED | axe-core AxeBuilder in execute-steps.activity.ts, data flows through ExecutionResult, persisted in persist-results, fetched in getTestRunDetail, rendered via AccessibilityPanel with impact severity badges (critical/serious/moderate/minor) |
+| 1 | User can describe a feature and receive a full test suite covering happy path, edge cases, and error states | PASSED | VERIFIED | VERIFIED | Playwright MCP: Filled form at /suites/new, submitted, watched progress (Crawling → Generating Test Cases → Generating Steps 0/5 → complete). Suite completed with 5 test cases across 3 categories (Happy Path 2, Edge Case 2, Error State 1). |
+| 2 | User can review, select, and run individual tests from the generated suite | PASSED | VERIFIED | VERIFIED | Playwright MCP: Suite detail page at /suites/WlxnsqdLqr7cdZ-wo_4Vx shows test cases grouped by category with color-coded headers. Each case has title, priority badge (critical/high/medium), description, "Run Test" button, "Show reasoning" button. |
+| 3 | Every test run includes accessibility insights with issues categorized by severity | PASSED | VERIFIED | VERIFIED | Playwright MCP: Test run 4YhwUKTdWFPxaLQdjQBCt results page shows "Accessibility Insights" panel with "No violations" badge and "8 passed" count. axe-core scan runs successfully via AxeBuilder with WCAG 2.0/2.1 AA tags. |
 
 **Score:** 3/3 truths verified
-**Functional tests:** 0/3 (skipped -- static verification only, no dev server)
+**Functional tests:** 3/3 PASSED (all verified via Playwright MCP with live dev server, Temporal, and minimax/minimax-m2.5 AI model)
 
 ### Required Artifacts
 

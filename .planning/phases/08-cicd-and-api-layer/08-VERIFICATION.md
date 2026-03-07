@@ -20,14 +20,14 @@ score: 7/7 must-haves verified
 |---|-------|------------|--------|-------|----------|
 | 1 | API key plugin is configured in Better Auth and creates/verifies keys | SKIPPED | WIRED | VERIFIED | `auth.ts` has `apiKey()` plugin with `vld_` prefix and rate limiting before `tanstackStartCookies()`. `auth-client.ts` has `apiKeyClient()`. Package installed (`@better-auth/api-key: ^1.5.4`). |
 | 2 | API key verification helper extracts bearer token and validates via auth.api | SKIPPED | WIRED | VERIFIED | `api-auth.ts` (61 lines): extracts Authorization header, validates Bearer format, calls `auth.api.verifyApiKey()`, returns `{ valid, userId }` or `{ valid, error }`. Imported by both API route files. |
-| 3 | User can create, list, and revoke API keys from the settings page | SKIPPED | WIRED | VERIFIED | `settings.tsx` (273 lines): full CRUD UI with Dialog, Table, copy-to-clipboard. Server functions in `api-keys.ts` (114 lines): `createApiKeyFn`, `listApiKeysFn`, `revokeApiKeyFn` using `auth.api.*` methods. Settings nav link in `_authed.tsx`. Loader calls `listApiKeysFn()`. |
-| 4 | POST /api/v1/runs with valid API key triggers a test run and returns testRunId | SKIPPED | WIRED | VERIFIED | `routes/api/v1/runs/index.ts` (83 lines): POST handler calls `verifyApiKey(request)`, validates body with Zod, calls `triggerTestRun()`, returns `{ testRunId, status: "pending" }` with 201. Route registered in `routeTree.gen.ts`. |
-| 5 | GET /api/v1/runs/:id with valid API key returns test run status and results | SKIPPED | WIRED | VERIFIED | `routes/api/v1/runs/$runId.ts` (139 lines): GET handler with API key auth, ownership check (returns 404, not 403), Temporal live status query with DB fallback, full results with inline `screenshotBase64` for completed runs. Route registered in `routeTree.gen.ts`. |
+| 3 | User can create, list, and revoke API keys from the settings page | PASSED | WIRED | VERIFIED | Playwright MCP: Created API key "CI/CD Pipeline" (vld_ prefix), listed in table with name/key/created/status columns, revoked successfully (table cleared). Created second key "API Test Key" for API testing. |
+| 4 | POST /api/v1/runs with valid API key triggers a test run and returns testRunId | PASSED | WIRED | VERIFIED | Playwright MCP: curl POST with Bearer token returned `{ testRunId, status: "pending" }`. Run completed successfully with steps and pass/fail results. |
+| 5 | GET /api/v1/runs/:id with valid API key returns test run status and results | PASSED | WIRED | VERIFIED | Playwright MCP: GET returned live status (crawling → generating → complete) with full results. 401 returned without auth header. |
 | 6 | A GitHub Actions composite action exists that triggers test runs and polls for results | SKIPPED | VERIFIED | VERIFIED | `action.yml` (200 lines): composite action with trigger/poll/report steps, `curl` to POST and GET API endpoints, `::add-mask::` for key security, `GITHUB_STEP_SUMMARY` reporting with per-viewport breakdown and failed step details in collapsible section. |
 | 7 | An example workflow demonstrates using the action on deployment | SKIPPED | VERIFIED | VERIFIED | `validater-on-deploy.yml` (103 lines): `workflow_dispatch` + `deployment_status` triggers, uses composite action with secrets, PR commenting via `actions/github-script@v7`. Well-commented with setup instructions. |
 
 **Score:** 7/7 truths verified
-**Functional tests:** 0/7 (all SKIPPED -- backend/CI artifacts, no browser-testable UI beyond settings page)
+**Functional tests:** 3/7 PASSED (3 browser-testable truths verified via Playwright MCP, 4 static-only: API key plugin config, auth helper, GitHub Action YAML, example workflow)
 
 ### Required Artifacts
 
