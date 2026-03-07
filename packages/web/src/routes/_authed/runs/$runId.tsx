@@ -29,6 +29,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
+import { AccessibilityPanel } from "@/components/accessibility-panel";
 
 // ---------------------------------------------------------------------------
 // Types for loader data (explicit to avoid implicit-any from dynamic imports)
@@ -49,6 +50,31 @@ interface TestRunStep {
   screenshotBase64: string | null;
 }
 
+interface AccessibilityResultData {
+  id: string;
+  resultId: string;
+  violationCount: number;
+  passCount: number;
+  incompleteCount: number;
+  inapplicableCount: number;
+  violations: Array<{
+    id: string;
+    impact: string | null;
+    description: string;
+    help: string;
+    helpUrl: string;
+    tags: string[];
+    nodes: Array<{
+      target: string[];
+      html: string;
+      impact: string | null;
+      failureSummary: string | undefined;
+    }>;
+    nodeCount: number;
+  }>;
+  createdAt: Date;
+}
+
 interface TestRunResult {
   id: string;
   testRunId: string;
@@ -60,6 +86,7 @@ interface TestRunResult {
   completedAt: Date;
   createdAt: Date;
   steps: TestRunStep[];
+  accessibility: AccessibilityResultData | null;
 }
 
 interface TestRun {
@@ -318,6 +345,26 @@ function TestRunDetailPage() {
               </span>
             )}
           </div>
+
+          {/* Accessibility summary */}
+          {(() => {
+            const totalA11yViolations = results.reduce(
+              (sum: number, r: TestRunResult) =>
+                sum + (r.accessibility?.violationCount ?? 0),
+              0,
+            );
+            if (totalA11yViolations > 0) {
+              return (
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="text-muted-foreground">Accessibility:</span>
+                  <span className="text-orange-600 dark:text-orange-400">
+                    {totalA11yViolations} violation{totalA11yViolations !== 1 ? "s" : ""} across viewports
+                  </span>
+                </div>
+              );
+            }
+            return null;
+          })()}
         </CardContent>
       </Card>
 
@@ -401,6 +448,7 @@ interface ViewportPanelProps {
       errorActual: string | null;
       screenshotBase64: string | null;
     }>;
+    accessibility?: AccessibilityResultData | null;
   };
   onScreenshotClick: (base64: string) => void;
 }
@@ -640,6 +688,11 @@ function ViewportPanel({ testRunId, result, onScreenshotClick }: ViewportPanelPr
         <ScrollArea className="h-[600px]">{stepList}</ScrollArea>
       ) : (
         stepList
+      )}
+
+      {/* Accessibility results */}
+      {result.accessibility && (
+        <AccessibilityPanel data={result.accessibility} />
       )}
     </div>
   );

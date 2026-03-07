@@ -13,11 +13,15 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthedRouteImport } from './routes/_authed'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthedSuitesRouteImport } from './routes/_authed/suites'
 import { Route as AuthedSettingsRouteImport } from './routes/_authed/settings'
 import { Route as AuthedRunsRouteImport } from './routes/_authed/runs'
 import { Route as AuthedDashboardRouteImport } from './routes/_authed/dashboard'
+import { Route as AuthedSuitesIndexRouteImport } from './routes/_authed/suites/index'
 import { Route as AuthedRunsIndexRouteImport } from './routes/_authed/runs/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as AuthedSuitesNewRouteImport } from './routes/_authed/suites/new'
+import { Route as AuthedSuitesSuiteIdRouteImport } from './routes/_authed/suites/$suiteId'
 import { Route as AuthedRunsRunIdRouteImport } from './routes/_authed/runs/$runId'
 import { Route as ApiV1RunsIndexRouteImport } from './routes/api/v1/runs/index'
 import { Route as ApiV1RunsRunIdRouteImport } from './routes/api/v1/runs/$runId'
@@ -41,6 +45,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthedSuitesRoute = AuthedSuitesRouteImport.update({
+  id: '/suites',
+  path: '/suites',
+  getParentRoute: () => AuthedRoute,
+} as any)
 const AuthedSettingsRoute = AuthedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -56,6 +65,11 @@ const AuthedDashboardRoute = AuthedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthedRoute,
 } as any)
+const AuthedSuitesIndexRoute = AuthedSuitesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthedSuitesRoute,
+} as any)
 const AuthedRunsIndexRoute = AuthedRunsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -65,6 +79,16 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthedSuitesNewRoute = AuthedSuitesNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AuthedSuitesRoute,
+} as any)
+const AuthedSuitesSuiteIdRoute = AuthedSuitesSuiteIdRouteImport.update({
+  id: '/$suiteId',
+  path: '/$suiteId',
+  getParentRoute: () => AuthedSuitesRoute,
 } as any)
 const AuthedRunsRunIdRoute = AuthedRunsRunIdRouteImport.update({
   id: '/$runId',
@@ -89,9 +113,13 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthedDashboardRoute
   '/runs': typeof AuthedRunsRouteWithChildren
   '/settings': typeof AuthedSettingsRoute
+  '/suites': typeof AuthedSuitesRouteWithChildren
   '/runs/$runId': typeof AuthedRunsRunIdRoute
+  '/suites/$suiteId': typeof AuthedSuitesSuiteIdRoute
+  '/suites/new': typeof AuthedSuitesNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/runs/': typeof AuthedRunsIndexRoute
+  '/suites/': typeof AuthedSuitesIndexRoute
   '/api/v1/runs/$runId': typeof ApiV1RunsRunIdRoute
   '/api/v1/runs/': typeof ApiV1RunsIndexRoute
 }
@@ -102,8 +130,11 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthedDashboardRoute
   '/settings': typeof AuthedSettingsRoute
   '/runs/$runId': typeof AuthedRunsRunIdRoute
+  '/suites/$suiteId': typeof AuthedSuitesSuiteIdRoute
+  '/suites/new': typeof AuthedSuitesNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/runs': typeof AuthedRunsIndexRoute
+  '/suites': typeof AuthedSuitesIndexRoute
   '/api/v1/runs/$runId': typeof ApiV1RunsRunIdRoute
   '/api/v1/runs': typeof ApiV1RunsIndexRoute
 }
@@ -116,9 +147,13 @@ export interface FileRoutesById {
   '/_authed/dashboard': typeof AuthedDashboardRoute
   '/_authed/runs': typeof AuthedRunsRouteWithChildren
   '/_authed/settings': typeof AuthedSettingsRoute
+  '/_authed/suites': typeof AuthedSuitesRouteWithChildren
   '/_authed/runs/$runId': typeof AuthedRunsRunIdRoute
+  '/_authed/suites/$suiteId': typeof AuthedSuitesSuiteIdRoute
+  '/_authed/suites/new': typeof AuthedSuitesNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_authed/runs/': typeof AuthedRunsIndexRoute
+  '/_authed/suites/': typeof AuthedSuitesIndexRoute
   '/api/v1/runs/$runId': typeof ApiV1RunsRunIdRoute
   '/api/v1/runs/': typeof ApiV1RunsIndexRoute
 }
@@ -131,9 +166,13 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/runs'
     | '/settings'
+    | '/suites'
     | '/runs/$runId'
+    | '/suites/$suiteId'
+    | '/suites/new'
     | '/api/auth/$'
     | '/runs/'
+    | '/suites/'
     | '/api/v1/runs/$runId'
     | '/api/v1/runs/'
   fileRoutesByTo: FileRoutesByTo
@@ -144,8 +183,11 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/settings'
     | '/runs/$runId'
+    | '/suites/$suiteId'
+    | '/suites/new'
     | '/api/auth/$'
     | '/runs'
+    | '/suites'
     | '/api/v1/runs/$runId'
     | '/api/v1/runs'
   id:
@@ -157,9 +199,13 @@ export interface FileRouteTypes {
     | '/_authed/dashboard'
     | '/_authed/runs'
     | '/_authed/settings'
+    | '/_authed/suites'
     | '/_authed/runs/$runId'
+    | '/_authed/suites/$suiteId'
+    | '/_authed/suites/new'
     | '/api/auth/$'
     | '/_authed/runs/'
+    | '/_authed/suites/'
     | '/api/v1/runs/$runId'
     | '/api/v1/runs/'
   fileRoutesById: FileRoutesById
@@ -204,6 +250,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authed/suites': {
+      id: '/_authed/suites'
+      path: '/suites'
+      fullPath: '/suites'
+      preLoaderRoute: typeof AuthedSuitesRouteImport
+      parentRoute: typeof AuthedRoute
+    }
     '/_authed/settings': {
       id: '/_authed/settings'
       path: '/settings'
@@ -225,6 +278,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedDashboardRouteImport
       parentRoute: typeof AuthedRoute
     }
+    '/_authed/suites/': {
+      id: '/_authed/suites/'
+      path: '/'
+      fullPath: '/suites/'
+      preLoaderRoute: typeof AuthedSuitesIndexRouteImport
+      parentRoute: typeof AuthedSuitesRoute
+    }
     '/_authed/runs/': {
       id: '/_authed/runs/'
       path: '/'
@@ -238,6 +298,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/auth/$'
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authed/suites/new': {
+      id: '/_authed/suites/new'
+      path: '/new'
+      fullPath: '/suites/new'
+      preLoaderRoute: typeof AuthedSuitesNewRouteImport
+      parentRoute: typeof AuthedSuitesRoute
+    }
+    '/_authed/suites/$suiteId': {
+      id: '/_authed/suites/$suiteId'
+      path: '/$suiteId'
+      fullPath: '/suites/$suiteId'
+      preLoaderRoute: typeof AuthedSuitesSuiteIdRouteImport
+      parentRoute: typeof AuthedSuitesRoute
     }
     '/_authed/runs/$runId': {
       id: '/_authed/runs/$runId'
@@ -277,16 +351,34 @@ const AuthedRunsRouteWithChildren = AuthedRunsRoute._addFileChildren(
   AuthedRunsRouteChildren,
 )
 
+interface AuthedSuitesRouteChildren {
+  AuthedSuitesSuiteIdRoute: typeof AuthedSuitesSuiteIdRoute
+  AuthedSuitesNewRoute: typeof AuthedSuitesNewRoute
+  AuthedSuitesIndexRoute: typeof AuthedSuitesIndexRoute
+}
+
+const AuthedSuitesRouteChildren: AuthedSuitesRouteChildren = {
+  AuthedSuitesSuiteIdRoute: AuthedSuitesSuiteIdRoute,
+  AuthedSuitesNewRoute: AuthedSuitesNewRoute,
+  AuthedSuitesIndexRoute: AuthedSuitesIndexRoute,
+}
+
+const AuthedSuitesRouteWithChildren = AuthedSuitesRoute._addFileChildren(
+  AuthedSuitesRouteChildren,
+)
+
 interface AuthedRouteChildren {
   AuthedDashboardRoute: typeof AuthedDashboardRoute
   AuthedRunsRoute: typeof AuthedRunsRouteWithChildren
   AuthedSettingsRoute: typeof AuthedSettingsRoute
+  AuthedSuitesRoute: typeof AuthedSuitesRouteWithChildren
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedDashboardRoute: AuthedDashboardRoute,
   AuthedRunsRoute: AuthedRunsRouteWithChildren,
   AuthedSettingsRoute: AuthedSettingsRoute,
+  AuthedSuitesRoute: AuthedSuitesRouteWithChildren,
 }
 
 const AuthedRouteWithChildren =
