@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-03-06)
 ## Current Position
 
 Phase: 8 of 10 (CI/CD and API Layer)
-Plan: 0 of 2 in current phase
-Status: Not started
-Last activity: 2026-03-07 -- Completed Phase 7
+Plan: 1 of 2 in current phase
+Status: In progress
+Last activity: 2026-03-07 -- Completed 08-01-PLAN.md
 
-Progress: [████████░░] 76%
+Progress: [████████░░] 79%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 25
-- Average duration: ~4.8 min
-- Total execution time: ~121 min
+- Total plans completed: 26
+- Average duration: ~4.9 min
+- Total execution time: ~127 min
 
 **By Phase:**
 
@@ -35,10 +35,11 @@ Progress: [████████░░] 76%
 | 06-live-streaming | 2/2 | ~9 min | ~4.5 min |
 | 06.1-step-details | 2/2 | ~11 min | ~5.5 min |
 | 07-video-and-reporting | 3/3 | ~10 min | ~3.3 min |
+| 08-cicd-and-api-layer | 1/2 | ~6 min | ~6 min |
 
 **Recent Trend:**
-- Last 5 plans: 06.1-01 (~8 min), 06.1-02 (~3 min), 07-01 (~4 min), 07-02 (~4 min), 07-03 (~6 min)
-- Trend: Phase 7 consistent ~3-6 min per plan
+- Last 5 plans: 06.1-02 (~3 min), 07-01 (~4 min), 07-02 (~4 min), 07-03 (~6 min), 08-01 (~6 min)
+- Trend: Consistent ~4-6 min per plan
 
 *Updated after each plan completion*
 
@@ -149,6 +150,11 @@ Recent decisions affecting current work:
 - 07-03: Export controls embedded in video card section for visual grouping with debug playback
 - 07-03: Temporal export workflow pattern: trigger -> poll status -> download on complete
 - 07-03: Path traversal prevention on downloadExportedVideo rejects paths containing ".."
+- 08-01: Better Auth API key table name is "apikey" (no underscore) -- matches API_KEY_TABLE_NAME constant
+- 08-01: API key prefix "vld_" for Validater-branded keys
+- 08-01: Rate limiting uses timeWindow (ms) and maxRequests (not window/max as initially expected)
+- 08-01: listApiKeys returns { apiKeys, total, limit, offset } not a flat array
+- 08-01: verifyApiKey() helper uses dynamic import of auth to avoid circular deps in server routes
 
 ### Pending Todos
 
@@ -168,5 +174,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-07
-Stopped at: Completed Phase 7 -- Video and Reporting
+Stopped at: Completed 08-01-PLAN.md -- API Key Infrastructure
 Resume file: None
