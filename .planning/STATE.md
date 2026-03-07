@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-03-06)
 
 **Core value:** Users can describe what to test in plain English, point at any URL, and get comprehensive test execution with visual proof -- no test code required.
-**Current focus:** Phase 7 - Video and Reporting
+**Current focus:** Phase 7 - Video and Reporting (COMPLETE)
 
 ## Current Position
 
 Phase: 7 of 10 (Video and Reporting)
-Plan: 2 of 3 in current phase
-Status: In progress
-Last activity: 2026-03-07 -- Completed 07-02-PLAN.md
+Plan: 3 of 3 in current phase
+Status: Phase complete
+Last activity: 2026-03-07 -- Completed 07-03-PLAN.md
 
-Progress: [█████████░] 92%
+Progress: [██████████] 96%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 24
+- Total plans completed: 25
 - Average duration: ~4.8 min
-- Total execution time: ~115 min
+- Total execution time: ~121 min
 
 **By Phase:**
 
@@ -34,12 +34,11 @@ Progress: [█████████░] 92%
 | 05-frontend-dashboard | 4/4 | ~31 min | ~7.8 min |
 | 06-live-streaming | 2/2 | ~9 min | ~4.5 min |
 | 06.1-step-details | 2/2 | ~11 min | ~5.5 min |
-
-| 07-video-and-reporting | 2/3 | ~4 min | ~4 min |
+| 07-video-and-reporting | 3/3 | ~10 min | ~3.3 min |
 
 **Recent Trend:**
-- Last 5 plans: 06-02 (~3 min), 06.1-01 (~8 min), 06.1-02 (~3 min), 07-02 (~4 min)
-- Trend: 07-02 fast -- template + generators + server functions, no schema changes
+- Last 5 plans: 06.1-01 (~8 min), 06.1-02 (~3 min), 07-01 (~4 min), 07-02 (~4 min), 07-03 (~6 min)
+- Trend: Phase 7 consistent ~3-6 min per plan
 
 *Updated after each plan completion*
 
@@ -144,6 +143,12 @@ Recent decisions affecting current work:
 - 07-02: Base64 PDF transfer via server function return (not file streaming)
 - 07-02: Shared buildReportData helper in exports.ts for DRY HTML/PDF generation
 - 07-02: Export buttons only visible for status=complete test runs
+- 07-03: ffmpeg-static default export cast through unknown for TypeScript compatibility (module vs string type)
+- 07-03: FFmpeg drawtext colon escape + right single quote substitution avoids nested escaping complexity
+- 07-03: Trim segments built from step timing with 0.5s padding and merged overlapping segments
+- 07-03: Export controls embedded in video card section for visual grouping with debug playback
+- 07-03: Temporal export workflow pattern: trigger -> poll status -> download on complete
+- 07-03: Path traversal prevention on downloadExportedVideo rejects paths containing ".."
 
 ### Pending Todos
 
@@ -163,5 +168,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-07
-Stopped at: Completed 07-02-PLAN.md (Report export)
+Stopped at: Completed 07-03-PLAN.md (Video playback and polished export) -- Phase 7 complete
 Resume file: None
