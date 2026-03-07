@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-03-06)
 
 **Core value:** Users can describe what to test in plain English, point at any URL, and get comprehensive test execution with visual proof -- no test code required.
-**Current focus:** Phase 8 - CI/CD and API Layer
+**Current focus:** Phase 8 - CI/CD and API Layer (Complete)
 
 ## Current Position
 
 Phase: 8 of 10 (CI/CD and API Layer)
-Plan: 2 of 3 in current phase
-Status: In progress
-Last activity: 2026-03-07 -- Completed 08-02-PLAN.md
+Plan: 3 of 3 in current phase
+Status: Phase complete
+Last activity: 2026-03-07 -- Completed 08-03-PLAN.md
 
-Progress: [█████████░] 97%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 28
-- Average duration: ~4.6 min
-- Total execution time: ~130 min
+- Total plans completed: 29
+- Average duration: ~4.5 min
+- Total execution time: ~132 min
 
 **By Phase:**
 
@@ -35,11 +35,11 @@ Progress: [█████████░] 97%
 | 06-live-streaming | 2/2 | ~9 min | ~4.5 min |
 | 06.1-step-details | 2/2 | ~11 min | ~5.5 min |
 | 07-video-and-reporting | 3/3 | ~10 min | ~3.3 min |
-| 08-cicd-and-api-layer | 2/3 | ~9 min | ~4.5 min |
+| 08-cicd-and-api-layer | 3/3 | ~11 min | ~3.7 min |
 
 **Recent Trend:**
-- Last 5 plans: 07-01 (~4 min), 07-02 (~4 min), 07-03 (~6 min), 08-01 (~6 min), 08-02 (~3 min)
-- Trend: Consistent ~3-6 min per plan
+- Last 5 plans: 07-02 (~4 min), 07-03 (~6 min), 08-01 (~6 min), 08-02 (~3 min), 08-03 (~2 min)
+- Trend: Consistent ~2-6 min per plan
 
 *Updated after each plan completion*
 
@@ -160,6 +160,11 @@ Recent decisions affecting current work:
 - 08-02: screenshotBase64 included inline (not URL-based) for single-request CI/CD consumption
 - 08-02: Ownership check returns 404 (not 403) to avoid leaking test run existence
 - 08-02: Invalid viewport errors surfaced as 400 (not 500) for actionable client feedback
+- 08-03: Composite action (YAML-only) over TypeScript action -- no build step, simpler maintenance
+- 08-03: API key masked via ::add-mask:: as first step before any curl calls
+- 08-03: Multi-line GITHUB_OUTPUT using random EOF delimiter for results-json output
+- 08-03: 10-second polling interval with configurable timeout (default 300s)
+- 08-03: GITHUB_STEP_SUMMARY includes failed step details in collapsible section
 
 ### Pending Todos
 
@@ -179,5 +184,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-07
-Stopped at: Completed 08-02-PLAN.md -- REST API Endpoints
+Stopped at: Completed 08-03-PLAN.md -- GitHub Actions Integration (Phase 8 complete)
 Resume file: None
