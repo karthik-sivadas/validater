@@ -135,6 +135,10 @@ Recent decisions affecting current work:
 - 06.1-02: ACTION_COLORS duplicated in live viewer and results page (not shared module) -- small map, avoids cross-component coupling
 - 06.1-02: Nullable action/description in results page types for backward compatibility with existing test runs
 - 06.1-02: Screenshot thumbnails max-h-48 + object-cover for compact display; Dialog zoom preserves full-size
+- 07-01: readFile+writeFile instead of rename for cross-device temp-to-permanent video copy
+- 07-01: Video reference captured before context.close(), file read after -- Playwright only finalizes on close
+- 07-01: All video operations best-effort (try/catch) -- never break test execution
+- 07-01: videoPath stored as relative path (testRunId/viewport.webm) -- VIDEOS_DIR prefix resolved at read time
 - 07-02: Standalone HTML report with inline CSS (no external deps) for universal browser rendering
 - 07-02: Fresh Chromium launch per PDF (not browser pool) since PDF generation is infrequent
 - 07-02: Base64 PDF transfer via server function return (not file streaming)
