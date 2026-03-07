@@ -10,3 +10,8 @@ export type {
 } from "./workflows/test-run.workflow.js";
 export { getTestRunStatus } from "./workflows/test-run.workflow.js";
 export { testRunWorkflow } from "./workflows/test-run.workflow.js";
+
+// Report generation
+export { generateHtmlReport } from "./reports/html-generator.js";
+export type { ReportData, ReportViewport, ReportStep } from "./reports/html-generator.js";
+export { generatePdfReport } from "./reports/pdf-generator.js";
