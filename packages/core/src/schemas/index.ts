@@ -9,3 +9,4 @@ export const appConfigSchema = z.object({
 export * from './locator.js';
 export * from './dom-element.js';
 export * from './test-step.js';
+export * from './test-suite.js';

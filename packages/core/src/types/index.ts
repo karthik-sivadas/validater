@@ -5,3 +5,4 @@ export type AppConfig = {
 export * from './dom.js';
 export * from './test-step.js';
 export * from './generation.js';
+export * from './test-suite.js';
